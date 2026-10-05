@@ -4,17 +4,20 @@
   "description": "Fireworks x Northstar Retail Group — internal QBR and customer account-health dashboards",
   "workspaces": [
     "shared",
-    "internal-qbr"
+    "internal-qbr",
+    "customer-health"
   ],
   "engines": {
     "node": ">=20"
   },
   "scripts": {
     "dev:internal": "npm run dev -w internal-qbr",
-    "build": "npm run build -w internal-qbr",
+    "dev:customer": "npm run dev -w customer-health",
+    "build": "npm run build -w internal-qbr && npm run build -w customer-health",
     "preview:internal": "npm run preview -w internal-qbr",
+    "preview:customer": "npm run preview -w customer-health",
     "test": "vitest run",
-    "typecheck": "tsc -p internal-qbr --noEmit"
+    "typecheck": "tsc -p internal-qbr --noEmit && tsc -p customer-health --noEmit"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

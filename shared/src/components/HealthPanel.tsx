@@ -24,25 +24,35 @@ function bandText(i: number) {
 
 export interface HealthPanelProps {
   health: HealthResult;
-  /** Show the "Top risks" button and pop-up (internal view only). */
+  /** Show the "Focus areas" button and pop-up (internal view only). */
   showRisks?: boolean;
+  /** Show the status badge and band list (internal view only). */
+  showStatus?: boolean;
+  /** Label above the overall score. */
+  label?: string;
 }
 
-export function HealthPanel({ health, showRisks = false }: HealthPanelProps) {
+export function HealthPanel({ health, showRisks = false, showStatus = true, label = 'Overall' }: HealthPanelProps) {
   // Accordion: at most one pillar open at a time.
   const [openKey, setOpenKey] = useState<string | null>(null);
-  const weights = health.pillars.map((p) => `${p.letter} ${Math.round(p.weight * 100)}%`).join(' · ');
+  // Normalise so the shown weights always sum to 100% (pillars without input are redistributed).
+  const totalWeight = health.pillars.reduce((s, p) => s + p.weight, 0);
+  const weights = health.pillars
+    .map((p) => `${p.letter}\u00a0${Math.round((p.weight / totalWeight) * 100)}%`)
+    .join(' · ');
   return (
     <div className="health">
       <div className="health__summary">
-        <span className="label health__brand">Overall</span>
+        <span className="label health__brand">{label}</span>
         <div className="health__score">
           <span className="health__value">{health.score.toFixed(2)}</span>
           <span className="health__outof">/ 5</span>
         </div>
-        <div className="health__status-row">
-          <span className={`badge health__status health__status--${health.status}`}>{STATUS_LABEL[health.status]}</span>
-        </div>
+        {showStatus && (
+          <div className="health__status-row">
+            <span className={`badge health__status health__status--${health.status}`}>{STATUS_LABEL[health.status]}</span>
+          </div>
+        )}
         <dl className="health__facts">
           <div>
             <dt>Basis</dt>
@@ -55,14 +65,16 @@ export function HealthPanel({ health, showRisks = false }: HealthPanelProps) {
             <dt>Weights</dt>
             <dd>{weights}</dd>
           </div>
-          <div>
-            <dt>Bands</dt>
-            <dd className="health__bands">
-              {STATUS_BANDS.map((b, i) => (
-                <span key={b.status}>{bandText(i)}</span>
-              ))}
-            </dd>
-          </div>
+          {showStatus && (
+            <div>
+              <dt>Bands</dt>
+              <dd className="health__bands">
+                {STATUS_BANDS.map((b, i) => (
+                  <span key={b.status}>{bandText(i)}</span>
+                ))}
+              </dd>
+            </div>
+          )}
         </dl>
         {showRisks && <TopRisks risks={rankRisks(health)} />}
       </div>
@@ -72,6 +84,7 @@ export function HealthPanel({ health, showRisks = false }: HealthPanelProps) {
           <li key={p.key}>
             <PillarRow
               pillar={p}
+              share={p.weight / totalWeight}
               open={openKey === p.key}
               onToggle={() => setOpenKey((k) => (k === p.key ? null : p.key))}
             />
@@ -82,7 +95,18 @@ export function HealthPanel({ health, showRisks = false }: HealthPanelProps) {
   );
 }
 
-function PillarRow({ pillar: p, open, onToggle }: { pillar: PillarResult; open: boolean; onToggle: () => void }) {
+function PillarRow({
+  pillar: p,
+  share,
+  open,
+  onToggle,
+}: {
+  pillar: PillarResult;
+  /** Weight as a share of the pillars shown (sums to 1). */
+  share: number;
+  open: boolean;
+  onToggle: () => void;
+}) {
   return (
     <details className="pillar" open={open}>
       <summary
@@ -101,7 +125,7 @@ function PillarRow({ pillar: p, open, onToggle }: { pillar: PillarResult; open: 
           </span>
           <span className="pillar__desc">{p.summary}</span>
         </span>
-        <span className="pillar__weight label">{Math.round(p.weight * 100)}%</span>
+        <span className="pillar__weight label">{Math.round(share * 100)}%</span>
         <Pips score={p.score} />
         <span className="pillar__score">{p.score.toFixed(1)}</span>
         <span className="pillar__chevron" aria-hidden="true" />

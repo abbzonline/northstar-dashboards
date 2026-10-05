@@ -143,6 +143,18 @@ Run the pilot brand both ways on the new shared deployment:
 - **If it doesn't,** arm B is the plan, and the pilot produced the evidence.
 - **Measure in both arms:** grounding, eval pass, escalation, CSAT, tone/policy fidelity, and P50/P95 time-to-first-token.
 
+**Success criteria** (four weeks of live traffic; one arm must clear all of them):
+
+| Metric | Target |
+|---|---|
+| Grounded answers | ≥ 95% |
+| Eval pass rate | ≥ 93% |
+| Escalation rate | ≤ 12% |
+| CSAT | ≥ Atlas week-4 (83.7) |
+| P95 latency | ≤ 1.3 s, held through one promotion peak |
+
+**Evidence that justifies wave 2:** the arm is chosen on quality (if arm A is enough, no adapter is trained), and Ridgeline's handle-time and CSAT baselines are captured before launch so the uplift is measured directly.
+
 This framing shows we aren't married to the architecture, and that's what Demi is expected to probe.
 
 ## Biggest risk: commercial
