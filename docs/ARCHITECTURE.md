@@ -31,7 +31,9 @@ The architecture as stated for the EBR:
 - five isolated RAG indexes
 - five system prompts
 
-**Atlas needs no retraining.** Its adapter already exists and is loaded onto the new deployment. The move is a redeploy, not a retrain: run the new deployment in shadow (or split traffic) against Atlas's live-merge deployment, cut over at parity, then retire the old deployment.
+**Five adapters, one base, Atlas unchanged.** Nothing about the Atlas model is retired or retrained: its adapter is loaded onto the shared deployment exactly as trained. What's retired is Atlas's *current deployment*, and only because consolidation makes it a duplicate. Switching it off stops paying a second GPU floor.
+
+**Why a new deployment rather than adding adapters to Atlas's current one.** Live merge bakes Atlas into the base weights, so that GPU no longer holds a clean base model; it holds "base + Atlas" as one set of weights. Loading a Brand B adapter there would stack Brand B on Atlas's tone and policy, which is exactly the contamination this design avoids. Multi-LoRA needs the untouched base with every adapter kept separate at inference time. Whether a deployment serves one merged model or base plus add-ons is set when it's created (`--enable-addons`). The docs show no way to switch an existing live-merge deployment into add-on mode in place (moderate-high confidence). "New" means a new deployment object with the same base model, shape and region, not necessarily new hardware or a new contract.
 
 ## Why not the alternatives
 
@@ -40,6 +42,7 @@ The architecture as stated for the EBR:
 | Reuse the Atlas adapter with a brand prompt | It was trained on Atlas only, so it has learned Atlas's tone and return-policy behaviour, exactly what differs by brand. A prompt fights learned weights, and Atlas tone and policy would leak through: the worst failure mode for a retail brand |
 | Separate full fine-tunes per brand | Five dedicated deployments (five GPU floors), five pipelines, five retrains whenever the base changes; the smaller brands lack the transcripts to justify it |
 | Serverless | Not available for custom or LoRA models on Fireworks, and serverless carries "no SLA guarantees for up-time or latency" |
+| Keep Atlas on its own live-merged deployment; put the four new brands on a second multi-LoRA deployment | **Valid stated alternative.** Atlas stays untouched at the infrastructure level too and can run FP8 for a slightly better P50. The cost is two GPU floors instead of one. Choose it if flagship P50 matters more than the cost difference |
 
 ## Structure
 
@@ -70,6 +73,20 @@ Fireworks' compatibility table: **BF16 shapes support LoRA add-ons; FP8 and FP4 
 | B. Five live-merged deployments, each FP8 | Five GPU floors (about $29k/month warm at one H100 each) | Lowest P50 per brand (FP8, no adapter overhead) |
 
 At Northstar's volumes, A wins on cost. FP8 live merge becomes the fallback for any brand whose volume later justifies its own deployment.
+
+## Migration sequence (keeps uptime throughout)
+
+| Step | Action | Gate to proceed |
+|---|---|---|
+| 1 | Stand up the multi-LoRA deployment alongside the live one. Load **Atlas's adapter first**. **Tune autoscaling for the combined five-brand peak now**, using the 21 Aug promo burst as the template | Atlas-on-add-on matches Atlas-on-merge on the existing eval set (grounding, eval pass, P50/P95) before any customer traffic touches it |
+| 2 | Load the **pilot brand's adapter** on the same deployment and run the two-arm pilot there, so the pilot doubles as the production test of the shared deployment | Pilot success criteria met (see Pilot) |
+| 3 | Shift **Atlas traffic by percentage (10% → 50% → 100%)** at Northstar's routing layer | Parity at each step; rollback to the old deployment available at every step |
+| 4 | Load the **remaining three adapters**, each as it clears its own eval gate | Per-brand eval gate |
+| 5 | **Decommission the live-merge deployment** | Atlas has run clean on the shared deployment through at least one promo-scale burst |
+
+**Budget the overlap.** Steps 1–5 run two GPU floors in parallel. Size that window in **weeks, not months** (each extra warm H100 week is about $1.3k at $8.00/GPU-hour), so the consolidation saving is real.
+
+**The one documented risk.** The shared BF16 deployment must be autoscaled for five brands' combined peaks, not one brand's. The 21 Aug threshold incident shows what happens when that's tuned reactively, so it's tuned in step 1, before Atlas traffic moves.
 
 ## Latency plan
 
@@ -117,7 +134,7 @@ Mitigation:
 2. Agree the pilot brand and success criteria jointly with Northstar.
 3. Tie the move to the shared deployment to a committed second brand, not to Atlas alone.
 
-**Managed technical step (not the biggest risk):** moving Atlas from live merge onto the multi-LoRA deployment. Atlas's adapter is unchanged, but it gives up live merge's zero overhead. Shadow-test and cut over only at parity on R, M and U. If latency doesn't hold, keep Atlas on its own live-merged (optionally FP8) deployment and put only the four new brands on multi-LoRA.
+**Managed technical step (not the biggest risk):** moving Atlas's traffic onto the multi-LoRA deployment, following the migration sequence above. The adapter is unchanged, but it gives up live merge's zero overhead. If latency doesn't hold at any step, roll back and take the stated alternative: Atlas stays on its own live-merged (optionally FP8) deployment and the four new brands share a multi-LoRA deployment.
 
 ## Open items
 
