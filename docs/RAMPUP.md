@@ -73,14 +73,16 @@ Context for the automation bands:
 
 | Metric | Direction | 5 | 4 | 3 | 2 | Source |
 |---|---|---|---|---|---|---|
-| Grounded answers | higher | ≥ 95% | ≥ 90% | ≥ 85% | ≥ 80% | RAGAS CI gates |
-| Eval pass rate | higher | ≥ 95% | ≥ 90% | ≥ 85% | ≥ 80% | Microsoft Foundry agent evaluators |
+| Grounded answers | higher | ≥ 95% | ≥ 90% | ≥ 85% | ≥ 80% | Account-team quality gate |
+| Eval pass rate | higher | ≥ 95% | ≥ 90% | ≥ 85% | ≥ 80% | Account-team quality gate |
 
-Where the bands come from:
-- **RAGAS:** its CI gates are answer relevancy ≥ 0.90 and context precision/recall ≥ 0.95 ([RAGAS: add to CI](https://docs.ragas.io/en/v0.2.8/howtos/applications/add_to_ci/)). Score 5 = clears the 0.95 gate; score 4 = clears the 0.90 gate. Scores 3 and 2 are our interpolation in 5-point steps.
-- **Microsoft Foundry:** defines the evaluators: Groundedness, Intent Resolution, Task Adherence and Task Completion. Graded evaluators use a 1–5 scale with a default pass mark of 3, and the composite "Output Quality" passes only if every component passes ([Microsoft Foundry: agent evaluators](https://learn.microsoft.com/en-us/azure/foundry/concepts/evaluation-evaluators/agent-evaluators)).
-- **Assumed definitions:** `grounded_answer_rate_pct` is the share of responses passing a Groundedness check. `quality_eval_pass_rate_pct` is a composite that passes only when every component passes, like Foundry's Output Quality.
+**These bands are account-team quality gates, anchored to common evaluation-framework practice.** No framework publishes a scale saying 95% of requests passing is excellent and 90% is good; the 5-point scale is ours. What the frameworks do supply:
+- **RAGAS** shows an example CI configuration that gates on answer relevancy ≥ 0.90 and context precision/recall ≥ 0.95 ([RAGAS: add to CI](https://docs.ragas.io/en/v0.2.8/howtos/applications/add_to_ci/)). It is an example of where teams set release gates, not an industry benchmark. We borrowed 0.95 and 0.90 as the edges of 5 and 4; 85% and 80% for 3 and 2 are our interpolation in 5-point steps.
+- **Microsoft Foundry** supplies the *structure*, not the thresholds: separate component evaluators (Groundedness, Intent Resolution, Task Adherence, Task Completion) on a 1–5 scale with a default pass mark of 3, and a composite Output Quality that passes only when every applicable component passes ([Microsoft Foundry: agent evaluators](https://learn.microsoft.com/en-us/azure/foundry/concepts/evaluation-evaluators/agent-evaluators)). It does not say what share of requests passing earns a given score.
+- **Why two metrics:** they measure different things. Grounding asks whether the answer stayed supported by the available knowledge; eval pass asks whether the whole response met the task-quality bar. Both are direct measures of the model, unlike CSAT or escalation, which sit in User outcomes.
+- **Assumed definitions:** `grounded_answer_rate_pct` is the share of responses passing a groundedness check. `quality_eval_pass_rate_pct` is a composite that passes only when every component passes, structured like Foundry's Output Quality.
 - **Not used:** the RAGAS page also shows `faithfulness 0.4 ± 0.1`. That's a test that the score hasn't drifted, not a quality bar.
+- **To firm up:** the gates should be confirmed with Northstar against their own eval harness, ideally with the pass marks they already use for release decisions.
 
 ### U: User outcomes
 
@@ -161,7 +163,7 @@ What the score says:
 | Weights | 20/20/20/10/20/10 | Judgement pillars get half weight |
 | Scoring basis | Full-period averages | Fair to the numbers; trailing windows flatter and are volatile |
 | Availability scale | 99.9 = 5, 0.2-pt steps | Team standard (stricter SLA-anchored alternative documented above) |
-| M and U sources | Microsoft Foundry, RAGAS, Freshworks 2025, Salesforce 2025 | Primary, first-party sources instead of blog aggregators |
+| M and U sources | Microsoft Foundry, RAGAS, Freshworks 2025, Salesforce 2025 (M bands are account-team gates anchored to RAGAS/Foundry practice, not a published scale) | Primary, first-party sources instead of blog aggregators |
 | Escalation | Scored in U as first-contact resolution | Has a direct Freshworks benchmark; keeps M purely about answer correctness |
 | Profitability perspective | Fireworks' commercial view, scored 1 | Current revenue is immaterial relative to the ceiling across Northstar; Atlas is the proof of concept for the group rollout. Customer value already shows in U and the EBR |
 | Status bands | Out of 5: Healthy ≥ 4, Positive-Watch ≥ 3, Negative-Watch ≥ 2, At risk < 2 | Same scale as the scores; splitting Watch shows which way an account is leaning |
