@@ -13,13 +13,14 @@ The code lives in [`shared/src/health/rampup.ts`](../shared/src/health/rampup.ts
 | **M** | Model quality | Are the answers right? (offline evaluation) | 20% | Measured |
 | **P** | Partnership | How committed is Northstar beyond the first deployment? | 10% | Judgement |
 | **U** | User outcomes | What did Northstar's shoppers experience? | 20% | Measured |
-| **P** | Profitability | Is the value delivered worth well more than the spend? | 10% | Judgement |
+| **P** | Profitability | Is the account commercially worth it to Fireworks? | 10% | Judgement |
 
 Design principles:
 - **One letter, one pillar.** The pillars are mutually exclusive, and every pillar is scored so that higher means healthier.
 - **Measured vs judgement.** Measured pillars carry 80% of the weight, so most of the score rests on evidence. The two P pillars are judgement calls by the account team.
 - **Internal vs customer views.** Both P pillars are internal only, because the brief says not to show internal sentiment or commercial judgement to the customer. The customer dashboard shows R, A, M and U only.
 - **Coverage.** RAMP UP covers everything PROVE does: Product maps to Adoption; Risk and Engagement map to Partnership; Outcomes and Voice of the Customer map to User outcomes. It adds the pillars an inference business needs: Reliability, Model quality and Profitability.
+- **Profitability is Fireworks' view, not the customer's.** The value Northstar gets (agent-hours saved vs spend) is already reflected in User outcomes and belongs in the EBR and customer dashboard as the value story. Profitability scores what the account is worth to Fireworks, which is internal only.
 
 ## Scoring rules
 
@@ -117,9 +118,10 @@ Current ranking (Aug 2026):
 
 | # | Item | Score | Exact position | Distance from 5 |
 |---|---|---|---|---|
-| 1 | Partnership (judgement) | 2 | 2.00 | 3.00 |
-| 2 | P50 latency (R): 605 ms; for a 4 ≤ 500 ms, for a 5 ≤ 300 ms | 3 | 3.65 | 1.35 |
-| 3 | P95 latency (R): 1.67 s; for a 4 ≤ 1.50 s, for a 5 ≤ 1.00 s | 3 | 3.67 | 1.33 |
+| 1 | Profitability (judgement) | 1 | 1.00 | 4.00 |
+| 2 | Partnership (judgement) | 2 | 2.00 | 3.00 |
+| 3 | P50 latency (R): 605 ms; for a 4 ≤ 500 ms, for a 5 ≤ 300 ms | 3 | 3.65 | 1.35 |
+| — | P95 latency (R): 1.67 s; for a 4 ≤ 1.50 s, for a 5 ≤ 1.00 s | 3 | 3.67 | 1.33 |
 | — | Tier-1 automation (A): 67.9% | 3 | 3.79 | 1.21 |
 | — | Error rate (R): 1.04% | 3 | 3.96 | 1.04 |
 
@@ -130,7 +132,7 @@ Set by the account team in [`internal-qbr/src/judgements.ts`](../internal-qbr/sr
 | Pillar | Score | Rationale |
 |---|---|---|
 | Partnership | **2** | Live on one brand out of five. The flagship team is engaged, but the wider business hasn't bought in: the four sister brands have no commitment, sponsor or timeline. Next step is an executive sponsor above brand level at the EBR. |
-| Profitability | **5** | The value delivered far exceeds the spend. In August, $1,213 of inference automated 97,488 Tier-1 tickets, roughly 12,550 agent-hours at the current handle time. A human team would cost many times more. **Caveat:** from Fireworks' side the account is small (about $15k annualised), so expansion is the commercial lever. |
+| Profitability | **1** | Scored from Fireworks' side. $1,213 in August is about $14.3k annualised: roughly 0.0014% of Fireworks' $1B+ run rate, so it doesn't move the needle. Month one also needed three hands-on interventions (catalog sync incident, autoscaling change, RAG index refresh). **Assumes** per-token serverless pricing (about $1.11 per 1M tokens); on dedicated GPUs the account would likely be loss-making. The lever is expansion to the four sister brands on a shared model. |
 
 ## Current result (Aug 1–31, 2026, full-period averages)
 
@@ -141,14 +143,14 @@ Set by the account team in [`internal-qbr/src/judgements.ts`](../internal-qbr/sr
 | M | Grounded 93.9% → 4 · eval pass 93.1% → 4 | 4.00 | 0.80 |
 | P | Judgement | 2.00 | 0.20 |
 | U | CSAT 82.3 → 4 · handle time 7.74 min → 4 · first-contact resolution 87.2% → 4 | 4.00 | 0.80 |
-| P | Judgement | 5.00 | 0.50 |
-| **Overall** | | **3.77 / 5 (Positive-Watch)** | |
+| P | Judgement | 1.00 | 0.10 |
+| **Overall** | | **3.37 / 5 (Positive-Watch)** | |
 
 What the score says:
 - **Strengths:** adoption, model quality and user outcomes (all 4.0).
-- **Weaknesses:** reliability, held back by the Aug 9 incident and averaging below 99.9%; and partnership, which needs buy-in beyond Atlas.
-- **Status:** 3.77 is Positive-Watch, in the upper part of the band and 0.23 short of Healthy. Lifting reliability by one band (3.33 → 4.33) would get there.
-- **For the expansion case:** "prove reliability on Atlas and win sponsorship across the group, then scale to the four other brands".
+- **Weaknesses:** profitability (commercially immaterial at about $14k a year), partnership (needs buy-in beyond Atlas) and reliability (latency and the Aug 9 incident).
+- **Status:** 3.37 is Positive-Watch, 0.63 short of Healthy.
+- **For the expansion case:** both judgement pillars point the same way. Scaling to the four sister brands on a shared model is what makes the account worth its support cost and turns a single-brand relationship into a group one. The pitch: "prove reliability on Atlas, win group sponsorship, then scale".
 
 ## Decision log
 
@@ -160,6 +162,7 @@ What the score says:
 | Availability scale | 99.9 = 5, 0.2-pt steps | Team standard (stricter SLA-anchored alternative documented above) |
 | M and U sources | Microsoft Foundry, RAGAS, Freshworks 2025, Salesforce 2025 | Primary, first-party sources instead of blog aggregators |
 | Escalation | Scored in U as first-contact resolution | Has a direct Freshworks benchmark; keeps M purely about answer correctness |
+| Profitability perspective | Fireworks' commercial view, scored 1 | ~$14k a year doesn't move the needle at a $1B+ run rate; customer value already shows in U and the EBR |
 | Status bands | Out of 5: Healthy ≥ 4, Positive-Watch ≥ 3, Negative-Watch ≥ 2, At risk < 2 | Same scale as the scores; splitting Watch shows which way an account is leaning |
 | CSAT yardstick | Salesforce: 85 = 5, 70 = 4, 60 = 3, 50 = 2, below 50 = 1 | Salesforce's general good (70) / poor (50) guidance fits an AI agent better than Freshworks' human-chat retail tiers |
 | Dashboard sources | Plain-text citations, no outbound links | Internal dashboard stays self-contained; full references live in this doc |

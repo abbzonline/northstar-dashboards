@@ -1,5 +1,8 @@
 import { ACCOUNT } from './account';
-import { fmtInt, fmtUsd, sum, type DailyMetric, type Judgement } from '@northstar/shared';
+import { fmtUsd, sum, type DailyMetric, type Judgement } from '@northstar/shared';
+
+/** Fireworks' annualised revenue run rate (company tear sheet, Jul 2026: "$1B+ ARR"). */
+const FIREWORKS_RUN_RATE_USD = 1_000_000_000;
 
 /**
  * Account-team judgement for the two P pillars of RAMP UP.
@@ -7,8 +10,10 @@ import { fmtInt, fmtUsd, sum, type DailyMetric, type Judgement } from '@northsta
  */
 export function judgements(rows: DailyMetric[]): Record<'partnership' | 'profitability', Judgement> {
   const spend = sum(rows.map((r) => r.spend_usd));
-  const agentHours = sum(rows.map((r) => r.automated_tier1_tickets * r.avg_handle_time_min)) / 60;
-  const automated = sum(rows.map((r) => r.automated_tier1_tickets));
+  const annualised = (spend / rows.length) * 365;
+  const shareOfRunRate = (annualised / FIREWORKS_RUN_RATE_USD) * 100;
+  const opsEvents = rows.filter((r) => r.operational_note).length;
+  const annualisedK = `$${Math.round(annualised / 1000)}k`;
 
   return {
     partnership: {
@@ -23,14 +28,15 @@ export function judgements(rows: DailyMetric[]): Record<'partnership' | 'profita
       ],
     },
     profitability: {
-      score: 5,
+      score: 1,
       rationale:
-        'Value delivered is far larger than the spend. A human team handling the same Tier-1 load would cost many times ' +
-        'what Northstar paid for inference this month.',
+        `At about ${annualisedK} a year, ${ACCOUNT.brand} doesn't move the needle for a company with a $1B+ run ` +
+        'rate, and it needed hands-on engineering in its first month. The commercial case rests on expansion.',
       evidence: [
-        `${fmtUsd(spend)} inference spend for the month`,
-        `${fmtInt(automated)} Tier-1 tickets automated, roughly ${fmtInt(agentHours)} agent-hours at the current handle time`,
-        'Caveat: from Fireworks’ side the account is small (~$15k annualised); expansion is the commercial lever',
+        `${fmtUsd(spend)} revenue in ${rows.length} days, about ${annualisedK} annualised: ${shareOfRunRate.toFixed(4)}% of the $1B+ run rate`,
+        `${opsEvents} hands-on interventions in month one (catalog sync incident, autoscaling change, RAG index refresh)`,
+        'Assumes per-token serverless pricing (~$1.11 per 1M tokens); on dedicated GPUs the account would likely be loss-making',
+        'Lever: the four sister brands on a shared model',
       ],
     },
   };

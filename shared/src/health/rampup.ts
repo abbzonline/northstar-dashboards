@@ -6,7 +6,7 @@
  *   M  Model quality   20%  measured
  *   P  Partnership     10%  judgement (internal only)
  *   U  User outcomes   20%  measured
- *   P  Profitability   10%  judgement (internal only)
+ *   P  Profitability   10%  judgement (internal only): what the account is worth to Fireworks
  *
  * Every pillar scores 1–5. Measured pillars average their metric scores; each metric is
  * scored against published benchmark bands using its average over the whole reporting
@@ -297,7 +297,7 @@ export const RAMPUP: PillarDef[] = [
     letter: 'P',
     name: 'Profitability',
     weight: 0.1,
-    summary: 'Is the value delivered worth well more than the spend?',
+    summary: 'Is the account commercially worth it to Fireworks?',
   },
 ];
 
