@@ -31,13 +31,13 @@ describe('customer-health stays customer-safe', () => {
     for (const f of files) expect(readFileSync(f, 'utf8'), f).not.toMatch(forbidden);
   });
 
-  it('scores the four measured pillars only, ~3.83 with weights redistributed', () => {
+  it('scores the four measured pillars only, ~3.58 with weights redistributed', () => {
     const csv = readFileSync(resolve(__dirname, '../../data/northstar_flagship_30_day_metrics.csv'), 'utf8');
     const loaded = loadMetrics(csv);
     if (!loaded.ok) throw new Error('fixture failed to load');
     const health = computeHealth(loaded.rows, {});
     expect(health.pillars.map((p) => p.letter)).toEqual(['R', 'A', 'M', 'U']);
-    expect(health.score).toBeCloseTo(3.83, 2);
+    expect(health.score).toBeCloseTo(3.58, 2);
   });
 
   it('joint actions match internal actions on owner and due date', () => {

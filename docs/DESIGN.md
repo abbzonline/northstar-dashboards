@@ -50,22 +50,22 @@ Two dashboards built from the same August dataset: an **internal QBR** for Firew
 | Pillar | Weight | Scored by |
 |---|---|---|
 | Reliability | 20% | availability, error rate, P50/P95 latency vs benchmark bands |
-| Adoption | 20% | Tier-1 automation, volume trend |
+| Adoption | 20% | Tier-1 automation penetration (request volume is consumption, not adoption, so it is not scored) |
 | Model quality | 20% | grounded answers, eval pass |
 | Partnership | 10% | account-team judgement (internal only) |
 | User outcomes | 20% | CSAT, handle time and first-contact resolution |
 | Profitability | 10% | account-team judgement, Fireworks' commercial view (internal only) |
 
 - Each metric scores 1–5 on its **full-period average**, rounded to display precision first; a pillar is the weighted mean of its metrics.
-- **Internal: 3.37 / 5, Positive-Watch** (Healthy ≥ 4, Positive-Watch ≥ 3, Negative-Watch ≥ 2, At risk < 2).
-- **Customer: 3.83 / 5** from the four measured pillars only; the judgement pillars' weight is redistributed, so each shows as 25%.
+- **Internal: 3.17 / 5, Positive-Watch** (Healthy ≥ 4, Positive-Watch ≥ 3, Negative-Watch ≥ 2, At risk < 2).
+- **Customer: 3.58 / 5** from the four measured pillars only; the judgement pillars' weight is redistributed, so each shows as 25%.
 - **Focus areas** lists the three items furthest from a perfect 5, by exact position within each band.
 
 ## 6. Internal vs customer
 
 | Item | Internal QBR | Customer health |
 |---|---|---|
-| Health score | All six pillars, 3.37, status band shown | Four measured pillars, 3.83, "Operational health, 1–5", no status band |
+| Health score | All six pillars, 3.17, status band shown | Four measured pillars, 3.58, "Operational health, 1–5", no status band |
 | Focus areas (lowest-scoring items) | Yes | No |
 | Headline metrics and trend charts | Yes | Yes, same figures |
 | Operational events | As logged | Restated in plain customer language |

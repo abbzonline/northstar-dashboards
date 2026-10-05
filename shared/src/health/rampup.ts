@@ -149,18 +149,7 @@ export const RAMPUP: PillarDef[] = [
         precision: 1,
         format: (n) => fmtPct(n, 1),
         bands: { direction: 'higher', edges: [80, 70, 60, 45] },
-      },
-      {
-        id: 'volume-trend',
-        label: 'Request volume trend',
-        value: (_w, all) => {
-          const first = avg(all.slice(0, 7), 'requests');
-          const last = avg(all.slice(-7), 'requests');
-          return ((last - first) / first) * 100;
-        },
-        precision: 0,
-        format: (n) => `${n > 0 ? '+' : ''}${n.toFixed(0)}%`,
-        bands: { direction: 'higher', edges: [10, 2, -2, -10] },
+        note: 'Automated Tier-1 tickets as a share of all Tier-1 tickets. Request volume is not scored: it measures consumption, not adoption, and requests per ticket rose over the month.',
       },
     ],
   },

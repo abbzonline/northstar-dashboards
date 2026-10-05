@@ -70,7 +70,7 @@ describe('computeHealth on the Northstar dataset (full-period averages)', () => 
   it('weights pillars 20/20/20/10/20/10 and lands in Positive-Watch', () => {
     const weights = health.pillars.map((p) => p.weight);
     expect(weights.reduce((a, b) => a + b, 0)).toBeCloseTo(1, 10);
-    expect(health.score).toBeCloseTo(3.37, 2);
+    expect(health.score).toBeCloseTo(3.17, 2);
     expect(health.status).toBe('positive-watch');
   });
 

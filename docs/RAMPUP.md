@@ -60,8 +60,9 @@ Notes:
 
 | Metric | Direction | 5 | 4 | 3 | 2 | Source |
 |---|---|---|---|---|---|---|
-| Tier-1 automation | higher | ≥ 80% | ≥ 70% | ≥ 60% | ≥ 45% | Agreed bands. Context below |
-| Request volume trend (first vs last 7 days) | higher | ≥ +10% | ≥ +2% | ≥ −2% | ≥ −10% | Internal rule |
+| Tier-1 automation (automated Tier-1 tickets ÷ all Tier-1 tickets) | higher | ≥ 80% | ≥ 70% | ≥ 60% | ≥ 45% | Agreed bands. Context below |
+
+**Why request volume is not scored.** Request volume measures consumption, not adoption. Requests per Tier-1 ticket rose from 4.6 to 6.2 over August, so volume can grow because the model makes more calls per ticket while the share of work entrusted to it stays flat. Scoring it would reward exactly that. Adoption is scored on automation penetration alone; automated-ticket volume is reported alongside it as context against total ticket volume (week 1 → final week: penetration 65.8% → 70.1%, automated tickets +15%, total tickets +8%).
 
 Context for the automation bands:
 - **Freshworks:** AI agents deflect 53% of retail queries, the highest of any industry ([Freshworks Customer Service Benchmark 2025](https://www.freshworks.com/assets/resources/Customer-Service-Benchmark-Report-2025.pdf)).
@@ -139,17 +140,17 @@ Set by the account team in [`internal-qbr/src/judgements.ts`](../internal-qbr/sr
 | Pillar | Inputs → scores | Pillar score | Weighted |
 |---|---|---|---|
 | R | Availability 99.85% → 4 · errors 1.04% → 3 · P50 605 ms → 3 · P95 1.67 s → 3 | 3.33 | 0.67 |
-| A | Automation 67.9% → 3 · volume +45% → 5 | 4.00 | 0.80 |
+| A | Automation 67.9% → 3 | 3.00 | 0.60 |
 | M | Grounded 93.9% → 4 · eval pass 93.1% → 4 | 4.00 | 0.80 |
 | P | Judgement | 2.00 | 0.20 |
 | U | CSAT 82.3 → 4 · handle time 7m 44s → 4 · first-contact resolution 87.2% → 4 | 4.00 | 0.80 |
 | P | Judgement | 1.00 | 0.10 |
-| **Overall** | | **3.37 / 5 (Positive-Watch)** | |
+| **Overall** | | **3.17 / 5 (Positive-Watch)** | |
 
 What the score says:
-- **Strengths:** adoption, model quality and user outcomes (all 4.0).
+- **Strengths:** model quality and user outcomes (both 4.0). Adoption is 3.0: automation averaged 67.9%, just under the 70% band, though it ended the month at 70.1%.
 - **Weaknesses:** profitability (current revenue immaterial relative to the group-wide ceiling), partnership (needs buy-in beyond Atlas) and reliability (latency and the Aug 9 incident).
-- **Status:** 3.37 is Positive-Watch, 0.63 short of Healthy.
+- **Status:** 3.17 is Positive-Watch, 0.83 short of Healthy.
 - **For the expansion case:** both judgement pillars point the same way. Scaling to the four sister brands on a shared model is what makes the account worth its support cost and turns a single-brand relationship into a group one. The pitch: "prove reliability on Atlas, win group sponsorship, then scale".
 
 ## Decision log

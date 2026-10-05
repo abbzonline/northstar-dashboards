@@ -20,7 +20,7 @@ The two dashboards are **separate apps** sharing one data and design package (`s
 - **Month one worked.** Tier-1 automation reached 70% by month end (67.9% August average), and quality improved every week.
 - **Reliability is the gap: 99.85% availability, below 99.9% on 27 of 31 days.** The cause can't be read from daily metrics, so the plan is telemetry first, autoscaling retune second, and always-on capacity only if the evidence calls for it (cheap per brand once five brands share it).
 - **Recommendation:** expand on one base model with an adapter, knowledge index and prompt per brand, piloting on Ridgeline first.
-- **Account health:** 3.37 / 5 internally (Positive-Watch); 3.83 / 5 on the customer view, which scores operational pillars only.
+- **Account health:** 3.17 / 5 internally (Positive-Watch); 3.58 / 5 on the customer view, which scores operational pillars only.
 
 ## Quick start
 

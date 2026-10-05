@@ -123,7 +123,7 @@ export function OutcomesView({ m, single = false }: { m: Model; single?: boolean
         <ChartCard
           id="chart-automation"
           title="Tier-1 automation rate"
-          headline={`Rose from ${fmtPct(cmp.automation.first)} in week 1 to ${fmtPct(cmp.automation.last)} in the final week.`}
+          headline={`Rose from ${fmtPct(cmp.automation.first)} in week 1 to ${fmtPct(cmp.automation.last)} in the final week, while automated tickets grew ${pctChange(cmp.automated.deltaPct)} against total tickets ${pctChange(cmp.tickets.deltaPct)}.`}
         >
           <TrendChart
             data={days}

@@ -43,7 +43,7 @@ export function TrendsView({ m, showEvents = true }: { m: Model; showEvents?: bo
         <ChartCard
           id="chart-automation"
           title="Tier-1 automation rate"
-          headline={`7-day average up from ${fmtPct(cmp.automation.first)} to ${fmtPct(cmp.automation.last)}; ended the month at ${fmtPct(last.automation_rate_pct)}.`}
+          headline={`Penetration up from ${fmtPct(cmp.automation.first)} to ${fmtPct(cmp.automation.last)} (7-day averages) while automated tickets rose ${pctChange(cmp.automated.deltaPct)} against total tickets ${pctChange(cmp.tickets.deltaPct)}; ended the month at ${fmtPct(last.automation_rate_pct)}.`}
         >
           <TrendChart
             data={days}

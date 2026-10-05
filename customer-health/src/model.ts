@@ -40,6 +40,7 @@ export function buildModel(rows: DailyMetric[]) {
       tickets: windowCompare(days, 'tier1_tickets'),
       reqPerTicket: windowCompare(days, 'requests_per_ticket'),
       automation: windowCompare(days, 'automation_rate_pct'),
+      automated: windowCompare(days, 'automated_tier1_tickets'),
       spend: windowCompare(days, 'spend_usd'),
       costPer1k: windowCompare(days, 'cost_per_1k_requests_usd'),
       p50: windowCompare(days, 'p50_latency_ms'),
