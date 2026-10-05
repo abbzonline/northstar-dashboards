@@ -1,7 +1,7 @@
 /*
- * L1 motion (customer-health/DESIGN.md §4 and §7). Everything is scoped under .motion-l1, which only the
- * customer app sets, so the internal dashboard is unaffected. No scroll-triggered effects: data is
- * visible at first paint.
+ * L1 motion (customer-health/DESIGN.md and internal-qbr/DESIGN.md, §4 and §7). Scoped under .motion-l1,
+ * which both apps set on <main>. No scroll-triggered effects and no animated figures: data is visible
+ * at first paint.
  */
 
 /* Entrance: once per view load. */
@@ -37,6 +37,10 @@
 /* Pillar rows already tint on hover; keep their transition consistent. */
 .motion-l1 .pillar__summary { transition: background-color 0.15s ease; }
 
+/* Decisions list (internal plan view). */
+.motion-l1 .decision { transition: background-color 0.15s ease; }
+.motion-l1 .decision:hover { background: var(--fw-surface-tint); }
+
 @media (prefers-reduced-motion: reduce) {
   .motion-l1 .view-in > * { animation: none; }
   .motion-l1 .kpi--link,
@@ -44,5 +48,6 @@
   .motion-l1 .facts-card,
   .motion-l1 .table-wrap,
   .motion-l1 .table tbody tr,
-  .motion-l1 .pillar__summary { transition: none; }
+  .motion-l1 .pillar__summary,
+  .motion-l1 .decision { transition: none; }
 }

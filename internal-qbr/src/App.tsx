@@ -24,7 +24,7 @@ export function App({ result }: { result: LoadResult }) {
           <span className="badge badge--purple">Internal use only</span>
         </div>
       </header>
-      <main className="frame shell">
+      <main className="frame shell motion-l1">
         {result.ok ? (
           <Dashboard result={result} view={route.view} anchor={route.anchor} />
         ) : (
@@ -79,9 +79,12 @@ function Dashboard({
         </div>
       </div>
 
-      {view === 'health' && <HealthView m={m} />}
-      {view === 'trends' && <TrendsView m={m} />}
-      {view === 'plan' && <PlanView m={m} />}
+      {/* Keyed by view so the entrance replays on navigation (DESIGN.md §7). */}
+      <div className="view-in" key={view}>
+        {view === 'health' && <HealthView m={m} />}
+        {view === 'trends' && <TrendsView m={m} />}
+        {view === 'plan' && <PlanView m={m} />}
+      </div>
     </>
   );
 }
