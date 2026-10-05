@@ -1,0 +1,370 @@
+/**
+ * RAMP UP account-health score, adapted from GitLab's PROVE framework.
+ *
+ *   R  Reliability     20%  measured
+ *   A  Adoption        20%  measured
+ *   M  Model quality   20%  measured
+ *   P  Partnership     10%  judgement (internal only)
+ *   U  User outcomes   20%  measured
+ *   P  Profitability   10%  judgement (internal only)
+ *
+ * Every pillar scores 1–5. Measured pillars average their metric scores; each metric is
+ * scored against published benchmark bands using its average over the whole reporting
+ * period (not a trailing window), so a strong final week can't flatter the score.
+ * Volume trend is the one comparison metric (first vs last 7 days). Values are rounded to display precision
+ * before scoring, so the number on screen is the number that was scored.
+ * Status is banded on the same 1–5 scale: Healthy ≥ 3.75, Watch ≥ 2.50, At risk below.
+ */
+import type { DailyMetric } from '../data/schema';
+import { mean, round } from '../data/derive';
+import { fmtMs, fmtPct } from '../format';
+
+export type Score = 1 | 2 | 3 | 4 | 5;
+
+/** Lower edge (or upper edge, for lower-is-better metrics) of scores 5, 4, 3 and 2. Anything beyond is a 1. */
+export interface Bands {
+  direction: 'higher' | 'lower';
+  edges: [number, number, number, number];
+}
+
+/** Plain-text citation shown on the dashboard; full references live in docs/RAMPUP.md. */
+export interface Source {
+  label: string;
+}
+
+export interface MetricDef {
+  id: string;
+  label: string;
+  /** Value over the scoring window (the full period by default); `all` is the full dataset for trend metrics. */
+  value: (window: DailyMetric[], all: DailyMetric[]) => number;
+  precision: number;
+  format: (n: number) => string;
+  /** Formatter for band edges when they need more precision than the value (defaults to `format`). */
+  bandFormat?: (n: number) => string;
+  bands: Bands;
+  /** Relative weight inside its pillar (default 1). */
+  weight?: number;
+  source: Source;
+  note?: string;
+}
+
+interface PillarBase {
+  key: string;
+  letter: string;
+  name: string;
+  /** Share of the overall score, 0–1. */
+  weight: number;
+  summary: string;
+}
+
+export interface MeasuredPillarDef extends PillarBase {
+  kind: 'measured';
+  metrics: MetricDef[];
+}
+
+export interface JudgementPillarDef extends PillarBase {
+  kind: 'judgement';
+}
+
+export type PillarDef = MeasuredPillarDef | JudgementPillarDef;
+
+/** A judgement score supplied by the account team (kept out of shared code). */
+export interface Judgement {
+  score: Score;
+  rationale: string;
+  evidence?: string[];
+}
+
+export function scoreValue(value: number, { direction, edges }: Bands): Score {
+  const passes = (edge: number) => (direction === 'higher' ? value >= edge : value <= edge);
+  if (passes(edges[0])) return 5;
+  if (passes(edges[1])) return 4;
+  if (passes(edges[2])) return 3;
+  if (passes(edges[3])) return 2;
+  return 1;
+}
+
+/** "≥ 95% · ≥ 90% · …" style labels for scores 5→2, used in the methodology table. */
+export function bandLabels(metric: MetricDef): string[] {
+  const op = metric.bands.direction === 'higher' ? '≥' : '≤';
+  const f = metric.bandFormat ?? metric.format;
+  return metric.bands.edges.map((e) => `${op} ${f(e)}`);
+}
+
+// ---------------------------------------------------------------------------
+// Benchmarks
+// ---------------------------------------------------------------------------
+
+const SRC = {
+  freshworks: {
+    label: 'Freshworks Customer Service Benchmark 2025 — Retail & eCommerce, conversations (Trendsetter / Performer / Aspirant)',
+  },
+  ragas: {
+    label: 'RAGAS CI gates (answer relevancy ≥ 0.90; context precision/recall ≥ 0.95) + Microsoft Foundry evaluators',
+  },
+  foundry: {
+    label: 'Microsoft Foundry agent evaluators (Groundedness, Task Completion, Intent Resolution, Task Adherence)',
+  },
+  availability: { label: 'Fireworks team standard: 99.9% = 5, then 0.2-pt steps' },
+  errors: {
+    label: 'Major LLM API providers run server-error rates of roughly 0.3–0.7%',
+  },
+  latency: {
+    label: 'Time-to-first-token UX targets: < 500 ms feels instant, > 2 s feels broken',
+  },
+  automation: {
+    label: 'Agreed bands. Context: Freshworks retail AI deflection 53%; Salesforce 30% of cases AI-handled (50% by 2027)',
+  },
+  trend: { label: 'Internal rule: growth in served requests, first vs last 7 days' },
+} satisfies Record<string, Source>;
+
+const avg = (rows: DailyMetric[], key: keyof DailyMetric) => mean(rows.map((r) => r[key] as number));
+const fmtMin = (n: number) => `${n.toFixed(2)} min`;
+/** 2.05 -> "2m 03s", 68 -> "1h 08m" */
+const fmtDuration = (min: number) => {
+  const s = Math.round(min * 60);
+  if (s >= 3600) return `${Math.floor(s / 3600)}h ${String(Math.floor((s % 3600) / 60)).padStart(2, '0')}m`;
+  return `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, '0')}s`;
+};
+
+export const RAMPUP: PillarDef[] = [
+  {
+    kind: 'measured',
+    key: 'reliability',
+    letter: 'R',
+    name: 'Reliability',
+    weight: 0.2,
+    summary: 'Is the platform up, error-free and fast?',
+    metrics: [
+      {
+        id: 'availability',
+        label: 'Availability',
+        value: (w) => avg(w, 'availability_pct'),
+        precision: 2,
+        format: (n) => fmtPct(n, 2),
+        bands: { direction: 'higher', edges: [99.9, 99.7, 99.5, 99.3] },
+        source: SRC.availability,
+      },
+      {
+        id: 'errors',
+        label: 'Error rate',
+        value: (w) => avg(w, 'error_rate_pct'),
+        precision: 2,
+        format: (n) => fmtPct(n, 2),
+        bands: { direction: 'lower', edges: [0.5, 1, 2, 5] },
+        source: SRC.errors,
+      },
+      {
+        id: 'p50',
+        label: 'P50 latency',
+        value: (w) => avg(w, 'p50_latency_ms'),
+        precision: 0,
+        format: fmtMs,
+        bands: { direction: 'lower', edges: [300, 500, 800, 1200] },
+        weight: 0.5,
+        source: SRC.latency,
+        note: 'Assumed time-to-first-token: ~331 output tokens in ~600 ms end-to-end would be implausible.',
+      },
+      {
+        id: 'p95',
+        label: 'P95 latency',
+        value: (w) => avg(w, 'p95_latency_ms'),
+        precision: 0,
+        format: fmtMs,
+        bands: { direction: 'lower', edges: [1000, 1500, 2000, 3000] },
+        weight: 0.5,
+        source: SRC.latency,
+      },
+    ],
+  },
+  {
+    kind: 'measured',
+    key: 'adoption',
+    letter: 'A',
+    name: 'Adoption',
+    weight: 0.2,
+    summary: 'Is Northstar putting more of its support load on the model?',
+    metrics: [
+      {
+        id: 'automation',
+        label: 'Tier-1 automation',
+        value: (w) => avg(w, 'automation_rate_pct'),
+        precision: 1,
+        format: (n) => fmtPct(n, 1),
+        bands: { direction: 'higher', edges: [80, 70, 60, 45] },
+        source: SRC.automation,
+      },
+      {
+        id: 'volume-trend',
+        label: 'Request volume trend',
+        value: (_w, all) => {
+          const first = avg(all.slice(0, 7), 'requests');
+          const last = avg(all.slice(-7), 'requests');
+          return ((last - first) / first) * 100;
+        },
+        precision: 0,
+        format: (n) => `${n > 0 ? '+' : ''}${n.toFixed(0)}%`,
+        bands: { direction: 'higher', edges: [10, 2, -2, -10] },
+        source: SRC.trend,
+      },
+    ],
+  },
+  {
+    kind: 'measured',
+    key: 'model-quality',
+    letter: 'M',
+    name: 'Model quality',
+    weight: 0.2,
+    summary: 'Are the answers right? (offline evaluation)',
+    metrics: [
+      {
+        id: 'grounded',
+        label: 'Grounded answers',
+        value: (w) => avg(w, 'grounded_answer_rate_pct'),
+        precision: 1,
+        format: (n) => fmtPct(n, 1),
+        bands: { direction: 'higher', edges: [95, 90, 85, 80] },
+        source: SRC.ragas,
+        note: 'Share of responses passing a Groundedness check (Foundry: 1–5, pass at 3).',
+      },
+      {
+        id: 'eval-pass',
+        label: 'Eval pass rate',
+        value: (w) => avg(w, 'quality_eval_pass_rate_pct'),
+        precision: 1,
+        format: (n) => fmtPct(n, 1),
+        bands: { direction: 'higher', edges: [95, 90, 85, 80] },
+        source: SRC.foundry,
+        note: 'Assumed composite like Foundry Output Quality: passes only if every component passes.',
+      },
+    ],
+  },
+  {
+    kind: 'judgement',
+    key: 'partnership',
+    letter: 'P',
+    name: 'Partnership',
+    weight: 0.1,
+    summary: 'How committed is Northstar beyond the first deployment?',
+  },
+  {
+    kind: 'measured',
+    key: 'user-outcomes',
+    letter: 'U',
+    name: 'User outcomes',
+    weight: 0.2,
+    summary: "What did Northstar's shoppers experience?",
+    metrics: [
+      {
+        id: 'csat',
+        label: 'CSAT',
+        value: (w) => avg(w, 'csat_score'),
+        precision: 1,
+        format: (n) => n.toFixed(1),
+        bandFormat: (n) => n.toFixed(2),
+        bands: { direction: 'higher', edges: [99.05, 95.92, 90.43, 80.4] },
+        source: SRC.freshworks,
+        note: 'Freshworks CSAT is % satisfied; csat_score assumed to be on the same scale. Score-2 edge is our extension below Aspirant.',
+      },
+      {
+        id: 'handle-time',
+        label: 'Avg handle time',
+        value: (w) => avg(w, 'avg_handle_time_min'),
+        precision: 2,
+        format: fmtMin,
+        bandFormat: fmtDuration,
+        bands: { direction: 'lower', edges: [2.05, 12.12, 68, 120] },
+        source: SRC.freshworks,
+        note: 'Benchmarked against Freshworks resolution time (2m 03s / 12m 07s / 1h 08m), the closest published equivalent.',
+      },
+      {
+        id: 'fcr',
+        label: 'First-contact resolution',
+        value: (w) => 100 - avg(w, 'escalation_rate_pct'),
+        precision: 1,
+        format: (n) => fmtPct(n, 1),
+        bandFormat: (n) => fmtPct(n, 2),
+        bands: { direction: 'higher', edges: [93.95, 82.43, 68.12, 58] },
+        source: SRC.freshworks,
+        note: 'Proxy: 100% − escalation rate.',
+      },
+    ],
+  },
+  {
+    kind: 'judgement',
+    key: 'profitability',
+    letter: 'P',
+    name: 'Profitability',
+    weight: 0.1,
+    summary: 'Is the value delivered worth well more than the spend?',
+  },
+];
+
+// ---------------------------------------------------------------------------
+// Scoring
+// ---------------------------------------------------------------------------
+
+export interface MetricResult {
+  def: MetricDef;
+  value: number;
+  score: Score;
+}
+
+export type PillarResult =
+  | (Omit<MeasuredPillarDef, 'metrics'> & { score: number; metrics: MetricResult[] })
+  | (JudgementPillarDef & { score: number; judgement: Judgement });
+
+export type HealthStatus = 'healthy' | 'watch' | 'at-risk';
+
+export interface HealthResult {
+  pillars: PillarResult[];
+  /** Weighted score, 1–5. */
+  score: number;
+  status: HealthStatus;
+  window: { from: string; to: string; days: number; isFullPeriod: boolean };
+}
+
+/** Status bands on the 1–5 scale (the 75% / 50% cut-offs of GitLab's model, expressed out of 5). */
+export const STATUS_BANDS = { healthy: 3.75, watch: 2.5 } as const;
+
+export function statusFor(score: number): HealthStatus {
+  if (score >= STATUS_BANDS.healthy) return 'healthy';
+  if (score >= STATUS_BANDS.watch) return 'watch';
+  return 'at-risk';
+}
+
+export function computeHealth(
+  rows: DailyMetric[],
+  judgements: Partial<Record<string, Judgement>>,
+  pillars: PillarDef[] = RAMPUP,
+  /** Omit to score the whole period (the agreed default). */
+  windowDays?: number,
+): HealthResult {
+  const window = windowDays ? rows.slice(-windowDays) : rows;
+
+  const results: PillarResult[] = pillars
+    .filter((p) => p.kind === 'measured' || judgements[p.key])
+    .map((p) => {
+      if (p.kind === 'judgement') {
+        const judgement = judgements[p.key]!;
+        return { ...p, score: judgement.score, judgement };
+      }
+      const metrics = p.metrics.map((def) => {
+        const value = round(def.value(window, rows), def.precision);
+        return { def, value, score: scoreValue(value, def.bands) };
+      });
+      const totalWeight = metrics.reduce((s, m) => s + (m.def.weight ?? 1), 0);
+      const score = metrics.reduce((s, m) => s + m.score * (m.def.weight ?? 1), 0) / totalWeight;
+      return { ...p, metrics, score };
+    });
+
+  // Missing pillars (e.g. judgements not supplied) have their weight redistributed, as in GitLab's model.
+  const totalWeight = results.reduce((s, p) => s + p.weight, 0);
+  const score = results.reduce((s, p) => s + p.score * p.weight, 0) / totalWeight;
+  return {
+    pillars: results,
+    score,
+    status: statusFor(score),
+    window: { from: window[0].date, to: window[window.length - 1].date, days: window.length, isFullPeriod: window.length === rows.length },
+  };
+}

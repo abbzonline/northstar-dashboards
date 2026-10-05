@@ -1,0 +1,129 @@
+/*
+ * Typography matches fireworks.ai (see fonts/FONTS.md):
+ *   Inter (variable)  — the site default: titles at weight 500, body copy, numbers
+ *   Favorit 550       — uppercase labels, eyebrows, badges (tracking 0.04em)
+ * Fallback faces reuse the site's own metric overrides so layout doesn't shift while fonts load.
+ */
+@import '@fontsource-variable/inter';
+@import './components.css';
+
+@font-face {
+  font-family: 'Favorit';
+  src: url('./fonts/favorit-550.woff2') format('woff2');
+  font-weight: 550;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Favorit Fallback';
+  src: local('Arial');
+  ascent-override: 79.09%;
+  descent-override: 25.86%;
+  line-gap-override: 0%;
+  size-adjust: 131.49%;
+}
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial');
+  ascent-override: 90.44%;
+  descent-override: 22.52%;
+  line-gap-override: 0%;
+  size-adjust: 107.12%;
+}
+
+/* Fireworks tokens (see tokens.ts). */
+:root {
+  --fw-purple-25: oklch(89% .06 299.99);
+  --fw-purple-50: oklch(82% .11 298.95);
+  --fw-purple-200: oklch(66% .2 294.66);
+  --fw-purple-400: rgb(103, 32, 255);
+  --fw-purple-500: oklch(43% .23 285.65);
+  --fw-purple-900: oklch(22% .13 285.01);
+  --fw-marine-700: oklch(64% .11 180.47);
+  --fw-red-100: oklch(94% .03 22.95);
+  --fw-red-500: oklch(64% .21 28.54);
+  --fw-red-700: oklch(50% .18 29.51);
+  --fw-surface-tint: #FAF7FF;
+  --fw-border: #E6EAF4;
+  /* .text-headline on the site = neutrals-900; .text-copy = gray. */
+  --fw-ink: oklch(21% .01 264.38);
+  --fw-body: oklch(28% .01 285.93);
+  --fw-gray: oklch(48% .01 256.74);
+  --fw-eyebrow-gray: #0000000d;
+  /* Only non-Fireworks colour: their palette has no amber for the 'Watch' health band. */
+  --amber-500: oklch(76% .15 75);
+  --amber-100: oklch(95% .04 80);
+  --amber-700: oklch(52% .12 65);
+
+  /* Same stacks as the site's --font-inter / --font-favorit. */
+  --font-inter: 'Inter Variable', 'Inter Fallback', ui-sans-serif, system-ui, sans-serif;
+  --font-favorit: 'Favorit', 'Favorit Fallback', ui-monospace, monospace;
+  /* Only for literal identifiers (deployment id, file paths). */
+  --font-code: ui-monospace, 'SFMono-Regular', Consolas, monospace;
+
+  --radius: 12px;
+  --gutter: clamp(16px, 4vw, 40px);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; } /* as on fireworks.ai */
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+html, body {
+  margin: 0;
+  background: #FFFFFF;
+  color: var(--fw-body);
+  font-family: var(--font-inter);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { color: var(--fw-ink); margin: 0; font-weight: 500; }
+
+/* Site type scale: text-display-md → text-display-lg for page titles. */
+h1 { font-size: 2.25rem; line-height: 1.22; letter-spacing: -0.09rem; }
+@media (min-width: 640px) {
+  h1 { font-size: 3rem; line-height: 1.25; letter-spacing: -0.12rem; }
+}
+
+/* Favorit label, as on the site: font-favorit uppercase tracking-[0.04em]. */
+.label,
+.eyebrow,
+.badge {
+  font-family: var(--font-favorit);
+  font-weight: 550;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+/* Eyebrow with the site's purple marker square (--color-marker-eyebrow = purple-500). */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: var(--fw-ink);
+}
+.eyebrow::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--fw-purple-500);
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 6px 12px;
+  border-radius: 0; /* square, like the site's buttons */
+  background: var(--fw-eyebrow-gray);
+  color: var(--fw-ink);
+  white-space: nowrap;
+}
+.badge--purple { background: var(--fw-purple-400); color: #fff; }
+
+.muted { color: var(--fw-gray); }
+.num { font-variant-numeric: tabular-nums; }
+.mono { font-family: var(--font-code); font-size: 0.875em; }

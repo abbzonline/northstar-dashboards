@@ -1,0 +1,53 @@
+# Decision log
+
+The decisions behind the Northstar dashboards: what was chosen, why, and what was rejected. Newest at the bottom. Each future decision gets a row here, and the commit that implements it explains the reasoning in its message.
+
+Scoring-specific detail (bands, sources, formulas) lives in [RAMPUP.md](RAMPUP.md).
+
+## Scope and structure
+
+| # | Date | Decision | Why | Rejected alternative |
+|---|---|---|---|---|
+| 1 | 2026-10-04 | Build the internal QBR (Deliverable 1) first, as a basic MVP, then layer up | Get a working, runnable base early; iterate on content once the shell is right | Building all three deliverables in parallel |
+| 2 | 2026-10-04 | **Two separate dashboards**, not one app with two views | No need to manage access control per user: the customer app simply never contains internal data | One app with role-based views |
+| 3 | 2026-10-04 | React + Vite + TypeScript, Recharts, PapaParse; npm workspaces with a `shared/` package | Mainstream, runs with `npm install` and nothing else; the customer app reuses data loading, theme and charts | Streamlit/Dash (less control over the Fireworks design) |
+| 4 | 2026-10-04 | Convert the supplied `.xlsx` to the CSV the brief names; bundle it at build time | The brief refers to a CSV; bundling means no runtime fetch can fail; a bad CSV shows an error panel | Reading the xlsx directly |
+
+## Design
+
+| # | Date | Decision | Why | Rejected alternative |
+|---|---|---|---|---|
+| 5 | 2026-10-04 | Match fireworks.ai exactly: colour tokens, fonts and header frame from the site's own CSS/HTML | The audience is Fireworks; fidelity signals seriousness | An approximate "Fireworks-ish" palette |
+| 6 | 2026-10-04 | Use the actual Favorit font file (licensed, Dinamo), documented in `shared/src/theme/fonts/FONTS.md` | Exact match to the site's labels | Open-source lookalike; hotlinking from fireworks.ai |
+| 7 | 2026-10-04 | Official Fireworks logo SVG in a 1392px framed header with hairline side rules | Mirrors the site's layout at every screen width | Text wordmark |
+| 8 | 2026-10-04 | Badge reads "Internal use only", with square corners | Clear audience marker; square corners match the site's buttons | "Internal · Fireworks only" pill |
+| 9 | 2026-10-05 | Only one off-brand colour: amber for the "Watch" status | The Fireworks palette has no yellow/amber | Repurposing a brand colour for warning |
+
+## Page content
+
+| # | Date | Decision | Why | Rejected alternative |
+|---|---|---|---|---|
+| 10 | 2026-10-05 | Eight clickable headline tiles (requests/day, handle time, CSAT, spend, availability, P50/P95, eval pass, escalation), each jumping to its chart | All the headline metrics at a glance, with the evidence one click away | Five summary tiles |
+| 11 | 2026-10-05 | Under the title: model ID on the left, date range on the right; no "comparisons" note | The comparison is implied by the results | Listing deployment, period and comparison basis in one row |
+| 12 | 2026-10-05 | Scenario: Northstar is an outerwear-fashion holding company; flagship brand **Atlas**; model `northstar-atlas-support-ft-v1` | The brief leaves the brand unnamed; a concrete scenario makes the expansion story tangible | Generic "flagship brand" wording |
+| 13 | 2026-10-05 | No outbound links and no obscure source names on the dashboard; methodology prose lives in docs, not on the page | The internal page should be facts and evidence; explanations belong in the guidance docs | Inline citations and explanatory paragraphs on the page |
+
+## Account health (RAMP UP)
+
+| # | Date | Decision | Why | Rejected alternative |
+|---|---|---|---|---|
+| 14 | 2026-10-05 | Health framework **RAMP UP**: Reliability, Adoption, Model quality, Partnership, User outcomes, Profitability; adapted from GitLab's PROVE | One letter per pillar and mutually exclusive; covers everything PROVE does plus inference-specific pillars | First draft "Risks to Adoption / Management Risks / Performance / User XP" (mixed polarity, no outcomes pillar) |
+| 15 | 2026-10-05 | Weights R/A/M/U 20% each, the two Ps 10% each; every pillar and band scored out of 5 | Judgement pillars get half weight so evidence dominates | Equal weights |
+| 16 | 2026-10-05 | Score on **full-period averages**, not the last 7 days; tiles use the same basis; trends shown as a separate change line | "Fair to the numbers rather than flattering and volatile" | Trailing 7-day window (scored ≈ 4.0 Healthy vs 3.6 Watch) |
+| 17 | 2026-10-05 | M and U benchmarks from primary sources: Microsoft Foundry evaluators, RAGAS CI gates, Freshworks Benchmark 2025 (retail conversations), Salesforce State of Service 2025 | Every number must survive "why should I believe this?" | Vendor-marketing and SEO statistics blogs |
+| 18 | 2026-10-05 | Availability bands: 99.9% = 5, then 0.2-point steps | Team standard | Anchoring to Fireworks' 99.99% SLA (would score 99.85% as a 2) |
+| 19 | 2026-10-05 | Escalation is scored in U as first-contact resolution (100% − escalation) | Direct Freshworks benchmark; keeps M purely about answer correctness | Scoring escalation in M |
+| 20 | 2026-10-05 | **Partnership = 2** | Live on one brand of five; buy-in from the rest of the business is still needed | 3 ("lukewarm") |
+| 21 | 2026-10-05 | **Profitability = 5** | About $1.2k of inference replaced roughly 12,550 agent-hours of Tier-1 work in August | Scoring from Fireworks' revenue angle (account is ~$15k a year; noted as a caveat) |
+| 22 | 2026-10-05 | Status bands out of 5: Healthy ≥ 3.75, Watch ≥ 2.50, At risk below | Same scale as the scores (GitLab's 75% / 50% cut-offs) | Percentages |
+
+## Repository
+
+| # | Date | Decision | Why | Rejected alternative |
+|---|---|---|---|---|
+| 23 | 2026-10-05 | Private GitHub repo containing only `northstar-dashboards/` | Tracks decisions over time; private because of the licensed Favorit font and live application work | Public repo; including the whole working folder |
