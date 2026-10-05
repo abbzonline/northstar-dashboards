@@ -114,7 +114,7 @@ export interface Dependency {
 
 export const DEPENDENCIES: Dependency[] = [
   { item: 'Scale-up threshold retune and promotion pre-warm runbook on the Atlas deployment (no warm floor)', side: 'Fireworks', owner: 'Fireworks Engineering', neededBy: '16 Oct', status: 'In progress' },
-  { item: 'BF16 capacity reserved for the shared multi-LoRA deployment (EU region; 1.5x region-restricted rate confirmed with Northstar)', side: 'Fireworks', owner: 'Fireworks Infrastructure', neededBy: '6 Nov', status: 'Not started' },
+  { item: 'BF16 capacity reserved for the shared multi-LoRA deployment (EU region; 1.5x region-restricted rate to be confirmed with Northstar)', side: 'Fireworks', owner: 'Fireworks Infrastructure', neededBy: '6 Nov', status: 'Not started' },
   { item: 'Ridgeline adapter training and per-brand eval sets', side: 'Fireworks', owner: 'Fireworks Applied ML', neededBy: '20 Nov', status: 'Not started' },
   { item: 'Ridgeline transcripts and catalogue export', side: 'Northstar', owner: 'Northstar CX operations', neededBy: '6 Nov', status: 'Not started' },
   { item: 'Legal sign-off on de-branded Atlas transcripts', side: 'Northstar', owner: 'Northstar Legal', neededBy: '6 Nov', status: 'Not started' },
@@ -188,7 +188,7 @@ export const DECISIONS: Decision[] = [
     recommendation: 'Reserve for the pilot window only (weeks, not months); release if the pilot slips',
   },
   {
-    decision: 'Availability target to offer on the shared deployment',
+    decision: 'Availability target: Atlas now vs the shared deployment',
     owner: 'Field CTO + Engineering',
     by: '20 Oct',
     recommendation: 'Do not offer 99.9% on Atlas alone. A warm minimum replica costs ~$4.6k/month extra ($7.6k with EU placement) for ~22 minutes/month of availability (99.85% → 99.9%). Keep scale-to-zero, retune scale-up thresholds, pre-warm for known promotions via the scale API. Offer 99.9% with a warm floor on the shared deployment from the pilot onward, where five brands utilise it',

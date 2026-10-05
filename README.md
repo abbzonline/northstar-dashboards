@@ -111,4 +111,5 @@ Stack: React 18, Recharts 2, PapaParse, Vite 6, Vitest 3, TypeScript 5.7. npm wo
 - The customer-facing dashboard (`customer-health/`) and the EBR deck are in progress; the internal QBR is complete.
 - The data is daily and covers one deployment. There's no per-conversation drill-down.
 - Pre-launch baselines, an SLA, and the four sister-brand descriptions were not supplied; every figure that depends on them is labelled as an assumption on the page and in `docs/`.
-- Pricing figures are from fireworks.ai/pricing as of 5 Oct 2026 and are set in one place (`internal-qbr/src/views/PlanView.tsx`); on-demand rates changed on 1 Sep 2026 and may change again.
+- Pricing figures are from fireworks.ai/pricing as of 5 Oct 2026. Code reads them from one file (`shared/src/pricing.ts`); `docs/ARCHITECTURE.md` carries the same fact table. On-demand rates changed on 1 Sep 2026 and may change again.
+- `spend_usd` is treated as Northstar's contracted per-token rate (~$1.12 per 1M tokens, constant every day); GPU utilisation is inferred, not observed.

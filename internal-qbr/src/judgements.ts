@@ -1,5 +1,5 @@
 import { ACCOUNT } from './account';
-import { fmtUsd, sum, type DailyMetric, type Judgement } from '@northstar/shared';
+import { WARM_H100_MONTH, WARM_H100_MONTH_EU, fmtUsd, sum, type DailyMetric, type Judgement } from '@northstar/shared';
 
 /**
  * Account-team judgement for the two P pillars of RAMP UP.
@@ -29,9 +29,9 @@ export function judgements(rows: DailyMetric[]): Record<'partnership' | 'profita
         `${ACCOUNT.brand} deployment serves as a proof of concept to secure approval for rollouts across the ` +
         'other four brands, which carry significantly higher customer volumes.',
       evidence: [
-        `Current revenue: ${fmtUsd(spend)} for August (approx. ${annualisedK} annualised)`,
+        `Current revenue: ${fmtUsd(spend)} for August at a contracted ~$1.12 per 1M tokens (approx. ${annualisedK} annualised)`,
         'Cost to serve: three operational events in month one (catalogue-sync incident, autoscaling threshold adjustment, RAG index refresh). One account team supports all five brands on a single shared deployment, so support effort does not scale per brand',
-        'Deployment economics: custom models run on dedicated deployments only, so Atlas carries a GPU floor (one warm H100 is approx. $5.8k/month at $8.00/GPU-hour; approx. $8.8k/month at the 1.5x region-restricted rate if EU residency is required). August billing is consistent only with aggressive scale-to-zero. One brand cannot keep a warm replica well utilised, so Atlas stays scale-to-zero at ~99.85%; five brands on one multi-LoRA deployment share a warm floor at approx. $1.2k–1.8k each, which is when 99.9% becomes affordable',
+        `Deployment economics: Northstar pays per token while the dedicated GPU floor is a Fireworks-side cost. One warm H100 is approx. ${fmtUsd(Math.round(WARM_H100_MONTH / 100) * 100)}/month at list (approx. ${fmtUsd(Math.round(WARM_H100_MONTH_EU / 100) * 100)} at the EU rate), so Atlas alone utilises roughly a fifth of a GPU-day (inferred). Atlas stays scale-to-zero; five brands on one multi-LoRA deployment turn the floor into utilised capacity`,
         'Strategic value: a recognised retail logo and a reference account for EMEA retail',
         'Upside: rollout to the four sister brands, each with its own catalogue, tone of voice and return policies. Each brand gets a dedicated LoRA adapter, RAG index and system prompt on the same open-weight base as Atlas',
       ],

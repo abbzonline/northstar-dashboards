@@ -1,17 +1,18 @@
-import { KpiTile, Section, fmtInt, fmtUsd } from '@northstar/shared';
+import {
+  H100_PER_HOUR,
+  KpiTile,
+  REGION_PREMIUM,
+  Section,
+  WARM_H100_MONTH,
+  WARM_H100_MONTH_EU,
+  WARM_H100_WEEK,
+  fmtInt,
+  fmtUsd,
+} from '@northstar/shared';
 import type { Model } from '../model';
 import { ACTIONS, BRANDS, COMPETITORS, DECISIONS, DEPENDENCIES, RISKS, STAKEHOLDERS, type Level } from '../plan';
 
-/**
- * Pricing from fireworks.ai/pricing, checked 5 Oct 2026 (on-demand rates rose on 1 Sep 2026).
- * H100 / H200 $8.00 per GPU-hour, billed per GPU-second. Region-restricted deployments (e.g. EU-only
- * placement for data residency) are priced at a 1.5x premium. Managed LoRA SFT on a 16–80B base is
- * $3.00 per 1M training tokens; fine-tuned models serve at the base model's price.
- */
-const H100_PER_HOUR = 8;
-const REGION_PREMIUM = 1.5;
-const WARM_H100_MONTH = H100_PER_HOUR * 24 * 365 / 12;
-const WARM_H100_MONTH_EU = WARM_H100_MONTH * REGION_PREMIUM;
+// Pricing constants come from @northstar/shared (shared/src/pricing.ts), checked 5 Oct 2026.
 
 const round100 = (usd: number) => fmtUsd(Math.round(usd / 100) * 100);
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -46,7 +47,7 @@ export function PlanView({ m }: { m: Model }) {
           <KpiTile
             label="Indicative group value"
             value={`${fmtUsd(Math.round((atlasAnnual * groupMultiple) / 1000) * 1000)}/yr`}
-            sub={`vs ${fmtUsd(Math.round(atlasAnnual / 1000) * 1000)}/yr today; volume-scaled from Atlas (low case; see Margin)`}
+            sub={`vs ${fmtUsd(Math.round(atlasAnnual / 1000) * 1000)}/yr today; per-token revenue at Atlas's contracted rate`}
           />
           <KpiTile label="Pilot" value={pilot?.name ?? '—'} sub={pilot?.timing} />
         </div>
@@ -91,11 +92,11 @@ export function PlanView({ m }: { m: Model }) {
           </table>
         </div>
         <p className="table__caption">
-          Sister-brand profiles are scenario assumptions. Indicative value scales Atlas's August spend by Tier-1 volume (per-token basis, the low case); on dedicated capacity the ceiling is set by replicas needed, see Margin.
+          Sister-brand profiles are scenario assumptions. Indicative value scales Atlas's August revenue by Tier-1 volume at the contracted per-token rate (~$1.12 per 1M tokens); the GPU floor that carries it is on the cost side, see Margin.
         </p>
       </Section>
 
-      <Section id="risks" eyebrow="01b · Top risks" title="Top three risks" stack>
+      <Section id="risks" eyebrow="02 · Top risks" title="Top three risks" stack>
         <div className="table-wrap">
           <table className="table">
             <thead>
@@ -127,7 +128,7 @@ export function PlanView({ m }: { m: Model }) {
         </p>
       </Section>
 
-      <Section id="stakeholders" eyebrow="02 · Relationship" title="Stakeholder coverage" stack>
+      <Section id="stakeholders" eyebrow="03 · Relationship" title="Stakeholder coverage" stack>
         <div className="table-wrap">
           <table className="table">
             <thead>
@@ -152,7 +153,7 @@ export function PlanView({ m }: { m: Model }) {
         </div>
       </Section>
 
-      <Section id="dependencies" eyebrow="03 · Delivery" title="Dependencies, support burden and margin" stack>
+      <Section id="dependencies" eyebrow="04 · Delivery" title="Dependencies, support burden and margin" stack>
         <div className="plan-grid">
           <div className="table-wrap">
             <table className="table">
@@ -197,21 +198,21 @@ export function PlanView({ m }: { m: Model }) {
             <div>
               <dt>Margin</dt>
               <dd>
-                {`One warm H100 is approx. ${round100(WARM_H100_MONTH)}/month at ${fmtUsd(H100_PER_HOUR, 2)}/GPU-hour ` +
-                  `(approx. ${round100(WARM_H100_MONTH_EU)}/month at the ${REGION_PREMIUM}x region-restricted rate if EU ` +
-                  `residency is required), against ${fmtUsd(m.totalSpend)} billed for August. August is only consistent ` +
-                  `with aggressive scale-to-zero. A warm replica on Atlas alone would raise the bill 4–7x to buy ~22 minutes ` +
-                  `of availability a month (99.85% → 99.9%), so it is not recommended; the warm floor belongs on the shared ` +
-                  `deployment. Shared across five ` +
-                  `brands, the floor is approx. ${round100(WARM_H100_MONTH / 5)}–${round100(WARM_H100_MONTH_EU / 5)} per ` +
-                  `brand, and group revenue scales with replicas needed, not with ticket volume; the indicative value above ` +
-                  `is the per-token low case.`}
+                {`Northstar pays per token (${fmtUsd(m.totalSpend)} for August, ~$1.12 per 1M tokens); the dedicated ` +
+                  `GPU floor is a Fireworks-side cost. One warm H100 is approx. ${round100(WARM_H100_MONTH)}/month at ` +
+                  `${fmtUsd(H100_PER_HOUR, 2)}/GPU-hour list (approx. ${round100(WARM_H100_MONTH_EU)} at the ` +
+                  `${REGION_PREMIUM}x region-restricted rate), so Atlas alone utilises roughly a fifth of a GPU-day ` +
+                  `(inferred, not observed). A warm replica on Atlas alone would buy ~22 minutes of availability a month ` +
+                  `(99.85% → 99.9%) with idle capacity that someone has to pay for; it is not recommended. On the shared ` +
+                  `deployment five brands' token revenue (~$115k/yr indicative) covers one warm floor ` +
+                  `(approx. ${round100(WARM_H100_MONTH * 12)}–${round100(WARM_H100_MONTH_EU * 12)}/yr at list), which ` +
+                  `is what fixes the margin.`}
               </dd>
             </div>
             <div>
               <dt>Migration overlap</dt>
               <dd>
-                {`Two deployments run in parallel during cutover: approx. ${round100(H100_PER_HOUR * 24 * 7)} per extra ` +
+                {`Two deployments run in parallel during cutover: approx. ${round100(WARM_H100_WEEK)} per extra ` +
                   'week. Budget in weeks, not months.'}
               </dd>
             </div>
@@ -219,7 +220,7 @@ export function PlanView({ m }: { m: Model }) {
         </div>
       </Section>
 
-      <Section id="competition" eyebrow="04 · Competitive risk" title="Competitive risk" stack>
+      <Section id="competition" eyebrow="05 · Competitive risk" title="Competitive risk" stack>
         <div className="table-wrap">
           <table className="table">
             <thead>
@@ -244,7 +245,7 @@ export function PlanView({ m }: { m: Model }) {
         </div>
       </Section>
 
-      <Section id="decisions" eyebrow="05 · Leadership" title="Decisions needed" stack>
+      <Section id="decisions" eyebrow="06 · Leadership" title="Decisions needed" stack>
         <ol className="decisions">
           {DECISIONS.map((d, i) => (
             <li key={d.decision} className="decision">
@@ -264,7 +265,7 @@ export function PlanView({ m }: { m: Model }) {
         </ol>
       </Section>
 
-      <Section id="actions" eyebrow="06 · Next actions" title="Next actions" stack>
+      <Section id="actions" eyebrow="07 · Next actions" title="Next actions" stack>
         <div className="table-wrap">
           <table className="table">
             <thead>
