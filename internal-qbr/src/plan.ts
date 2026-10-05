@@ -63,7 +63,7 @@ export const BRANDS: Brand[] = [
     note: 'Largest volume and value; new tooling integration; Agentforce is in the account',
   },
   {
-    name: 'Fjell Kids',
+    name: 'Polar',
     positioning: "Children's outerwear",
     ticketsPerDay: 7100,
     catalogue: '~6k SKUs, size-led',
@@ -143,7 +143,7 @@ export const COMPETITORS: Competitor[] = [
   },
   {
     threat: 'Gorgias AI Agent',
-    where: 'Fjell Kids (Gorgias)',
+    where: 'Polar (Gorgias)',
     level: 'Medium',
     response: 'E-commerce native. Counter with grounding on sizing and product-safety content',
   },
