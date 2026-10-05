@@ -14,3 +14,4 @@ export * from './health/rampup';
 export * from './components/HealthPanel';
 export * from './components/Pips';
 export * from './components/TopRisks';
+export * from './components/ViewMenu';

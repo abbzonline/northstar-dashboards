@@ -7,6 +7,7 @@
 @import '@fontsource-variable/inter';
 @import './components.css';
 @import './risks.css';
+@import './plan.css';
 
 @font-face {
   font-family: 'Favorit';

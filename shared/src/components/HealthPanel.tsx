@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   bandLabels,
   rankRisks,
@@ -28,11 +29,13 @@ export interface HealthPanelProps {
 }
 
 export function HealthPanel({ health, showRisks = false }: HealthPanelProps) {
+  // Accordion: at most one pillar open at a time.
+  const [openKey, setOpenKey] = useState<string | null>(null);
   const weights = health.pillars.map((p) => `${p.letter} ${Math.round(p.weight * 100)}%`).join(' · ');
   return (
     <div className="health">
       <div className="health__summary">
-        <span className="label health__brand">RAMP UP score</span>
+        <span className="label health__brand">Overall</span>
         <div className="health__score">
           <span className="health__value">{health.score.toFixed(2)}</span>
           <span className="health__outof">/ 5</span>
@@ -67,7 +70,11 @@ export function HealthPanel({ health, showRisks = false }: HealthPanelProps) {
       <ol className="health__pillars">
         {health.pillars.map((p) => (
           <li key={p.key}>
-            <PillarRow pillar={p} />
+            <PillarRow
+              pillar={p}
+              open={openKey === p.key}
+              onToggle={() => setOpenKey((k) => (k === p.key ? null : p.key))}
+            />
           </li>
         ))}
       </ol>
@@ -75,10 +82,17 @@ export function HealthPanel({ health, showRisks = false }: HealthPanelProps) {
   );
 }
 
-function PillarRow({ pillar: p }: { pillar: PillarResult }) {
+function PillarRow({ pillar: p, open, onToggle }: { pillar: PillarResult; open: boolean; onToggle: () => void }) {
   return (
-    <details className="pillar">
-      <summary className="pillar__summary">
+    <details className="pillar" open={open}>
+      <summary
+        className="pillar__summary"
+        onClick={(e) => {
+          // Controlled: React owns the open state so only one pillar is open at a time.
+          e.preventDefault();
+          onToggle();
+        }}
+      >
         <span className="pillar__letter">{p.letter}</span>
         <span className="pillar__name">
           <span className="pillar__title">

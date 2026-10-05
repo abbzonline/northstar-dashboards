@@ -108,7 +108,7 @@
 .section { padding-top: 48px; scroll-margin-top: 88px; }
 .section__head { display: grid; gap: 8px; margin-bottom: 16px; }
 .section__title { font-size: 1.5rem; line-height: 1.33; letter-spacing: -0.06rem; }
-#health .section__grid { grid-template-columns: 1fr; }
+.section__grid.section__grid--stack, #health .section__grid { grid-template-columns: 1fr; }
 .kpis-head { margin-top: 48px; }
 .kpis-head__note { margin: 0; font-size: 13px; color: var(--fw-gray); }
 .section__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr)); gap: 16px; }
@@ -126,7 +126,8 @@
 }
 /* Arriving from a KPI tile: clear the sticky header, then pulse the card in brand purple. */
 .card { scroll-margin-top: 96px; }
-.card:target { animation: card-flash 1.8s ease-out; }
+/* Added by the router when a headline tile deep-links to this chart. */
+.card.is-target { animation: card-flash 1.8s ease-out; }
 @keyframes card-flash {
   0%, 40% { border-color: var(--fw-purple-400); box-shadow: 0 0 0 3px var(--fw-purple-25); }
   100% { border-color: var(--fw-border); box-shadow: 0 0 0 3px transparent; }

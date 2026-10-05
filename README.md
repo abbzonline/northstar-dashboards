@@ -50,7 +50,17 @@ The app reads **`data/northstar_flagship_30_day_metrics.csv`**: 31 daily rows, A
 
 ## What the internal QBR shows
 
-- **RAMP UP score.** An account-health score adapted from GitLab's PROVE. The full method, every benchmark band with its source, and the decision log are in [`docs/RAMPUP.md`](docs/RAMPUP.md). It has six pillars, each scored 1–5:
+Three views, switched from the dropdown next to the Fireworks logo (each is a shareable URL):
+
+| View | URL | Contents |
+|---|---|---|
+| Account health | `#/health` | Customer score (RAMP UP) with Top risks, eight headline metrics, operational events |
+| Performance trends | `#/trends` | Nine charts across adoption, spend, reliability, latency and quality; each headline tile opens its chart here |
+| Expansion plan | `#/plan` | Pipeline across the four sister brands, stakeholder coverage, dependencies / support burden / margin, competitive risk, decisions needed, next actions with owners and dates |
+
+Plan content (brand profiles, stakeholders, dependencies, competitors, decisions, actions) lives in `internal-qbr/src/plan.ts`. The sister-brand profiles are scenario assumptions, because the brief's brand descriptions weren't supplied.
+
+- **Customer score (RAMP UP).** An account-health score adapted from GitLab's PROVE. The full method, every benchmark band with its source, and the decision log are in [`docs/RAMPUP.md`](docs/RAMPUP.md). It has six pillars, each scored 1–5:
 
   | Pillar | Weight | Scored by |
   |---|---|---|
