@@ -204,9 +204,10 @@
   padding: 24px;
   background: var(--fw-surface-tint);
   border-bottom: 1px solid var(--fw-border);
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 14px;
-  align-content: start;
 }
 @media (min-width: 1024px) { .health__summary { border-bottom: 0; border-right: 1px solid var(--fw-border); } }
 .health__brand { font-size: 0.75rem; color: var(--fw-purple-500); }

@@ -12,3 +12,5 @@ export * from './components/TrendChart';
 export * from './components/EventLegend';
 export * from './health/rampup';
 export * from './components/HealthPanel';
+export * from './components/Pips';
+export * from './components/TopRisks';

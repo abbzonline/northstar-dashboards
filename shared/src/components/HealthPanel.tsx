@@ -1,5 +1,14 @@
-import { bandLabels, STATUS_BANDS, type HealthResult, type HealthStatus, type PillarResult } from '../health/rampup';
+import {
+  bandLabels,
+  rankRisks,
+  STATUS_BANDS,
+  type HealthResult,
+  type HealthStatus,
+  type PillarResult,
+} from '../health/rampup';
 import { fmtDay } from '../format';
+import { Pips } from './Pips';
+import { TopRisks } from './TopRisks';
 
 const STATUS_LABEL = Object.fromEntries(STATUS_BANDS.map((b) => [b.status, b.label])) as Record<HealthStatus, string>;
 
@@ -12,19 +21,13 @@ function bandText(i: number) {
   return `${b.label} ${b.min.toFixed(2)}–${upper}`;
 }
 
-/** Five square pips, partially filled for fractional scores (e.g. 4.2). */
-function Pips({ score, small }: { score: number; small?: boolean }) {
-  return (
-    <span className={`pips${small ? ' pips--small' : ''}`} aria-hidden="true">
-      {[0, 1, 2, 3, 4].map((i) => {
-        const fill = Math.max(0, Math.min(1, score - i));
-        return <span key={i} className="pip" style={{ ['--fill' as string]: `${fill * 100}%` }} />;
-      })}
-    </span>
-  );
+export interface HealthPanelProps {
+  health: HealthResult;
+  /** Show the "Top risks" button and pop-up (internal view only). */
+  showRisks?: boolean;
 }
 
-export function HealthPanel({ health }: { health: HealthResult }) {
+export function HealthPanel({ health, showRisks = false }: HealthPanelProps) {
   const weights = health.pillars.map((p) => `${p.letter} ${Math.round(p.weight * 100)}%`).join(' · ');
   return (
     <div className="health">
@@ -58,6 +61,7 @@ export function HealthPanel({ health }: { health: HealthResult }) {
             </dd>
           </div>
         </dl>
+        {showRisks && <TopRisks risks={rankRisks(health)} />}
       </div>
 
       <ol className="health__pillars">

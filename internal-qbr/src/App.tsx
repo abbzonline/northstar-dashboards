@@ -115,7 +115,7 @@ function Dashboard({ result }: { result: Extract<LoadResult, { ok: true }> }) {
       </div>
 
       <Section id="health" eyebrow="00 · Account health" title="RAMP UP score">
-        <HealthPanel health={health} />
+        <HealthPanel health={health} showRisks />
       </Section>
 
       <div className="section__head kpis-head">

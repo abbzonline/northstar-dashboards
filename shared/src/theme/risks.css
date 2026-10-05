@@ -1,0 +1,122 @@
+/* ---------- Fireworks secondary button (styled like "Contact us" on fireworks.ai) ---------- */
+.fw-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border: 1px solid var(--fw-ink);
+  border-radius: 0;
+  background: #fff;
+  color: var(--fw-ink);
+  font-family: var(--font-favorit);
+  font-weight: 550;
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.fw-button:hover { color: var(--fw-purple-400); border-color: var(--fw-purple-400); }
+.fw-button:focus-visible { outline: 2px solid var(--fw-purple-400); outline-offset: 2px; }
+.fw-button__count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 4px;
+  background: var(--fw-purple-400);
+  color: #fff;
+  font-size: 0.75rem;
+}
+
+/* Pinned to the bottom-left of the score column. */
+.health__risks-button { margin-top: auto; }
+
+/* ---------- Top risks dialog ---------- */
+.risks {
+  width: min(760px, calc(100vw - 32px));
+  max-height: calc(100vh - 64px);
+  padding: 0;
+  border: 1px solid var(--fw-border);
+  border-radius: var(--radius);
+  background: #fff;
+  color: var(--fw-body);
+  box-shadow: 0 24px 64px rgba(23, 25, 29, 0.18);
+}
+/* Blur and dim everything behind the dialog to focus attention. */
+.risks::backdrop {
+  background: rgba(23, 25, 29, 0.28);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.risks[open] { animation: risks-in 0.2s cubic-bezier(.33, 1, .68, 1); }
+@keyframes risks-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) { .risks[open] { animation: none; } }
+
+.risks__inner { padding: 24px; display: grid; gap: 16px; }
+.risks__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.risks__head > div { display: grid; gap: 8px; }
+.risks__title { font-size: 1.5rem; line-height: 1.33; letter-spacing: -0.06rem; }
+.risks__close {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border: 1px solid var(--fw-border);
+  background: #fff;
+  cursor: pointer;
+}
+.risks__close:hover { border-color: var(--fw-purple-400); }
+.risks__close:focus-visible { outline: 2px solid var(--fw-purple-400); outline-offset: 2px; }
+.risks__close span::before,
+.risks__close span::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 14px;
+  height: 1.5px;
+  background: var(--fw-ink);
+}
+.risks__close span::before { transform: translate(-50%, -50%) rotate(45deg); }
+.risks__close span::after { transform: translate(-50%, -50%) rotate(-45deg); }
+
+.risks__list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--fw-border); }
+.risk {
+  display: grid;
+  grid-template-columns: 28px 40px 1fr auto;
+  gap: 16px;
+  align-items: start;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--fw-border);
+}
+.risk:last-child { border-bottom: 0; padding-bottom: 0; }
+.risk__rank { font-size: 0.875rem; color: var(--fw-gray); padding-top: 13px; }
+.risk__main { display: grid; gap: 8px; min-width: 0; }
+.risk__title { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; color: var(--fw-ink); font-weight: 500; }
+.risk__pillar { font-size: 13px; color: var(--fw-gray); font-weight: 400; }
+.risk__facts { margin: 0; display: flex; flex-wrap: wrap; gap: 6px 24px; font-size: 13px; }
+.risk__facts div { display: grid; gap: 2px; }
+.risk__facts dt {
+  font-family: var(--font-favorit);
+  font-weight: 550;
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--fw-gray);
+}
+.risk__facts dd { margin: 0; color: var(--fw-ink); }
+.risk__rationale { margin: 0; font-size: 13px; color: var(--fw-body); }
+.risk__score { display: grid; justify-items: end; gap: 6px; }
+.risk__score-row { display: inline-flex; align-items: center; gap: 12px; }
+.risk__uplift { font-size: 12px; color: var(--fw-gray); white-space: nowrap; }
+
+@media (max-width: 639px) {
+  .risk { grid-template-columns: 40px 1fr; }
+  .risk__rank { display: none; }
+  .risk__score { grid-column: 2; justify-items: start; }
+}

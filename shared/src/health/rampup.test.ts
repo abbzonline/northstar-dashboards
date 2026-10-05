@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { loadMetrics } from '../data/loadMetrics';
-import { computeHealth, scoreValue, statusFor, type Judgement } from './rampup';
+import { computeHealth, rankRisks, scoreValue, statusFor, type Judgement } from './rampup';
 
 const csv = readFileSync(resolve(__dirname, '../../../data/northstar_flagship_30_day_metrics.csv'), 'utf8');
 const loaded = loadMetrics(csv);
@@ -78,5 +78,26 @@ describe('computeHealth on the Northstar dataset (full-period averages)', () => 
     const measuredOnly = computeHealth(rows, {});
     expect(measuredOnly.pillars).toHaveLength(4);
     expect(measuredOnly.pillars.reduce((a, p) => a + p.weight, 0)).toBeCloseTo(0.8, 10);
+  });
+});
+
+describe('rankRisks', () => {
+  const health = computeHealth(rows, judgements);
+
+  it('returns the three lowest-rated items, ties broken by uplift to the overall score', () => {
+    const risks = rankRisks(health);
+    expect(risks.map((r) => [r.key, r.score])).toEqual([
+      ['partnership', 2],
+      ['adoption:automation', 3],
+      ['reliability:errors', 3],
+    ]);
+  });
+
+  it('states what the next band needs and what it is worth', () => {
+    const [, automation, errors] = rankRisks(health);
+    expect(automation.nextBand).toBe('≥ 70.0% for a 4');
+    expect(automation.uplift).toBeCloseTo(0.1, 10);
+    expect(errors.nextBand).toBe('≤ 1.00% for a 4');
+    expect(errors.uplift).toBeCloseTo(0.2 / 3, 10);
   });
 });

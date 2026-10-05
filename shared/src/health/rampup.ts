@@ -372,3 +372,73 @@ export function computeHealth(
     window: { from: window[0].date, to: window[window.length - 1].date, days: window.length, isFullPeriod: window.length === rows.length },
   };
 }
+
+// ---------------------------------------------------------------------------
+// Top risks
+// ---------------------------------------------------------------------------
+
+export interface RiskItem {
+  key: string;
+  letter: string;
+  pillar: string;
+  label: string;
+  kind: 'measured' | 'judgement';
+  score: Score;
+  /** Formatted current value (measured items only). */
+  value?: string;
+  /** What the next band needs, e.g. "≥ 70.0% for a 4" (measured items only). */
+  nextBand?: string;
+  /** Points added to the overall score if this item rises one band. */
+  uplift: number;
+  /** Judgement rationale (judgement items only). */
+  rationale?: string;
+}
+
+/**
+ * The lowest-rated items across all pillars: every measured metric plus each judgement pillar.
+ * Sorted by score (lowest first); ties broken by uplift, i.e. how much one band of improvement
+ * would add to the overall score.
+ */
+export function rankRisks(health: HealthResult, limit = 3): RiskItem[] {
+  const totalWeight = health.pillars.reduce((s, p) => s + p.weight, 0);
+  const items: RiskItem[] = health.pillars.flatMap((p): RiskItem[] => {
+    const pillarShare = p.weight / totalWeight;
+    if (p.kind === 'judgement') {
+      return [
+        {
+          key: p.key,
+          letter: p.letter,
+          pillar: p.name,
+          label: p.name,
+          kind: 'judgement',
+          score: p.judgement.score,
+          uplift: p.judgement.score < 5 ? pillarShare : 0,
+          rationale: p.judgement.rationale,
+        },
+      ];
+    }
+    const metricWeight = p.metrics.reduce((s, m) => s + (m.def.weight ?? 1), 0);
+    return p.metrics.map((m) => {
+      const op = m.def.bands.direction === 'higher' ? '≥' : '≤';
+      const f = m.def.bandFormat ?? m.def.format;
+      // edges are listed for scores 5,4,3,2; the edge for score s+1 is at index 4 - s.
+      const nextEdge = m.score < 5 ? m.def.bands.edges[4 - m.score] : undefined;
+      return {
+        key: `${p.key}:${m.def.id}`,
+        letter: p.letter,
+        pillar: p.name,
+        label: m.def.label,
+        kind: 'measured',
+        score: m.score,
+        value: m.def.format(m.value),
+        nextBand: nextEdge === undefined ? undefined : `${op} ${f(nextEdge)} for a ${m.score + 1}`,
+        uplift: m.score < 5 ? (pillarShare * (m.def.weight ?? 1)) / metricWeight : 0,
+      };
+    });
+  });
+
+  return items
+    .filter((i) => i.score < 5)
+    .sort((a, b) => a.score - b.score || b.uplift - a.uplift)
+    .slice(0, limit);
+}

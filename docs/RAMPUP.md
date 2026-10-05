@@ -105,6 +105,24 @@ Caveats:
 - **Handle time vs resolution time:** Freshworks measures resolution time (elapsed time to resolve), not active handle time. It's the closest published equivalent.
 - **Escalation moved pillars:** escalation is measured in U, as first-contact resolution, rather than in M. M asks "is the answer right"; U asks "what did the customer experience".
 
+## Top risks
+
+The internal view has a **Top risks** button that lists the three lowest-rated items:
+
+- **Candidates:** every measured metric plus each judgement pillar. Anything already scoring 5 is excluded.
+- **Order:** lowest score first. Ties are broken by **uplift**: how much one band of improvement would add to the overall score (pillar weight × the metric's share of its pillar).
+- **Shown per item:** current value, what the next band needs, and the uplift. Judgement items show their rationale instead.
+
+Current top three (Aug 2026):
+
+| # | Item | Score | Next band | Uplift |
+|---|---|---|---|---|
+| 1 | Partnership (judgement) | 2 | Account-team call | +0.10 |
+| 2 | Tier-1 automation (A) | 3 | ≥ 70.0% for a 4 (now 67.9%) | +0.10 |
+| 3 | Error rate (R) | 3 | ≤ 1.00% for a 4 (now 1.04%) | +0.07 |
+
+P50 and P95 latency also score 3, but each is worth +0.03, so they fall outside the top three.
+
 ## Judgement pillars
 
 Set by the account team in [`internal-qbr/src/judgements.ts`](../internal-qbr/src/judgements.ts).
