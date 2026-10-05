@@ -100,8 +100,21 @@ describe('rankRisks', () => {
     expect(exactPosition(99, 5, higher)).toBe(5);
   });
 
-  it('states what the next band needs', () => {
-    const [, p50] = rankRisks(health);
-    expect(p50.nextBand).toBe('≤ 500 ms for a 4');
+  it('gives thresholds for the next band and for a 5', () => {
+    const [, p50, p95] = rankRisks(health);
+    expect(p50.targets).toEqual([
+      { score: 4, threshold: '≤ 500 ms' },
+      { score: 5, threshold: '≤ 300 ms' },
+    ]);
+    expect(p95.targets).toEqual([
+      { score: 4, threshold: '≤ 1.50 s' },
+      { score: 5, threshold: '≤ 1.00 s' },
+    ]);
+  });
+
+  it('shows only "For a 5" when the next band is the top band', () => {
+    const all = rankRisks(health, 99);
+    const availability = all.find((r) => r.key === 'reliability:availability')!;
+    expect(availability.targets).toEqual([{ score: 5, threshold: '≥ 99.90%' }]);
   });
 });

@@ -111,15 +111,15 @@ The internal view has a **Top risks** button that lists the three items **furthe
 
 - **Candidates:** every measured metric plus each judgement pillar. Anything already scoring 5 is excluded.
 - **Order:** by exact distance from 5. A metric's exact position is its whole-number score plus how far its value has travelled through that band towards the next edge. Example: P50 at 605 ms sits 65% of the way from 800 ms (a 3) to 500 ms (a 4), giving 3.65, which is 1.35 from 5. Judgement pillars use their score as-is.
-- **Shown per item:** current value and what the next band needs. Judgement items show their rationale.
+- **Shown per item:** current value, the threshold for the next band ("For a 4") and the threshold for a 5 ("For a 5"). An item already scoring 4 shows only "For a 5". Judgement items show their rationale.
 
 Current ranking (Aug 2026):
 
 | # | Item | Score | Exact position | Distance from 5 |
 |---|---|---|---|---|
 | 1 | Partnership (judgement) | 2 | 2.00 | 3.00 |
-| 2 | P50 latency (R): 605 ms, needs ≤ 500 ms for a 4 | 3 | 3.65 | 1.35 |
-| 3 | P95 latency (R): 1.67 s, needs ≤ 1.50 s for a 4 | 3 | 3.67 | 1.33 |
+| 2 | P50 latency (R): 605 ms; for a 4 ≤ 500 ms, for a 5 ≤ 300 ms | 3 | 3.65 | 1.35 |
+| 3 | P95 latency (R): 1.67 s; for a 4 ≤ 1.50 s, for a 5 ≤ 1.00 s | 3 | 3.67 | 1.33 |
 | — | Tier-1 automation (A): 67.9% | 3 | 3.79 | 1.21 |
 | — | Error rate (R): 1.04% | 3 | 3.96 | 1.04 |
 

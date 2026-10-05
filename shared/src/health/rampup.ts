@@ -388,8 +388,8 @@ export interface RiskItem {
   distance: number;
   /** Formatted current value (measured items only). */
   value?: string;
-  /** What the next band needs, e.g. "≥ 70.0% for a 4" (measured items only). */
-  nextBand?: string;
+  /** Thresholds for the next band and for a 5, e.g. [{ score: 4, threshold: "≤ 500 ms" }, { score: 5, … }]. */
+  targets?: { score: Score; threshold: string }[];
   /** Judgement rationale (judgement items only). */
   rationale?: string;
 }
@@ -430,7 +430,8 @@ export function rankRisks(health: HealthResult, limit = 3): RiskItem[] {
     return p.metrics.map((m) => {
       const op = m.def.bands.direction === 'higher' ? '≥' : '≤';
       const f = m.def.bandFormat ?? m.def.format;
-      const nextEdge = m.score < 5 ? m.def.bands.edges[4 - m.score] : undefined;
+      // edges are listed for scores 5,4,3,2: the edge for score t is at index 5 - t.
+      const targetScores = [...new Set([m.score + 1, 5])].filter((t) => t > m.score && t <= 5) as Score[];
       return {
         key: `${p.key}:${m.def.id}`,
         letter: p.letter,
@@ -440,7 +441,7 @@ export function rankRisks(health: HealthResult, limit = 3): RiskItem[] {
         score: m.score,
         distance: 5 - exactPosition(m.value, m.score, m.def.bands),
         value: m.def.format(m.value),
-        nextBand: nextEdge === undefined ? undefined : `${op} ${f(nextEdge)} for a ${m.score + 1}`,
+        targets: targetScores.map((t) => ({ score: t, threshold: `${op} ${f(m.def.bands.edges[5 - t])}` })),
       };
     });
   });

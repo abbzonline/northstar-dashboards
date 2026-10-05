@@ -57,10 +57,12 @@ export function TopRisks({ risks }: { risks: RiskItem[] }) {
                         <dt>Current</dt>
                         <dd className="num">{r.value}</dd>
                       </div>
-                      <div>
-                        <dt>Next band</dt>
-                        <dd className="num">{r.nextBand}</dd>
-                      </div>
+                      {r.targets?.map((t) => (
+                        <div key={t.score}>
+                          <dt>For a {t.score}</dt>
+                          <dd className="num">{t.threshold}</dd>
+                        </div>
+                      ))}
                     </dl>
                   ) : (
                     <p className="risk__rationale">{r.rationale}</p>
