@@ -80,9 +80,23 @@ Context for the automation bands:
 - **RAGAS** shows an example CI configuration that gates on answer relevancy ≥ 0.90 and context precision/recall ≥ 0.95 ([RAGAS: add to CI](https://docs.ragas.io/en/v0.2.8/howtos/applications/add_to_ci/)). It is an example of where teams set release gates, not an industry benchmark. We borrowed 0.95 and 0.90 as the edges of 5 and 4; 85% and 80% for 3 and 2 are our interpolation in 5-point steps.
 - **Microsoft Foundry** supplies the *structure*, not the thresholds: separate component evaluators (Groundedness, Intent Resolution, Task Adherence, Task Completion) on a 1–5 scale with a default pass mark of 3, and a composite Output Quality that passes only when every applicable component passes ([Microsoft Foundry: agent evaluators](https://learn.microsoft.com/en-us/azure/foundry/concepts/evaluation-evaluators/agent-evaluators)). It does not say what share of requests passing earns a given score.
 - **Why two metrics:** they measure different things. Grounding asks whether the answer stayed supported by the available knowledge; eval pass asks whether the whole response met the task-quality bar. Both are direct measures of the model, unlike CSAT or escalation, which sit in User outcomes.
-- **Assumed definitions:** `grounded_answer_rate_pct` is the share of responses passing a groundedness check. `quality_eval_pass_rate_pct` is a composite that passes only when every component passes, structured like Foundry's Output Quality.
+- **Assumed definitions (not confirmed):** `grounded_answer_rate_pct` is taken as the share of responses passing a groundedness check. The dataset provides `quality_eval_pass_rate_pct` without the underlying rubric, so we don't know what it measures. For planning we assume it represents an end-to-end quality gate (structured like Foundry's Output Quality: passes only when every component passes). Production should expose the individual eval dimensions; the rubric is requested from Northstar as a pilot dependency.
 - **Not used:** the RAGAS page also shows `faithfulness 0.4 ± 0.1`. That's a test that the score hasn't drifted, not a quality bar.
 - **To firm up:** the gates should be confirmed with Northstar against their own eval harness, ideally with the pass marks they already use for release decisions.
+
+**Recommended production eval hierarchy.** One overall pass, broken down so a drop can be traced to its cause. It pairs end-to-end outcome checks with process and tool-use checks, the same philosophy as Microsoft Foundry's agent evaluators ([Microsoft Foundry: agent evaluators](https://learn.microsoft.com/en-us/azure/foundry/concepts/evaluation-evaluators/agent-evaluators)).
+
+| Level | Dimension | Question it answers |
+|---|---|---|
+| Overall | End-to-end pass | Did the response meet the bar on every applicable dimension below? |
+| Outcome | Factual accuracy / grounding | Is every claim supported by the catalogue, policy or order data retrieved? |
+| Outcome | Policy compliance | Does it apply the brand's return, warranty and safety policies correctly? |
+| Outcome | Task completion | Did it resolve what the shopper asked? |
+| Process | Tool-call correctness | Right tool, right arguments (order lookup, returns, stock), results used correctly |
+| Process | Escalation correctness | Hands over to a human when it should, and only then |
+| Brand | Tone and brand adherence | Sounds like this brand, not Atlas or a generic assistant |
+
+Reporting each dimension per brand is what makes the multi-brand pilot readable: a Ridgeline failure on policy compliance points to the knowledge index or prompt, while a failure on tone points to the adapter.
 
 ### U: User outcomes
 

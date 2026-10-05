@@ -177,7 +177,7 @@ export const RAMPUP: PillarDef[] = [
         precision: 1,
         format: (n) => fmtPct(n, 1),
         bands: { direction: 'higher', edges: [95, 90, 85, 80] },
-        note: 'Assumed composite: passes only if every component check passes.',
+        note: 'The dataset gives an eval pass rate without its rubric. For planning we assume it is an end-to-end quality gate; in production the individual eval dimensions should be exposed.',
       },
     ],
   },

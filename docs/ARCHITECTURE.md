@@ -144,7 +144,7 @@ Run the pilot brand both ways on the new shared deployment:
 
 - **If arm A clears the grounding and eval thresholds,** the brand doesn't need an adapter. Say so: the plan is "the lowest cost that clears the quality bar", not "the cheapest".
 - **If it doesn't,** arm B is the plan, and the pilot produced the evidence.
-- **Measure in both arms:** grounding, eval pass, escalation, CSAT, tone/policy fidelity, and P50/P95 time-to-first-token.
+- **Measure in both arms:** grounding, eval pass broken down by dimension (policy compliance, task completion, tool-call and escalation correctness, tone; see the eval hierarchy in RAMPUP.md), escalation, CSAT, and P50/P95 time-to-first-token.
 
 **Success criteria** (four weeks of live traffic; one arm must clear all of them):
 

@@ -40,6 +40,7 @@ export interface CustomerDependency {
 }
 
 export const NORTHSTAR_DEPENDENCIES: CustomerDependency[] = [
+  { item: 'Evaluation rubric and per-dimension results for Atlas', owner: 'Northstar CX operations', neededBy: '6 Nov' },
   { item: 'Ridgeline support transcripts', owner: 'Northstar CX operations', neededBy: '6 Nov' },
   { item: 'Ridgeline catalogue export for the knowledge index', owner: 'Northstar CX operations', neededBy: '6 Nov' },
   { item: 'Legal sign-off to use de-branded Atlas transcripts for shared support skills', owner: 'Northstar Legal', neededBy: '6 Nov' },

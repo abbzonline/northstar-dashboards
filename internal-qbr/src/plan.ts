@@ -116,6 +116,7 @@ export const DEPENDENCIES: Dependency[] = [
   { item: 'Scale-up threshold retune and promotion pre-warm runbook on the Atlas deployment (warm floor only if telemetry calls for it)', side: 'Fireworks', owner: 'Fireworks Engineering', neededBy: '16 Oct', status: 'In progress' },
   { item: 'BF16 capacity reserved for the shared multi-LoRA deployment (EU region; 1.5x region-restricted rate to be confirmed with Northstar)', side: 'Fireworks', owner: 'Fireworks Infrastructure', neededBy: '6 Nov', status: 'Not started' },
   { item: 'Ridgeline adapter training and per-brand eval sets', side: 'Fireworks', owner: 'Fireworks Applied ML', neededBy: '20 Nov', status: 'Not started' },
+  { item: 'Eval harness rubric and per-dimension results for Atlas (what the eval pass rate measures)', side: 'Northstar', owner: 'Northstar CX operations', neededBy: '6 Nov', status: 'Not started' },
   { item: 'Ridgeline transcripts and catalogue export', side: 'Northstar', owner: 'Northstar CX operations', neededBy: '6 Nov', status: 'Not started' },
   { item: 'Legal sign-off on de-branded Atlas transcripts', side: 'Northstar', owner: 'Northstar Legal', neededBy: '6 Nov', status: 'Not started' },
   { item: 'Routing layer supports percentage traffic split and rollback', side: 'Northstar', owner: 'Northstar Engineering', neededBy: '13 Nov', status: 'Not started' },
