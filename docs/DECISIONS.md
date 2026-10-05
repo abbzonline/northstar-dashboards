@@ -31,6 +31,7 @@ Scoring-specific detail (bands, sources, formulas) lives in [RAMPUP.md](RAMPUP.m
 | 11 | 2026-10-05 | Under the title: model ID on the left, date range on the right; no "comparisons" note | The comparison is implied by the results | Listing deployment, period and comparison basis in one row |
 | 12 | 2026-10-05 | Scenario: Northstar is an outerwear-fashion holding company; flagship brand **Atlas**; model `northstar-atlas-support-ft-v1` | The brief leaves the brand unnamed; a concrete scenario makes the expansion story tangible | Generic "flagship brand" wording |
 | 13 | 2026-10-05 | No outbound links and no obscure source names on the dashboard; methodology prose lives in docs, not on the page | The internal page should be facts and evidence; explanations belong in the guidance docs | Inline citations and explanatory paragraphs on the page |
+| 24 | 2026-10-05 | Remove the Benchmark column from the RAMP UP metric table; sources live only in `docs/RAMPUP.md` | Keeps the table to value, score and bands; follows #13 (provenance in guidance, not on the page) | Plain-text source column on the dashboard |
 
 ## Account health (RAMP UP)
 

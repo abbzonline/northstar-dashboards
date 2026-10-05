@@ -27,7 +27,7 @@ export interface Bands {
   edges: [number, number, number, number];
 }
 
-/** Plain-text citation shown on the dashboard; full references live in docs/RAMPUP.md. */
+/** Where a metric's bands come from. Not shown on the dashboard; documented in docs/RAMPUP.md. */
 export interface Source {
   label: string;
 }

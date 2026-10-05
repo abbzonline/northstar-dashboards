@@ -96,7 +96,6 @@ function PillarRow({ pillar: p }: { pillar: PillarResult }) {
                   <th>Period avg</th>
                   <th>Score</th>
                   <th>Bands for 5 · 4 · 3 · 2</th>
-                  <th>Benchmark</th>
                 </tr>
               </thead>
               <tbody>
@@ -114,11 +113,10 @@ function PillarRow({ pillar: p }: { pillar: PillarResult }) {
                       </span>
                     </td>
                     <td className="pillar__bands num">{bandLabels(m.def).join(' · ')}</td>
-                    <td className="pillar__source">{m.def.source.label}</td>
                   </tr>,
                   m.def.note && (
                     <tr key={`${m.def.id}-note`} className="pillar__note-row">
-                      <td colSpan={5}>{m.def.note}</td>
+                      <td colSpan={4}>{m.def.note}</td>
                     </tr>
                   ),
                 ])}
