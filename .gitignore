@@ -1,4 +1,5 @@
 node_modules/
 dist/
 *.log
-ebr/source/build/
+internal/ebr-generator/source/build/
+internal/ebr-backups/

@@ -1,11 +1,11 @@
 // Northstar Retail Group — Executive Business Review, October 2026.
-// Builds ebr/Northstar_EBR_Oct2026.pptx in the customer dashboard's design language: the same frame and
+// Builds send/ebr/Northstar_EBR_Oct2026.pptx in the customer dashboard's design language: the same frame and
 // top bar, Inter type scale, Fireworks colour tokens, KPI tiles, health panel, chart cards and square pills.
 //
-//   cd ebr/source && npm install && node build_ebr.js ../Northstar_EBR_Oct2026.pptx
+//   cd internal/ebr-generator/source && npm install && npm run build && npm run finish
 //
 // Every figure comes from the customer dashboard's own model (figures.js), so the deck and the dashboard
-// cannot disagree. Fonts: Inter (SIL OFL) — install ebr/fonts/*.ttf to view the .pptx as designed.
+// cannot disagree. Fonts: Inter (SIL OFL) — install ../fonts/*.ttf before running the finishing step.
 const pptxgen = require('pptxgenjs');
 const JSZip = require('jszip');
 const sharp = require('sharp');
@@ -13,8 +13,8 @@ const fs = require('fs');
 const path = require('path');
 const { loadFigures } = require('./figures');
 
-const OUT = process.argv[2] || path.join(__dirname, '..', 'Northstar_EBR_Oct2026.pptx');
-const ROOT = path.resolve(__dirname, '..', '..');
+const ROOT = path.resolve(__dirname, '..', '..', '..', 'send'); // the deliverable code and deck live in send/
+const OUT = process.argv[2] || path.join(__dirname, 'build', 'Northstar_EBR_Oct2026.pptx');
 
 // ---------------------------------------------------------------- tokens (shared/src/theme, as rendered)
 const T = {

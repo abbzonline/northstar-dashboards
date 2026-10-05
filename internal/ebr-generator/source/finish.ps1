@@ -4,7 +4,7 @@
 #   node build_ebr.js build\Northstar_EBR_Oct2026.pptx
 #   powershell -ExecutionPolicy Bypass -File finish.ps1 build\Northstar_EBR_Oct2026.pptx
 #
-# Requires PowerPoint and the fonts in ebr/fonts installed. Writes ebr/Northstar_EBR_Oct2026.pptx and .pdf,
+# Requires PowerPoint and the fonts in ../fonts installed. Writes send/ebr/Northstar_EBR_Oct2026.pptx and .pdf,
 # then fails if any Inter face did not embed.
 #
 # Never overwrites a deck that was edited by hand: the published .pptx must match what this script last wrote
@@ -14,7 +14,7 @@ param([Parameter(Mandatory = $true)][string]$Built, [switch]$Force)
 
 $ErrorActionPreference = 'Stop'
 $src = (Resolve-Path $Built).Path
-$ebr = Split-Path $PSScriptRoot -Parent
+$ebr = Join-Path (Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent) 'send\ebr'
 $pptx = Join-Path $ebr 'Northstar_EBR_Oct2026.pptx'
 $pdf = Join-Path $ebr 'Northstar_EBR_Oct2026.pdf'
 $stamp = Join-Path $PSScriptRoot 'build\last-finished.sha256'
@@ -54,7 +54,7 @@ try {
 $embedded = [regex]::Matches($xml, '<p:embeddedFont><p:font typeface="([^"]+)"') | ForEach-Object { $_.Groups[1].Value }
 Write-Output "embedded fonts: $($embedded -join ', ')"
 $missing = @('Inter', 'Inter Medium') | Where-Object { $embedded -notcontains $_ }
-if ($missing) { throw "Not embedded: $($missing -join ', '). Install ebr/fonts/*.ttf and rerun." }
+if ($missing) { throw "Not embedded: $($missing -join ', '). Install ../fonts/*.ttf and rerun." }
 
 New-Item -ItemType Directory -Force (Split-Path $stamp) | Out-Null
 (Get-FileHash $pptx -Algorithm SHA256).Hash | Set-Content $stamp

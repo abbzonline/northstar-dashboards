@@ -3,7 +3,8 @@
 const path = require('path');
 const fs = require('fs');
 
-const ROOT = path.resolve(__dirname, '..', '..');
+// The deliverable code lives in send/; this generator is internal and reads from it.
+const ROOT = path.resolve(__dirname, '..', '..', '..', 'send');
 const esbuild = require(path.join(ROOT, 'node_modules', 'esbuild'));
 
 // The deck only needs data, formatting and scoring, not the React components in the shared index.
