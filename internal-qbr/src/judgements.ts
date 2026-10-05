@@ -30,8 +30,9 @@ export function judgements(rows: DailyMetric[]): Record<'partnership' | 'profita
         'other four brands, which carry significantly higher customer volumes.',
       evidence: [
         `Current revenue: ${fmtUsd(spend)} for August (approx. ${annualisedK} annualised)`,
-        'Cost to serve: month-one hypercare covered a catalogue-sync incident, an autoscaling adjustment and a RAG index refresh. Each new brand adds its own catalogue, index and operating team to support',
+        'Cost to serve: three operational events in month one (catalogue-sync incident, autoscaling threshold adjustment, RAG index refresh). One account team supports all five brands on a single shared deployment, so support effort does not scale per brand',
         'Deployment economics: Fireworks serves LoRA models on dedicated deployments only, so a single-brand deployment is unlikely to cover its GPU cost; five brands on one multi-LoRA deployment share it',
+        'Strategic value: a recognised retail logo and a reference account for EMEA retail',
         'Upside: rollout to the four sister brands, each with its own catalogue, tone of voice and return policies. Each brand gets a dedicated LoRA adapter, RAG index and system prompt on the same open-weight base as Atlas',
       ],
     },
