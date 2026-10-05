@@ -2,11 +2,11 @@ import { ChartCard, EventLegend, Section, TrendChart, fmtMinSec, fmtPct, series 
 import type { Model } from '../model';
 import { ppChange } from './format';
 
-export function QualityView({ m }: { m: Model }) {
+export function QualityView({ m, showEvents = true }: { m: Model; showEvents?: boolean }) {
   const { days, events, cmp } = m;
   return (
     <>
-      <EventLegend events={events} />
+      {showEvents && <EventLegend events={events} />}
 
       <Section id="quality" title="Answer quality">
         <ChartCard

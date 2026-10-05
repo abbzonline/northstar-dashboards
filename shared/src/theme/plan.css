@@ -2,7 +2,51 @@
 .topbar__left { display: flex; align-items: center; gap: 20px; min-width: 0; }
 .topbar__divider { width: 1px; height: 24px; background: var(--fw-border); }
 
-.viewmenu { position: relative; }
+.viewmenu { position: relative; flex-shrink: 0; }
+.viewmenu__trigger { white-space: nowrap; }
+
+/* "Single page" switch (customer header): a link styled as a toggle, so the state lives in the URL. */
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--fw-ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.switch__track {
+  position: relative;
+  width: 32px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--fw-border);
+  transition: background 0.15s;
+}
+.switch__thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+  transition: transform 0.15s;
+}
+.switch[aria-checked='true'] .switch__track { background: var(--fw-purple-400); }
+.switch[aria-checked='true'] .switch__thumb { transform: translateX(14px); }
+.switch:hover { color: var(--fw-purple-400); }
+.switch:focus-visible { outline: 2px solid var(--fw-purple-400); outline-offset: 4px; border-radius: 4px; }
+
+/* Single page: a rule between the stacked views, and anchor offset under the sticky header. */
+.view-group { scroll-margin-top: 72px; }
+@media (max-width: 480px) {
+  .switch__text { display: none; }
+}
+.view-group + .view-group { border-top: 1px solid var(--fw-border); margin-top: 56px; }
 .viewmenu__trigger {
   display: inline-flex;
   align-items: center;
@@ -70,6 +114,7 @@
   .topbar__left { gap: 12px; }
   .topbar__left .logo { height: 18px; }
   .topbar .badge { display: none; }
+  .topbar__inner { gap: 12px; }
 }
 
 /* ---------- Plan view ---------- */

@@ -11,7 +11,7 @@ export interface ViewMenuItem {
  * View switcher next to the logo, styled like the "Product ⌄" menus on fireworks.ai.
  * Closes on selection, outside click or Esc.
  */
-export function ViewMenu({ items, current }: { items: ViewMenuItem[]; current: string }) {
+export function ViewMenu({ items, current, label }: { items: ViewMenuItem[]; current: string; label?: string }) {
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);
   const active = items.find((i) => i.id === current) ?? items[0];
@@ -39,7 +39,7 @@ export function ViewMenu({ items, current }: { items: ViewMenuItem[]; current: s
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
       >
-        {active.label}
+        {label ?? active.label}
         <span className="viewmenu__chevron" aria-hidden="true" />
       </button>
       {open && (

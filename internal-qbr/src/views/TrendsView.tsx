@@ -15,11 +15,11 @@ import {
 import { AVAILABILITY_TARGET, type Model } from '../model';
 import { fmtPct2, fmtUsd2, pctChange, ppChange } from './format';
 
-export function TrendsView({ m }: { m: Model }) {
+export function TrendsView({ m, showEvents = true }: { m: Model; showEvents?: boolean }) {
   const { days, events, cmp, last } = m;
   return (
     <>
-      <EventLegend events={events} />
+      {showEvents && <EventLegend events={events} />}
 
       <Section id="adoption" title="Adoption">
         <ChartCard

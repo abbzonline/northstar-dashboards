@@ -14,10 +14,12 @@ import {
   series,
 } from '@northstar/shared';
 import { AVAILABILITY_TARGET, type Model } from '../model';
-import { viewHref } from '../router';
+import { viewHref, type ViewId } from '../router';
 import { fmtPct2, pctChange, ppChange } from './format';
 
-export function OutcomesView({ m }: { m: Model }) {
+export function OutcomesView({ m, single = false }: { m: Model; single?: boolean }) {
+  // On the single page, tiles scroll to the chart on the same page instead of switching view.
+  const chartHref = (view: ViewId, anchor: string) => viewHref(single ? 'all' : view, anchor);
   const { cmp, periodAvg, days, events } = m;
   return (
     <>
@@ -34,7 +36,7 @@ export function OutcomesView({ m }: { m: Model }) {
       </div>
       <div className="kpis" aria-label="Headline results. Select one to see its trend">
         <KpiTile
-          href={viewHref('outcomes', 'chart-automation')}
+          href={chartHref('outcomes', 'chart-automation')}
           label="Tier-1 automation"
           value={fmtPct(periodAvg('automation_rate_pct'))}
           delta={`${ppChange(cmp.automation.delta)} since week 1`}
@@ -42,7 +44,7 @@ export function OutcomesView({ m }: { m: Model }) {
           sub={`Final week ${fmtPct(cmp.automation.last)}; 70% reached from ${m.firstAutomation70 ? fmtDay(m.firstAutomation70) : '—'}`}
         />
         <KpiTile
-          href={viewHref('quality', 'chart-csat-aht')}
+          href={chartHref('quality', 'chart-csat-aht')}
           label="Avg handle time"
           value={fmtMinSec(periodAvg('avg_handle_time_min'))}
           delta={`${fmtMinSec(cmp.aht.first)} → ${fmtMinSec(cmp.aht.last)}, week 1 → week 4`}
@@ -50,7 +52,7 @@ export function OutcomesView({ m }: { m: Model }) {
           sub="−35% vs pre-launch baseline, supplied by Northstar"
         />
         <KpiTile
-          href={viewHref('quality', 'chart-csat-aht')}
+          href={chartHref('quality', 'chart-csat-aht')}
           label="CSAT"
           value={periodAvg('csat_score').toFixed(1)}
           delta={`${cmp.csat.first.toFixed(1)} → ${cmp.csat.last.toFixed(1)}, week 1 → week 4`}
@@ -58,7 +60,7 @@ export function OutcomesView({ m }: { m: Model }) {
           sub="+12 pts vs pre-launch baseline, supplied by Northstar"
         />
         <KpiTile
-          href={viewHref('outcomes', 'chart-requests')}
+          href={chartHref('outcomes', 'chart-requests')}
           label="Requests / day"
           value={fmtCompact(periodAvg('requests'))}
           delta={`${pctChange(cmp.req.deltaPct)} since week 1`}
@@ -66,7 +68,7 @@ export function OutcomesView({ m }: { m: Model }) {
           sub={`${fmtInt(m.totalRequests)} in August`}
         />
         <KpiTile
-          href={viewHref('service', 'chart-availability')}
+          href={chartHref('service', 'chart-availability')}
           label="Availability"
           value={fmtPct2(m.avgAvailability)}
           delta={`${AVAILABILITY_TARGET}% met on ${m.daysAtTarget} of ${days.length} days`}
@@ -74,7 +76,7 @@ export function OutcomesView({ m }: { m: Model }) {
           sub={`Lowest ${fmtPct2(m.worstAvailability.availability_pct)} on ${fmtDay(m.worstAvailability.date)}`}
         />
         <KpiTile
-          href={viewHref('service', 'chart-latency')}
+          href={chartHref('service', 'chart-latency')}
           label="P50 / P95 latency"
           value={`${fmtMs(periodAvg('p50_latency_ms'))} / ${fmtMs(periodAvg('p95_latency_ms'))}`}
           delta={`P95 ${fmtSigned(cmp.p95.delta, fmtMs)} since week 1`}
@@ -82,7 +84,7 @@ export function OutcomesView({ m }: { m: Model }) {
           sub={`P50 ${fmtSigned(cmp.p50.delta, fmtMs)} since week 1`}
         />
         <KpiTile
-          href={viewHref('quality', 'chart-quality')}
+          href={chartHref('quality', 'chart-quality')}
           label="Eval pass rate"
           value={fmtPct(periodAvg('quality_eval_pass_rate_pct'))}
           delta={`${ppChange(cmp.evalPass.delta)} since week 1`}
@@ -90,7 +92,7 @@ export function OutcomesView({ m }: { m: Model }) {
           sub={`Grounded answers ${fmtPct(periodAvg('grounded_answer_rate_pct'))}`}
         />
         <KpiTile
-          href={viewHref('quality', 'chart-quality')}
+          href={chartHref('quality', 'chart-quality')}
           label="Escalation rate"
           value={fmtPct(periodAvg('escalation_rate_pct'))}
           delta={`${ppChange(cmp.escalation.delta)} since week 1`}

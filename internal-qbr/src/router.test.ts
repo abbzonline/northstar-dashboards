@@ -16,6 +16,11 @@ describe('parseHash', () => {
     expect(parseHash('#chart-quality')).toEqual({ view: 'trends', anchor: 'chart-quality' });
   });
 
+  it('reads the single-page route', () => {
+    expect(parseHash('#/all')).toEqual({ view: 'all', anchor: undefined });
+    expect(parseHash('#/all/view-plan')).toEqual({ view: 'all', anchor: 'view-plan' });
+  });
+
   it('round-trips with viewHref', () => {
     expect(parseHash(viewHref('trends', 'chart-spend'))).toEqual({ view: 'trends', anchor: 'chart-spend' });
   });

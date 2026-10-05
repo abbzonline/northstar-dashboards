@@ -12,14 +12,14 @@ import {
 import type { Model } from '../model';
 import { fmtUsd2, pctChange, round100 } from './format';
 
-export function SpendView({ m }: { m: Model }) {
+export function SpendView({ m, showEvents = true }: { m: Model; showEvents?: boolean }) {
   const { days, events, cmp } = m;
   const perMillion = (m.totalSpend / m.totalTokens) * 1e6;
   const runRate = (cmp.spend.last * 365) / 12;
 
   return (
     <>
-      <EventLegend events={events} />
+      {showEvents && <EventLegend events={events} />}
 
       <Section id="spend" title="Spend">
         <ChartCard

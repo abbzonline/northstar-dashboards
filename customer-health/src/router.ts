@@ -11,8 +11,11 @@ export const VIEWS: { id: ViewId; label: string; description: string }[] = [
   { id: 'next-steps', label: 'Next steps', description: 'Pilot proposal, dependencies and joint actions' },
 ];
 
+/** "all" stacks every view on one page (the "Single page" switch). */
+export type RouteView = ViewId | 'all';
+
 export interface Route {
-  view: ViewId;
+  view: RouteView;
   anchor?: string;
 }
 
@@ -20,11 +23,12 @@ export interface Route {
 export function parseHash(hash: string): Route {
   const parts = hash.replace(/^#\/?/, '').split('/').filter(Boolean);
   const view = parts[0];
+  if (view === 'all') return { view: 'all', anchor: parts[1] };
   if (VIEWS.some((v) => v.id === view)) return { view: view as ViewId, anchor: parts[1] };
   return { view: 'outcomes' };
 }
 
-export const viewHref = (view: ViewId, anchor?: string) => `#/${view}${anchor ? `/${anchor}` : ''}`;
+export const viewHref = (view: RouteView, anchor?: string) => `#/${view}${anchor ? `/${anchor}` : ''}`;
 
 export function useRoute(): Route {
   const [route, setRoute] = useState(() => parseHash(window.location.hash));

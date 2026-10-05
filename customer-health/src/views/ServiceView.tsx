@@ -2,11 +2,11 @@ import { ChartCard, EventLegend, Section, TrendChart, fmtDay, fmtMs, fmtPct, ser
 import { AVAILABILITY_TARGET, type Model } from '../model';
 import { fmtPct2 } from './format';
 
-export function ServiceView({ m }: { m: Model }) {
+export function ServiceView({ m, showEvents = true }: { m: Model; showEvents?: boolean }) {
   const { days, events, cmp } = m;
   return (
     <>
-      <EventLegend events={events} />
+      {showEvents && <EventLegend events={events} />}
 
       <Section id="availability" title="Availability and errors">
         <ChartCard

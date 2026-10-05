@@ -93,6 +93,9 @@ Exact fireworks.ai tokens (from the site's production CSS); defined once in `sha
 .viewmenu__trigger:disabled { color: var(--text-tertiary); cursor: not-allowed; }
 ```
 
+
+### Single-page switch
+Next to the view menu. A link styled as a toggle (`role="switch"`): off is the current view, on is `#/all`, which stacks every view with a 1px rule between them and shows the events legend once. While it is on, the menu trigger reads "Jump to" and scrolls to each view's block, and KPI tiles scroll to their chart on the same page. Track 32 × 18px, `--border` off, purple on; the label hides below 480px.
 ### Cards (KPI tiles, chart cards, facts panels)
 ```css
 /* KPI tile: tint → white, with an inset accent hairline (no lift: it breaks the grid). */

@@ -74,6 +74,9 @@ Same stack and scale as the customer dashboard: **Inter** (variable, self-hosted
 .fw-button:disabled { color: var(--text-tertiary); border-color: var(--border); cursor: not-allowed; }
 ```
 
+### Single-page switch
+Next to the view menu. A link styled as a toggle (`role="switch"`): off is the current view, on is `#/all`, which stacks every view with a 1px rule between them and shows the events legend once. While it is on, the menu trigger reads "Jump to" and scrolls to each view's block, and KPI tiles scroll to their chart on the same page. Track 32 × 18px, `--border` off, purple on; the label hides below 480px.
+
 ### Cards (KPI tiles, chart cards, facts panels, health panel)
 ```css
 .motion-l1 .kpi--link:hover { background: var(--surface-hover); box-shadow: 1px 0 0 var(--border), 0 1px 0 var(--border), inset 0 0 0 1px var(--border-hover); }

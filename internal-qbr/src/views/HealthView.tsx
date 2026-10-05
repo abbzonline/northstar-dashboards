@@ -3,9 +3,9 @@ import { AVAILABILITY_TARGET, type Model } from '../model';
 import { viewHref } from '../router';
 import { fmtPct2, fmtUsd2, pctChange, ppChange } from './format';
 
-const chart = (id: string) => viewHref('trends', id);
-
-export function HealthView({ m }: { m: Model }) {
+export function HealthView({ m, single = false }: { m: Model; single?: boolean }) {
+  // On the single page, tiles scroll to the chart on the same page instead of switching view.
+  const chart = (id: string) => viewHref(single ? 'all' : 'trends', id);
   const { cmp, periodAvg } = m;
   return (
     <>

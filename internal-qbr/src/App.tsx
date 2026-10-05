@@ -1,16 +1,18 @@
-import { ErrorPanel, ViewMenu, fmtDay, type LoadResult } from '@northstar/shared';
+import { ErrorPanel, SinglePageSwitch, ViewMenu, fmtDay, type LoadResult } from '@northstar/shared';
 import fireworksLogo from '@northstar/shared/brand/fireworks-logo.svg';
 import { useEffect, useMemo } from 'react';
 import { ACCOUNT } from './account';
 import { buildModel } from './model';
-import { VIEWS, useRoute, viewHref } from './router';
+import { VIEWS, useRoute, viewHref, type RouteView } from './router';
 import { HealthView } from './views/HealthView';
 import { PlanView } from './views/PlanView';
 import { TrendsView } from './views/TrendsView';
 
 export function App({ result }: { result: LoadResult }) {
   const route = useRoute();
-  const menu = VIEWS.map((v) => ({ ...v, href: viewHref(v.id) }));
+  const single = route.view === 'all';
+  // On the single page the menu jumps to each view's block instead of switching view.
+  const menu = VIEWS.map((v) => ({ ...v, href: single ? viewHref('all', `view-${v.id}`) : viewHref(v.id) }));
 
   return (
     <>
@@ -19,7 +21,8 @@ export function App({ result }: { result: LoadResult }) {
           <div className="topbar__left">
             <img className="logo" src={fireworksLogo} alt="Fireworks AI" width={172} height={22} />
             <span className="topbar__divider" aria-hidden="true" />
-            <ViewMenu items={menu} current={route.view} />
+            <ViewMenu items={menu} current={route.view} label={single ? 'Jump to' : undefined} />
+            <SinglePageSwitch on={single} href={single ? viewHref('health') : viewHref('all')} />
           </div>
           <span className="badge badge--purple">Internal use only</span>
         </div>
@@ -41,7 +44,7 @@ function Dashboard({
   anchor,
 }: {
   result: Extract<LoadResult, { ok: true }>;
-  view: (typeof VIEWS)[number]['id'];
+  view: RouteView;
   anchor?: string;
 }) {
   const m = useMemo(() => buildModel(result.rows), [result.rows]);
@@ -79,6 +82,19 @@ function Dashboard({
 
       {/* Keyed by view so the entrance replays on navigation (DESIGN.md §7). */}
       <div className="view-in" key={view}>
+        {view === 'all' && (
+          <>
+            <div className="view-group" id="view-health">
+              <HealthView m={m} single />
+            </div>
+            <div className="view-group" id="view-trends">
+              <TrendsView m={m} showEvents={false} />
+            </div>
+            <div className="view-group" id="view-plan">
+              <PlanView m={m} />
+            </div>
+          </>
+        )}
         {view === 'health' && <HealthView m={m} />}
         {view === 'trends' && <TrendsView m={m} />}
         {view === 'plan' && <PlanView m={m} />}

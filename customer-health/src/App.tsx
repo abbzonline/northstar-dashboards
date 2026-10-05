@@ -1,8 +1,8 @@
-import { ACCOUNT, ErrorPanel, ViewMenu, fmtDay, type LoadResult } from '@northstar/shared';
+import { ACCOUNT, ErrorPanel, EventLegend, SinglePageSwitch, ViewMenu, fmtDay, type LoadResult } from '@northstar/shared';
 import fireworksLogo from '@northstar/shared/brand/fireworks-logo.svg';
 import { useEffect, useMemo } from 'react';
 import { buildModel } from './model';
-import { VIEWS, useRoute, viewHref, type ViewId } from './router';
+import { VIEWS, useRoute, viewHref, type RouteView } from './router';
 import { NextStepsView } from './views/NextStepsView';
 import { OutcomesView } from './views/OutcomesView';
 import { QualityView } from './views/QualityView';
@@ -11,7 +11,9 @@ import { SpendView } from './views/SpendView';
 
 export function App({ result }: { result: LoadResult }) {
   const route = useRoute();
-  const menu = VIEWS.map((v) => ({ ...v, href: viewHref(v.id) }));
+  const single = route.view === 'all';
+  // On the single page the menu jumps to each view's block instead of switching view.
+  const menu = VIEWS.map((v) => ({ ...v, href: single ? viewHref('all', `view-${v.id}`) : viewHref(v.id) }));
 
   return (
     <>
@@ -20,7 +22,8 @@ export function App({ result }: { result: LoadResult }) {
           <div className="topbar__left">
             <img className="logo" src={fireworksLogo} alt="Fireworks AI" width={172} height={22} />
             <span className="topbar__divider" aria-hidden="true" />
-            <ViewMenu items={menu} current={route.view} />
+            <ViewMenu items={menu} current={route.view} label={single ? 'Jump to' : undefined} />
+            <SinglePageSwitch on={single} href={single ? viewHref('outcomes') : viewHref('all')} />
           </div>
         </div>
       </header>
@@ -35,7 +38,7 @@ export function App({ result }: { result: LoadResult }) {
   );
 }
 
-function Dashboard({ result, view, anchor }: { result: Extract<LoadResult, { ok: true }>; view: ViewId; anchor?: string }) {
+function Dashboard({ result, view, anchor }: { result: Extract<LoadResult, { ok: true }>; view: RouteView; anchor?: string }) {
   const m = useMemo(() => buildModel(result.rows), [result.rows]);
 
   // On every route change: jump to the anchor (and pulse it), or start the new view at the top.
@@ -70,6 +73,26 @@ function Dashboard({ result, view, anchor }: { result: Extract<LoadResult, { ok:
 
       {/* Keyed by view so the entrance replays on navigation (DESIGN.md §7). */}
       <div className="view-in" key={view}>
+        {view === 'all' && (
+          <>
+            <div className="view-group" id="view-outcomes">
+              <OutcomesView m={m} single />
+            </div>
+            <div className="view-group" id="view-service">
+              <EventLegend events={m.events} />
+              <ServiceView m={m} showEvents={false} />
+            </div>
+            <div className="view-group" id="view-quality">
+              <QualityView m={m} showEvents={false} />
+            </div>
+            <div className="view-group" id="view-spend">
+              <SpendView m={m} showEvents={false} />
+            </div>
+            <div className="view-group" id="view-next-steps">
+              <NextStepsView />
+            </div>
+          </>
+        )}
         {view === 'outcomes' && <OutcomesView m={m} />}
         {view === 'service' && <ServiceView m={m} />}
         {view === 'quality' && <QualityView m={m} />}

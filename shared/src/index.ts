@@ -18,3 +18,4 @@ export * from './components/Pips';
 export * from './components/PillarIcon';
 export * from './components/TopRisks';
 export * from './components/ViewMenu';
+export * from './components/SinglePageSwitch';

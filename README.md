@@ -66,12 +66,14 @@ Each view is a shareable URL, chosen from the dropdown next to the Fireworks log
 |---|---|---|---|
 | Internal | Account health | `#/health` | Customer score (RAMP UP, six pillars), Focus areas pop-up, eight headline metrics, operational events |
 | Internal | Performance trends | `#/trends` | Nine daily charts; each headline tile opens its chart here |
+| Internal | Single page | `#/all` | All three views stacked; the view menu becomes "Jump to" |
 | Internal | Expansion plan | `#/plan` | Pipeline across four brands, top three risks, stakeholder coverage, dependencies / support burden / margin, competitive risk, decisions needed, next actions |
 | Customer | Outcomes | `#/outcomes` | Operational health (four pillars), headline results, usage and adoption trends |
 | Customer | Service reliability | `#/service` | Availability vs proposed 99.9% target, errors, latency, known caveats |
 | Customer | Answer quality | `#/quality` | Grounding, eval pass, escalation; CSAT and handle time |
 | Customer | Spend | `#/spend` | Daily and cumulative spend, unit cost, budget context |
 | Customer | Next steps | `#/next-steps` | Ridgeline pilot proposal, Northstar's dependencies, joint actions |
+| Customer | Single page | `#/all` | All five views stacked; the view menu becomes "Jump to" |
 
 ## Data
 
