@@ -225,7 +225,7 @@ pres.addSection({ title: 'Expansion' });
   const rx = M + dw + 0.35, rw = CW - dw - 0.35;
   const side = [
     ['Data isolation', 'Each brand’s catalogue sits in its own knowledge index; each adapter is trained on that brand’s transcripts.'],
-    ['Why not reuse Atlas with a new prompt?', 'Atlas’s tone and return policies are learned into its adapter and would leak into other brands.'],
+    ['Why not reuse Atlas with a new prompt?', 'Atlas’s tone and policy-handling habits are learned into its adapter and would leak into other brands.'],
     ['Why not five separate models?', 'Five deployments to run and retrain, and the smaller brands lack the data to train them well.'],
   ];
   side.forEach(([head, body], i) => {
@@ -236,18 +236,18 @@ pres.addSection({ title: 'Expansion' });
       { text: body, options: { color: GRAY, fontSize: 13 } },
     ], { x: rx + 0.3, y, w: rw - 0.3, h: 1.4, margin: 0, valign: 'top', paraSpaceAfter: 4, isTextBox: true });
   });
-  s.addNotes('The architecture: one open-weight base model on a shared deployment, one adapter per brand for tone and policy, and a separate knowledge index and system prompt per brand. Atlas’s adapter moves over unchanged. Data isolation sits where it matters, in each brand’s index and adapter. Halden, the largest brand, can move to its own deployment once its volume keeps capacity busy. Why not reuse Atlas with a new prompt: its tone and return policies are learned and would leak. Why not five separate models: five deployments to run and retrain, and the smaller brands don’t have enough transcripts.');
+  s.addNotes('The architecture: one open-weight base model on a shared deployment, one adapter per brand for tone, workflow and policy-following behaviour, and a separate knowledge index and system prompt per brand. Policy facts such as return windows live in the index, not the weights, so they can change without retraining. Atlas’s adapter moves over unchanged. Data isolation sits where it matters, in each brand’s index and adapter. Halden, the largest brand, can move to its own deployment once its volume keeps capacity busy. Why not reuse Atlas with a new prompt: its tone and policy-handling habits are learned and would leak. Why not five separate models: five deployments to run and retrain, and the smaller brands don’t have enough transcripts.');
 }
 
 // ---------------------------------------------------------------- 5. Pilot
 {
   const s = slide('CONTENT', 'Expansion', '05 · Pilot', 'Ridgeline pilot: two arms, agreed criteria');
-  s.addText('Ridgeline is closest to Atlas in product and customer, uses the same Zendesk tooling and runs at moderate volume, so it tests tone and return-policy transfer with limited exposure.', {
+  s.addText('Ridgeline is closest to Atlas in product and customer, uses the same Zendesk tooling and runs at moderate volume, so it tests tone and return-policy handling with limited exposure.', {
     x: M, y: 1.95, w: CW, h: 0.65, fontSize: 15, color: C.text1, margin: 0, isTextBox: true,
   });
   const arms = [
     ['ARM A · LOWEST COST', 'Base model + Ridgeline prompt + Ridgeline knowledge index', 'No brand-specific training. If it clears every criterion, no adapter is needed.'],
-    ['ARM B · BRAND-TUNED', 'Base model + Ridgeline adapter + prompt + knowledge index', 'Tone and policy learned from Ridgeline transcripts.'],
+    ['ARM B · BRAND-TUNED', 'Base model + Ridgeline adapter + prompt + knowledge index', 'Tone and policy-following learned from Ridgeline transcripts.'],
   ];
   arms.forEach(([tag, setup, note], i) => {
     const y = 2.8 + i * 1.85;

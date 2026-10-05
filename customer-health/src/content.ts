@@ -9,7 +9,7 @@
 export const PILOT = {
   brand: 'Ridgeline',
   window: 'Nov–Dec 2026, four weeks of live traffic',
-  why: 'Closest to Atlas in product and customer, on the same Zendesk tooling, at moderate volume: it tests tone and return-policy transfer with limited exposure.',
+  why: 'Closest to Atlas in product and customer, on the same Zendesk tooling, at moderate volume: it tests tone and return-policy handling with limited exposure.',
   arms: [
     {
       name: 'Arm A',
@@ -19,7 +19,7 @@ export const PILOT = {
     {
       name: 'Arm B',
       setup: 'Base model + Ridgeline adapter + Ridgeline system prompt + knowledge index',
-      purpose: 'Brand-tuned: tone and policy behaviour learned from Ridgeline transcripts',
+      purpose: 'Brand-tuned: tone, workflow and policy-following behaviour learned from Ridgeline transcripts; policy facts stay in the knowledge index',
     },
   ],
   criteria: [

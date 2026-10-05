@@ -48,7 +48,7 @@ export const BRANDS: Brand[] = [
     stage: 'Pilot',
     timing: 'Nov–Dec 2026',
     confidence: 'High',
-    note: 'Closest to Atlas, same tooling, moderate volume: limits blast radius while testing tone and policy transfer',
+    note: 'Closest to Atlas, same tooling, moderate volume: limits blast radius while testing tone and policy handling',
   },
   {
     name: 'Halden',

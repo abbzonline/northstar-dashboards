@@ -62,7 +62,7 @@ The architecture as stated for the EBR:
 
 | Alternative | Why not |
 |---|---|
-| Reuse the Atlas adapter with a brand prompt | It was trained on Atlas only, so it has learned Atlas's tone and return-policy behaviour, exactly what differs by brand. A prompt fights learned weights, and Atlas tone and policy would leak through: the worst failure mode for a retail brand |
+| Reuse the Atlas adapter with a brand prompt | It was trained on Atlas only, so it has learned Atlas's tone, workflows and policy-following habits, exactly what differs by brand. A prompt fights learned weights, and Atlas's tone and habits would leak through: the worst failure mode for a retail brand |
 | Separate full fine-tunes per brand | Five dedicated deployments (five GPU floors), five pipelines, five retrains whenever the base changes; the smaller brands lack the transcripts to justify it |
 | Serverless | Not available for custom or LoRA models on Fireworks, and serverless carries "no SLA guarantees for up-time or latency" |
 | Keep Atlas on its own live-merged deployment; put the four new brands on a second multi-LoRA deployment | **Valid stated alternative.** Atlas stays untouched at the infrastructure level too and can run FP8 for a slightly better P50. The cost is two GPU floors instead of one. Choose it if flagship P50 matters more than the cost difference |
@@ -72,8 +72,8 @@ The architecture as stated for the EBR:
 | Layer | Scope | Holds |
 |---|---|---|
 | Base | One open-weight model on one BF16 deployment | General language ability |
-| LoRA adapter | One per brand (Atlas exists; four new) | The brand's tone and policy behaviour, plus brand-agnostic support skills (triage, escalation, tool-call format, knowing when to say "I don't know"), since there's no shared fine-tune layer |
-| RAG index | One per brand, isolated | That brand's catalogue. Data isolation lives here |
+| LoRA adapter | One per brand (Atlas exists; four new) | The brand's stable tone, workflow and policy-following behaviour (e.g. when a return falls outside policy, explain the rule and offer escalation rather than invent an exception), plus brand-agnostic support skills (triage, escalation, tool-call format, knowing when to say "I don't know"), since there's no shared fine-tune layer |
+| RAG index | One per brand, isolated | That brand's catalogue and policy facts (return windows, warranty and repair terms). Facts change, so they stay out of the weights. Data isolation lives here |
 | System prompt | One per brand | Routing, guardrails, anything that changes weekly |
 
 **Decision rule for where something lives:**
@@ -81,10 +81,11 @@ The architecture as stated for the EBR:
 | If it is… | It goes in… |
 |---|---|
 | Changes daily or weekly | RAG or prompt |
-| Stable but brand-specific style or policy behaviour | Adapter |
+| A policy fact (e.g. "returns accepted within 30 days") | RAG or config, never the adapter |
+| Stable but brand-specific tone, workflow or policy-following behaviour | Adapter |
 | A brand-agnostic support skill | Adapter, seeded from shared training data (below) |
 
-**Training data for new brands.** Seed each brand's training set with **de-branded Atlas transcripts** (triage, escalation, tool-call patterns with Atlas tone and policy removed), then add the brand's own transcripts. This covers brands with thin data. Moving Atlas data across brands needs Northstar's sign-off.
+**Training data for new brands.** Seed each brand's training set with **de-branded Atlas transcripts** (triage, escalation, tool-call patterns with Atlas tone and policy specifics removed), then add the brand's own transcripts. This covers brands with thin data. Moving Atlas data across brands needs Northstar's sign-off.
 
 ## The key trade-off: shared BF16 vs five FP8 deployments
 
