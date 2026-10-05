@@ -1,9 +1,6 @@
 import { ACCOUNT } from './account';
 import { fmtUsd, sum, type DailyMetric, type Judgement } from '@northstar/shared';
 
-/** Fireworks' annualised revenue run rate (company tear sheet, Jul 2026: "$1B+ ARR"). */
-const FIREWORKS_RUN_RATE_USD = 1_000_000_000;
-
 /**
  * Account-team judgement for the two P pillars of RAMP UP.
  * Internal only: the customer dashboard never imports this file.
@@ -11,7 +8,6 @@ const FIREWORKS_RUN_RATE_USD = 1_000_000_000;
 export function judgements(rows: DailyMetric[]): Record<'partnership' | 'profitability', Judgement> {
   const spend = sum(rows.map((r) => r.spend_usd));
   const annualised = (spend / rows.length) * 365;
-  const shareOfRunRate = (annualised / FIREWORKS_RUN_RATE_USD) * 100;
   const opsEvents = rows.filter((r) => r.operational_note).length;
   const annualisedK = `$${Math.round(annualised / 1000)}k`;
 
@@ -30,13 +26,14 @@ export function judgements(rows: DailyMetric[]): Record<'partnership' | 'profita
     profitability: {
       score: 1,
       rationale:
-        `At about ${annualisedK} a year, ${ACCOUNT.brand} doesn't move the needle for a company with a $1B+ run ` +
-        'rate, and it needed hands-on engineering in its first month. The commercial case rests on expansion.',
+        'Current revenue is immaterial relative to the revenue ceiling across Northstar. The ' +
+        `${ACCOUNT.brand} deployment serves as a proof of concept to secure approval for rollouts across the ` +
+        'other four brands, which carry significantly higher customer volumes.',
       evidence: [
-        `${fmtUsd(spend)} revenue in ${rows.length} days, about ${annualisedK} annualised: ${shareOfRunRate.toFixed(4)}% of the $1B+ run rate`,
-        `${opsEvents} hands-on interventions in month one (catalog sync incident, autoscaling change, RAG index refresh)`,
-        'Assumes per-token serverless pricing (~$1.11 per 1M tokens); on dedicated GPUs the account would likely be loss-making',
-        'Lever: the four sister brands on a shared model',
+        `Current revenue: ${fmtUsd(spend)} for August (approx. ${annualisedK} annualised)`,
+        `Cost to serve: ${opsEvents} engineering interventions in month one (catalog sync, autoscaling, RAG index refresh)`,
+        'Pricing assumption: per-token serverless (approx. $1.11 per 1M tokens); dedicated capacity would not be margin-positive at current volume',
+        'Upside: group-wide rollout to the four sister brands on a shared model',
       ],
     },
   };

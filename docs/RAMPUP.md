@@ -132,7 +132,7 @@ Set by the account team in [`internal-qbr/src/judgements.ts`](../internal-qbr/sr
 | Pillar | Score | Rationale |
 |---|---|---|
 | Partnership | **2** | Live on one brand out of five. The flagship team is engaged, but the wider business hasn't bought in: the four sister brands have no commitment, sponsor or timeline. Next step is an executive sponsor above brand level at the EBR. |
-| Profitability | **1** | Scored from Fireworks' side. $1,213 in August is about $14.3k annualised: roughly 0.0014% of Fireworks' $1B+ run rate, so it doesn't move the needle. Month one also needed three hands-on interventions (catalog sync incident, autoscaling change, RAG index refresh). **Assumes** per-token serverless pricing (about $1.11 per 1M tokens); on dedicated GPUs the account would likely be loss-making. The lever is expansion to the four sister brands on a shared model. |
+| Profitability | **1** | Scored from Fireworks' side. Current revenue is immaterial relative to the revenue ceiling across Northstar: $1,213 for August, approx. $14k annualised. The Atlas deployment serves as a proof of concept to secure approval for rollouts across the other four brands, which carry significantly higher customer volumes (scenario assumption, to be backed by the brand profiles). Cost to serve: three engineering interventions in month one (catalog sync, autoscaling, RAG index refresh). **Pricing assumption:** per-token serverless (approx. $1.11 per 1M tokens); dedicated capacity would not be margin-positive at current volume. |
 
 ## Current result (Aug 1–31, 2026, full-period averages)
 
@@ -148,7 +148,7 @@ Set by the account team in [`internal-qbr/src/judgements.ts`](../internal-qbr/sr
 
 What the score says:
 - **Strengths:** adoption, model quality and user outcomes (all 4.0).
-- **Weaknesses:** profitability (commercially immaterial at about $14k a year), partnership (needs buy-in beyond Atlas) and reliability (latency and the Aug 9 incident).
+- **Weaknesses:** profitability (current revenue immaterial relative to the group-wide ceiling), partnership (needs buy-in beyond Atlas) and reliability (latency and the Aug 9 incident).
 - **Status:** 3.37 is Positive-Watch, 0.63 short of Healthy.
 - **For the expansion case:** both judgement pillars point the same way. Scaling to the four sister brands on a shared model is what makes the account worth its support cost and turns a single-brand relationship into a group one. The pitch: "prove reliability on Atlas, win group sponsorship, then scale".
 
@@ -162,7 +162,7 @@ What the score says:
 | Availability scale | 99.9 = 5, 0.2-pt steps | Team standard (stricter SLA-anchored alternative documented above) |
 | M and U sources | Microsoft Foundry, RAGAS, Freshworks 2025, Salesforce 2025 | Primary, first-party sources instead of blog aggregators |
 | Escalation | Scored in U as first-contact resolution | Has a direct Freshworks benchmark; keeps M purely about answer correctness |
-| Profitability perspective | Fireworks' commercial view, scored 1 | ~$14k a year doesn't move the needle at a $1B+ run rate; customer value already shows in U and the EBR |
+| Profitability perspective | Fireworks' commercial view, scored 1 | Current revenue is immaterial relative to the ceiling across Northstar; Atlas is the proof of concept for the group rollout. Customer value already shows in U and the EBR |
 | Status bands | Out of 5: Healthy ≥ 4, Positive-Watch ≥ 3, Negative-Watch ≥ 2, At risk < 2 | Same scale as the scores; splitting Watch shows which way an account is leaning |
 | CSAT yardstick | Salesforce: 85 = 5, 70 = 4, 60 = 3, 50 = 2, below 50 = 1 | Salesforce's general good (70) / poor (50) guidance fits an AI agent better than Freshworks' human-chat retail tiers |
 | Dashboard sources | Plain-text citations, no outbound links | Internal dashboard stays self-contained; full references live in this doc |
