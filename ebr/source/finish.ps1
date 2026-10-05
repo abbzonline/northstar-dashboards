@@ -1,0 +1,40 @@
+# Finishes the deck in PowerPoint (Windows): embeds the Inter fonts so the .pptx renders as designed on machines
+# without Inter, and exports the PDF with PowerPoint's own renderer.
+#
+#   node build_ebr.js build\Northstar_EBR_Oct2026.pptx
+#   powershell -ExecutionPolicy Bypass -File finish.ps1 build\Northstar_EBR_Oct2026.pptx
+#
+# Requires PowerPoint and the fonts in ebr/fonts installed. Writes ebr/Northstar_EBR_Oct2026.pptx and .pdf,
+# then fails if any Inter face did not embed.
+param([Parameter(Mandatory = $true)][string]$Built)
+
+$ErrorActionPreference = 'Stop'
+$src = (Resolve-Path $Built).Path
+$ebr = Split-Path $PSScriptRoot -Parent
+$pptx = Join-Path $ebr 'Northstar_EBR_Oct2026.pptx'
+$pdf = Join-Path $ebr 'Northstar_EBR_Oct2026.pdf'
+
+$pp = New-Object -ComObject PowerPoint.Application
+try {
+  $p = $pp.Presentations.Open($src, -1, 0, 0)  # read-only, no window
+  $p.SaveAs($pptx, 24, -1)  # ppSaveAsOpenXMLPresentation, EmbedTrueTypeFonts
+  $p.SaveAs($pdf, 32)       # ppSaveAsPDF
+  $p.Close()
+} finally {
+  $pp.Quit()
+  [System.Runtime.InteropServices.Marshal]::ReleaseComObject($pp) | Out-Null
+}
+
+# Check the saved package itself (PowerPoint's Font.Embedded flag is unreliable through COM).
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+$zip = [System.IO.Compression.ZipFile]::OpenRead($pptx)
+try {
+  $reader = New-Object System.IO.StreamReader($zip.GetEntry('ppt/presentation.xml').Open())
+  $xml = $reader.ReadToEnd(); $reader.Close()
+} finally { $zip.Dispose() }
+$embedded = [regex]::Matches($xml, '<p:embeddedFont><p:font typeface="([^"]+)"') | ForEach-Object { $_.Groups[1].Value }
+Write-Output "embedded fonts: $($embedded -join ', ')"
+$missing = @('Inter', 'Inter Medium') | Where-Object { $embedded -notcontains $_ }
+if ($missing) { throw "Not embedded: $($missing -join ', '). Install ebr/fonts/*.ttf and rerun." }
+Write-Output "wrote $pptx"
+Write-Output "wrote $pdf"

@@ -8,7 +8,7 @@ Fireworks' account review of **Northstar Retail Group**'s fine-tuned support mod
 |---|---|---|
 | 1. Internal QBR dashboard | `internal-qbr/` (port 5173) | Fireworks account, engineering and leadership teams |
 | 2. Customer health dashboard | `customer-health/` (port 5174) | Northstar VP Customer Experience and VP Engineering |
-| 3. EBR deck, 7 slides with speaker notes | `ebr/Northstar_EBR_Oct2026.pptx` (+ `.pdf`) | Northstar VP Customer Experience and VP Engineering |
+| 3. EBR deck: cover, 8 slides with speaker notes, closing page | `ebr/Northstar_EBR_Oct2026.pptx` (+ `.pdf`) | Northstar VP Customer Experience and VP Engineering |
 | Design document, with screenshots | [`docs/DESIGN.md`](docs/DESIGN.md) | Reviewers |
 | Health-score method and benchmarks | [`docs/RAMPUP.md`](docs/RAMPUP.md) | Reviewers |
 | Scaling architecture | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Reviewers |
@@ -101,18 +101,18 @@ data/             the CSV
 shared/src/       data loading and validation, derived metrics, RAMP UP scoring, pricing constants, Fireworks theme, components
 internal-qbr/     internal QBR app (Vite + React + TypeScript)
 customer-health/  customer health app (same stack; never imports internal-qbr)
-ebr/              EBR deck (.pptx, .pdf) and its generator (source/)
+ebr/              EBR deck (.pptx, .pdf), its generator (source/) and the Inter fonts it uses (fonts/)
 docs/             design document, screenshots, scoring method, architecture, decision log
 scripts/          xlsx → csv conversion
 ```
 
 Stack: React 18, Recharts 2, PapaParse, Vite 6, Vitest 3, TypeScript 5.7, npm workspaces.
 
-**Typography:** Inter, the default font on fireworks.ai (open licence); see [`shared/src/theme/fonts/FONTS.md`](shared/src/theme/fonts/FONTS.md). The EBR deck uses Arial so it renders identically in any copy of PowerPoint.
+**Typography:** Inter, the default font on fireworks.ai (open licence); see [`shared/src/theme/fonts/FONTS.md`](shared/src/theme/fonts/FONTS.md). The EBR deck uses the same Inter type scale, with the fonts embedded in the .pptx; `ebr/fonts/` holds the two weights (SIL OFL) for editing it.
 
 ## Known limitations
 
 - **Daily data for one deployment:** there's no per-conversation drill-down.
 - **Missing inputs:** pre-launch baselines, an SLA and the sister-brand descriptions were not supplied. Every figure that depends on them is labelled as an assumption.
 - **Pricing can change:** on-demand rates changed on 1 Sep 2026 and may change again. Re-check before presenting.
-- **The EBR generator** (`ebr/source/build_ebr.js`) needs `pptxgenjs` and is not part of the npm workspace; the built `.pptx` and `.pdf` are committed.
+- **The EBR deck is generated, not hand-made.** `ebr/source/build_ebr.js` computes every figure with the customer dashboard's own model (`figures.js` bundles it with esbuild), so the deck and dashboard can't disagree. Rebuild with `cd ebr/source && npm install && npm run build`, then `npm run finish` (Windows with PowerPoint) to embed Inter and export the PDF. The built `.pptx` and `.pdf` are committed.

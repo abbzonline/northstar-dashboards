@@ -1,0 +1,14 @@
+{
+  "name": "northstar-ebr",
+  "private": true,
+  "description": "Builds the Northstar EBR deck from the customer dashboard's model, in its design language.",
+  "scripts": {
+    "build": "node build_ebr.js build/Northstar_EBR_Oct2026.pptx",
+    "finish": "powershell -ExecutionPolicy Bypass -File finish.ps1 build/Northstar_EBR_Oct2026.pptx"
+  },
+  "dependencies": {
+    "jszip": "3.10.2",
+    "pptxgenjs": "4.0.1",
+    "sharp": "0.35.5"
+  }
+}
