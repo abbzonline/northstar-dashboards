@@ -8,7 +8,6 @@ import { fmtUsd, sum, type DailyMetric, type Judgement } from '@northstar/shared
 export function judgements(rows: DailyMetric[]): Record<'partnership' | 'profitability', Judgement> {
   const spend = sum(rows.map((r) => r.spend_usd));
   const annualised = (spend / rows.length) * 365;
-  const opsEvents = rows.filter((r) => r.operational_note).length;
   const annualisedK = `$${Math.round(annualised / 1000)}k`;
 
   return {
@@ -31,9 +30,9 @@ export function judgements(rows: DailyMetric[]): Record<'partnership' | 'profita
         'other four brands, which carry significantly higher customer volumes.',
       evidence: [
         `Current revenue: ${fmtUsd(spend)} for August (approx. ${annualisedK} annualised)`,
-        `Cost to serve: ${opsEvents} engineering interventions in month one (catalog sync, autoscaling, RAG index refresh)`,
-        'Pricing assumption: per-token serverless (approx. $1.11 per 1M tokens); dedicated capacity would not be margin-positive at current volume',
-        'Upside: group-wide rollout to the four sister brands on a shared model',
+        'Cost to serve: month-one hypercare covered a catalogue-sync incident, an autoscaling adjustment and a RAG index refresh. Each new brand adds its own catalogue, index and operating team to support',
+        'Deployment economics: Fireworks serves LoRA models on dedicated deployments only, so a single-brand deployment is unlikely to cover its GPU cost; five brands on one multi-LoRA deployment share it',
+        'Upside: rollout to the four sister brands, each with its own catalogue, tone of voice and return policies, via one shared base model with a per-brand LoRA adapter, RAG index and system prompt',
       ],
     },
   };

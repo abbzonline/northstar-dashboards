@@ -11,7 +11,7 @@ The visual design follows fireworks.ai's own design tokens, taken from the site'
 
 Typography matches the site exactly. **Inter** (variable) is used for titles, body copy and numbers. **Favorit** (weight 550, uppercase, 0.04em tracking) is used for labels. Favorit is a commercial Dinamo font, copied from fireworks.ai for this private submission only; see [`shared/src/theme/fonts/FONTS.md`](shared/src/theme/fonts/FONTS.md).
 
-Every design and scoring decision, with its reasoning, is logged in [`docs/DECISIONS.md`](docs/DECISIONS.md).
+Every design and scoring decision, with its reasoning, is logged in [`docs/DECISIONS.md`](docs/DECISIONS.md). The plan for scaling from Atlas to the other four brands is in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Quick start
 
