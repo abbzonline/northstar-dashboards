@@ -9,10 +9,7 @@ Fireworks' account review of **Northstar Retail Group**'s fine-tuned support mod
 | 1. Internal QBR dashboard | `internal-qbr/` (port 5173) | Fireworks account, engineering and leadership teams |
 | 2. Customer health dashboard | `customer-health/` (port 5174) | Northstar VP Customer Experience and VP Engineering |
 | 3. EBR deck: cover with the five key messages, 7 slides with speaker notes, closing page | `ebr/Northstar_EBR_Oct2026.pptx` (+ `.pdf`) | Northstar VP Customer Experience and VP Engineering |
-| Design document, with screenshots | [`docs/DESIGN.md`](docs/DESIGN.md) | Reviewers |
-| Health-score method and benchmarks | [`docs/RAMPUP.md`](docs/RAMPUP.md) | Reviewers |
-| Scaling architecture | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Reviewers |
-| Every decision and why | [`docs/DECISIONS.md`](docs/DECISIONS.md) | Reviewers |
+| Dashboard design document, with screenshots | [`docs/Northstar_Dashboard_Design.pdf`](docs/Northstar_Dashboard_Design.pdf) (Markdown source: [`docs/DESIGN.md`](docs/DESIGN.md)) | Reviewers |
 
 The two dashboards are **separate apps** sharing one data and design package (`shared/`), so internal commercial judgement can't reach the customer build. A test enforces it.
 
@@ -81,11 +78,11 @@ Both apps read **`data/northstar_flagship_30_day_metrics.csv`**: 31 daily rows, 
 
 - **Bundled at build time.** To use different data, replace that file (same columns) and restart the dev server or rebuild.
 - **Bad data is reported, not hidden.** If a column is missing or a value won't parse, the page lists the exact problems instead of charts.
-- **Source format.** The exercise supplied an `.xlsx` with the same columns. `scripts/xlsx_to_csv.py` is the one-off conversion (Python and pandas; only needed to regenerate the CSV).
+- **Source format.** The exercise supplied an `.xlsx` with the same columns; it was converted once to this CSV.
 
 ## Assumptions
 
-Full list in [`docs/DESIGN.md`](docs/DESIGN.md) §8 and [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+Full list in the [design document](docs/Northstar_Dashboard_Design.pdf), section 8.
 
 - **Scenario:** Northstar is an outerwear-fashion holding company and Atlas its flagship brand. The dashboards show the model as `northstar-atlas-support-ft-v1`; the CSV's `deployment` column reads `northstar-flagship-support-ft-v1`. Set in `shared/src/account.ts`.
 - **Sister brands:** Ridgeline, Halden, Polar and Harbour & Hide, with their volumes, catalogues and tooling, are invented. The brief's brand descriptions were not supplied.
@@ -101,18 +98,17 @@ data/             the CSV
 shared/src/       data loading and validation, derived metrics, RAMP UP scoring, pricing constants, Fireworks theme, components
 internal-qbr/     internal QBR app (Vite + React + TypeScript)
 customer-health/  customer health app (same stack; never imports internal-qbr)
-ebr/              EBR deck (.pptx, .pdf), its generator (source/) and the Inter fonts it uses (fonts/)
-docs/             design document, screenshots, scoring method, architecture, decision log
-scripts/          xlsx → csv conversion
+ebr/              EBR deck (.pptx, .pdf)
+docs/             design document (PDF, Markdown source) and its screenshots
 ```
 
 Stack: React 18, Recharts 2, PapaParse, Vite 6, Vitest 3, TypeScript 5.7, npm workspaces.
 
-**Typography:** Inter, the default font on fireworks.ai (open licence); see [`shared/src/theme/fonts/FONTS.md`](shared/src/theme/fonts/FONTS.md). The EBR deck uses the same Inter type scale, with the fonts embedded in the .pptx; `ebr/fonts/` holds the two weights (SIL OFL) for editing it.
+**Typography:** Inter, the default font on fireworks.ai (open licence); see [`shared/src/theme/fonts/FONTS.md`](shared/src/theme/fonts/FONTS.md). The EBR deck uses the same Inter type scale, with the fonts embedded in the .pptx.
 
 ## Known limitations
 
 - **Daily data for one deployment:** there's no per-conversation drill-down.
 - **Missing inputs:** pre-launch baselines, an SLA and the sister-brand descriptions were not supplied. Every figure that depends on them is labelled as an assumption.
 - **Pricing can change:** on-demand rates changed on 1 Sep 2026 and may change again. Re-check before presenting.
-- **The EBR deck is generated, not hand-made.** `ebr/source/build_ebr.js` computes every figure with the customer dashboard's own model (`figures.js` bundles it with esbuild), so the deck and dashboard can't disagree. Rebuild with `cd ebr/source && npm install && npm run build`, then `npm run finish` (Windows with PowerPoint) to embed Inter and export the PDF. The built `.pptx` and `.pdf` are committed.
+

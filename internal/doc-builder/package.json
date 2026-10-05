@@ -1,0 +1,13 @@
+{
+  "name": "northstar-design-pdf",
+  "private": true,
+  "type": "module",
+  "description": "Renders send/docs/DESIGN.md to the PDF that goes to the receiver.",
+  "scripts": {
+    "build": "node build_pdf.mjs"
+  },
+  "dependencies": {
+    "marked": "^15.0.0",
+    "puppeteer-core": "^24.0.0"
+  }
+}
