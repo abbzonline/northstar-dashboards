@@ -1,0 +1,48 @@
+/*
+ * L1 motion (customer-health/DESIGN.md §4 and §7). Everything is scoped under .motion-l1, which only the
+ * customer app sets, so the internal dashboard is unaffected. No scroll-triggered effects: data is
+ * visible at first paint.
+ */
+
+/* Entrance: once per view load. */
+@keyframes view-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+.motion-l1 .view-in > * { animation: view-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.motion-l1 .view-in > *:nth-child(2) { animation-delay: 0.06s; }
+.motion-l1 .view-in > *:nth-child(3) { animation-delay: 0.12s; }
+.motion-l1 .view-in > *:nth-child(n + 4) { animation-delay: 0.18s; }
+
+/* KPI tiles: tint to white plus an inset accent hairline. No lift; it would break the grid. */
+.motion-l1 .kpi--link { transition: background-color 0.2s ease, box-shadow 0.2s ease; }
+.motion-l1 .kpi--link:hover {
+  background: #fff;
+  box-shadow: 1px 0 0 var(--fw-border), 0 1px 0 var(--fw-border), inset 0 0 0 1px var(--fw-purple-200);
+}
+.motion-l1 .kpi--link:active { background: var(--fw-surface-tint); }
+
+/* Chart cards and facts panels: border highlight only. */
+.motion-l1 .card,
+.motion-l1 .facts-card,
+.motion-l1 .table-wrap { transition: border-color 0.2s ease; }
+.motion-l1 .card:hover,
+.motion-l1 .facts-card:hover,
+.motion-l1 .table-wrap:hover { border-color: var(--fw-purple-200); }
+
+/* Table rows. */
+.motion-l1 .table tbody tr { transition: background-color 0.15s ease; }
+.motion-l1 .table tbody tr:hover { background: var(--fw-surface-tint); }
+
+/* Pillar rows already tint on hover; keep their transition consistent. */
+.motion-l1 .pillar__summary { transition: background-color 0.15s ease; }
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-l1 .view-in > * { animation: none; }
+  .motion-l1 .kpi--link,
+  .motion-l1 .card,
+  .motion-l1 .facts-card,
+  .motion-l1 .table-wrap,
+  .motion-l1 .table tbody tr,
+  .motion-l1 .pillar__summary { transition: none; }
+}

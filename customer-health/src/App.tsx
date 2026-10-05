@@ -25,7 +25,7 @@ export function App({ result }: { result: LoadResult }) {
           <span className="badge badge--purple">Prepared for {ACCOUNT.company}</span>
         </div>
       </header>
-      <main className="frame shell">
+      <main className="frame shell motion-l1">
         {result.ok ? (
           <Dashboard result={result} view={route.view} anchor={route.anchor} />
         ) : (
@@ -71,11 +71,14 @@ function Dashboard({ result, view, anchor }: { result: Extract<LoadResult, { ok:
         </div>
       </div>
 
-      {view === 'outcomes' && <OutcomesView m={m} />}
-      {view === 'service' && <ServiceView m={m} />}
-      {view === 'quality' && <QualityView m={m} />}
-      {view === 'spend' && <SpendView m={m} />}
-      {view === 'next-steps' && <NextStepsView />}
+      {/* Keyed by view so the entrance and count-ups replay on navigation (DESIGN.md §7). */}
+      <div className="view-in" key={view}>
+        {view === 'outcomes' && <OutcomesView m={m} />}
+        {view === 'service' && <ServiceView m={m} />}
+        {view === 'quality' && <QualityView m={m} />}
+        {view === 'spend' && <SpendView m={m} />}
+        {view === 'next-steps' && <NextStepsView />}
+      </div>
     </>
   );
 }
