@@ -180,7 +180,7 @@ export const DECISIONS: Decision[] = [
     decision: 'Commercial structure for the group rollout',
     owner: 'Account Executive + Sales leadership',
     by: '20 Oct',
-    recommendation: 'Committed spend on the shared deployment from wave 2, so the GPU floor is underwritten; pay-as-you-go during the pilot',
+    recommendation: 'Atlas stays on per-token billing until it migrates. The shared multi-LoRA deployment is billed as dedicated capacity (per GPU-second) from the pilot, with committed spend from wave 2; size replicas from a load benchmark before committing',
   },
   {
     decision: 'Reserve BF16 capacity before commitment',

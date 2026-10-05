@@ -91,7 +91,7 @@ Full list in [`docs/DESIGN.md`](docs/DESIGN.md) §8 and [`docs/ARCHITECTURE.md`]
 - **Sister brands:** Ridgeline, Halden, Polar and Harbour & Hide, with their volumes, catalogues and tooling, are invented. The brief's brand descriptions were not supplied.
 - **Pre-launch baselines:** not in the data. The brief's −35% handle time and +12 CSAT are labelled as baseline comparisons supplied by Northstar.
 - **99.9% availability:** a proposed target. No SLA was in place for August.
-- **Billing:** `spend_usd` tracks tokens at a constant ~$1.12 per 1M, so it's treated as Northstar's contracted per-token rate. GPU utilisation is inferred, not observed.
+- **Billing:** `spend_usd` tracks tokens at a constant ~$1.12 per 1M: Atlas is billed per token today, and Northstar moves to paying for dedicated capacity on the multi-LoRA deployment. GPU utilisation can't be derived from token billing, so none is quoted.
 - **Pricing:** fireworks.ai/pricing as of 5 Oct 2026. All code constants live in `shared/src/pricing.ts`.
 
 ## Project layout

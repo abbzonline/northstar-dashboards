@@ -1,5 +1,5 @@
 import { ACCOUNT } from './account';
-import { WARM_H100_MONTH, WARM_H100_MONTH_EU, fmtUsd, sum, type DailyMetric, type Judgement } from '@northstar/shared';
+import { BRANDS_ON_SHARED_DEPLOYMENT, WARM_H100_MONTH, WARM_H100_MONTH_EU, fmtUsd, sum, type DailyMetric, type Judgement } from '@northstar/shared';
 
 /**
  * Account-team judgement for the two P pillars of RAMP UP.
@@ -30,8 +30,8 @@ export function judgements(rows: DailyMetric[]): Record<'partnership' | 'profita
         'other four brands, which carry significantly higher customer volumes.',
       evidence: [
         `Current revenue: ${fmtUsd(spend)} for August at a contracted ~$1.12 per 1M tokens (approx. ${annualisedK} annualised)`,
-        'Cost to serve: three operational events in month one (catalogue-sync incident, autoscaling threshold adjustment, RAG index refresh). One account team supports all five brands on a single shared deployment, so support effort does not scale per brand',
-        `Deployment economics: Northstar pays per token while the dedicated GPU floor is a Fireworks-side cost. One warm H100 is approx. ${fmtUsd(Math.round(WARM_H100_MONTH / 100) * 100)}/month at list (approx. ${fmtUsd(Math.round(WARM_H100_MONTH_EU / 100) * 100)} at the EU rate), so Atlas alone utilises roughly a fifth of a GPU-day (inferred). No warm floor on Atlas unless telemetry shows it is needed; five brands on one multi-LoRA deployment turn any floor into utilised capacity`,
+        'Cost to serve: three operational events in month one (catalogue-sync incident, autoscaling threshold adjustment, RAG index refresh). Shared infrastructure and account-level overhead create operating leverage across the five brands, but support effort still grows with each brand: integration, RAG ingestion, eval sets, policy updates, adapter releases, monitoring and incidents',
+        `Deployment economics: Atlas is billed per token today, so its GPU utilisation can't be derived from billing; telemetry or load benchmarks are needed. On the shared multi-LoRA deployment Northstar moves to dedicated capacity billed per GPU-second: one H100 is approx. ${fmtUsd(Math.round(WARM_H100_MONTH / 100) * 100)}/month at list (approx. ${fmtUsd(Math.round(WARM_H100_MONTH_EU / 100) * 100)} at the EU rate), or approx. ${fmtUsd(Math.round(WARM_H100_MONTH / BRANDS_ON_SHARED_DEPLOYMENT / 100) * 100)}–${fmtUsd(Math.round(WARM_H100_MONTH_EU / BRANDS_ON_SHARED_DEPLOYMENT / 100) * 100)} per brand`,
         'Strategic value: a recognised retail logo and a reference account for EMEA retail',
         'Upside: rollout to the four sister brands, each with its own catalogue, tone of voice and return policies. Each brand gets a dedicated LoRA adapter, RAG index and system prompt on the same open-weight base as Atlas',
       ],

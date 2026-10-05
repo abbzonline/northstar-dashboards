@@ -27,7 +27,7 @@ Every number below is from [fireworks.ai/pricing](https://fireworks.ai/pricing) 
 | 1 | Atlas is a **LoRA adapter on an open-weight base**, trained on Atlas data only | Fireworks' managed fine-tuning produces LoRA adapters |
 | 2 | Atlas is served by **live merge on its own on-demand (dedicated) deployment** | "Neither custom base models nor LoRA addons are supported for serverless inference. All user-provided models, including trained models, require a dedicated deployment." Live merge is the single-model path, with performance "indistinguishable from a fully trained model" |
 | 3 | The deployment **autoscales** | The 21 Aug note ("autoscaling threshold adjusted") is a dedicated-deployment lever; the 9 and 21 Aug P95 spikes look like replica scale-up lag under burst |
-| 4 | **`spend_usd` tracks tokens at a constant ~$1.12 per 1M** ($1.110–1.123 on every day of August); treated as **Northstar's contracted per-token rate on dedicated capacity** (enterprise terms). The GPU floor is a Fireworks-side cost. **Utilisation (~20% of a GPU-day at list rates) is inferred, not observed** | A GPU-second bill would step with replica count and sit flat when idle; this one moves with tokens to three decimals. Consistent with "custom models are dedicated-only" and the pricing page's "contact us for enterprise deployments". $1,213 at the $8.00 list rate would be ~5 H100-hours/day, which is where the ~20% figure comes from |
+| 4 | **`spend_usd` tracks tokens at a constant ~$1.12 per 1M** ($1.110–1.123 on every day of August); **Atlas is billed per token today** (scenario fact; enterprise terms). On the multi-LoRA deployment Northstar **moves to paying for dedicated capacity**, billed per GPU-second. **GPU utilisation can't be derived from billing data: the price is per token while dedicated infrastructure is billed per GPU-second, so the GPU-seconds Atlas needs come from deployment telemetry or a load benchmark (tokens ÷ achievable tokens/s for the exact model, shape and workload)** | A GPU-second bill would step with replica count and sit flat when idle; this one moves with tokens to three decimals. Dividing token spend by the GPU list price would compare a selling price with a cost, so no utilisation figure is quoted |
 
 **Reliability: what we know and what we don't.** Two claims need keeping apart: the *economics* of a warm replica (solid) and the *cause* of the availability gap (not established).
 
@@ -36,7 +36,7 @@ Every number below is from [fireworks.ai/pricing](https://fireworks.ai/pricing) 
 - **Unknown:** how much of the gap comes from scale-to-zero, replica scale-up lag, application errors or other serving failures. Atlas handles roughly 19,000–31,000 requests a day (about 800–1,300 an hour on average), so unless traffic collapses overnight it is unlikely to spend much time at zero. Daily business metrics cannot separate these causes.
 - **Action:** pull the deployment telemetry first (replica count over time, scale-up events, 503s and error codes by hour). Retune autoscaling next. Add a warm minimum replica only if telemetry shows cold starts or scale-up lag are a material driver.
 
-**The economics, if a floor is needed.** One warm H100 is ~$5.8k/month at list (~$8.8k EU-only) against ~$1.2k/month of Atlas token revenue, so on Atlas alone it means either Fireworks carrying mostly idle capacity or Northstar committing to a minimum 4–7x its current bill. On the shared deployment the same floor is ~$1.2k–1.8k per brand, roughly Atlas's bill today. So a warm floor is cheap once five brands share it, and hard to justify for Atlas alone without evidence that it fixes the problem.
+**The economics, if a floor is needed.** One warm H100 is ~$5.8k/month at list (~$8.8k EU-only) against Atlas's ~$1.2k/month token bill, so on Atlas alone it means moving Atlas from per-token billing to dedicated capacity at 4–7x its current bill. On the shared deployment the same floor is ~$1.2k–1.8k per brand, roughly Atlas's bill today. So a warm floor is cheap once five brands share it, and hard to justify for Atlas alone without evidence that it fixes the problem.
 
 ## Recommendation
 
@@ -128,11 +128,10 @@ Scoring stays on month averages (decision #16); the week-4 figures are used only
 
 ## Deployment economics
 
-- A dedicated deployment has a GPU floor, so it only pays for itself above a utilisation threshold.
-- At Atlas's current volume, one brand can't keep a warm GPU well utilised.
-- Five brands on one deployment share the floor (about $1.2k per brand per month at one warm H100; $1.8k at the EU rate).
-- **Revenue and cost are separate lines.** Revenue is per token at the contracted rate, so it scales with volume: ~$115k/yr indicative across the group. The GPU floor is cost: one warm H100 is ~$70k/yr at list ($105k EU), two floors under the tiered plan ~$140k/yr ($210k EU). Group token revenue covers one shared floor; a second floor (Halden on its own deployment) needs Halden's volume, or revised commercial terms, to pay for itself. List rates overstate Fireworks' actual GPU cost, so treat these as the capacity's opportunity cost.
-- That's why the shared deployment belongs in the expansion plan and not in month one. It also ties directly to the Profitability score (1) in RAMP UP.
+- **Today: per-token billing.** Atlas costs Northstar ~$1.2k/month (~$1.12 per 1M tokens, ~$14k/yr). GPU utilisation can't be derived from billing data: the price is per token while dedicated infrastructure is billed per GPU-second, so the GPU-seconds Atlas needs come from deployment telemetry or a load benchmark (tokens ÷ achievable tokens/s for the exact model, shape and workload).
+- **After migration: dedicated capacity.** Northstar pays for the shared multi-LoRA deployment per GPU-second: one H100 is ~$5.8k/month at list (~$70k/yr), ~$8.8k EU-only (~$105k/yr). Shared by five brands that is ~$1.2k–1.8k per brand per month, roughly Atlas's bill today.
+- **How many replicas** depends on the combined five-brand load, which has to be benchmarked on the chosen base model and shape before capacity is committed. Halden on its own deployment later adds a second floor once its volume justifies it.
+- **Why this sits in the expansion plan, not month one.** For Atlas alone, dedicated capacity is 4–7x today's bill; across five brands it is comparable per brand. The move from per-token to dedicated billing is also what makes the account commercially meaningful to Fireworks, which ties to the Profitability score (1) in RAMP UP.
 
 ## Pilot: two arms
 

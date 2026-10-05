@@ -45,9 +45,9 @@ export function PlanView({ m }: { m: Model }) {
             sub={`${fmtInt(sisters.reduce((s, b) => s + b.tickets, 0))} tickets/day across ${sisters.length} brands`}
           />
           <KpiTile
-            label="Indicative group value"
-            value={`${fmtUsd(Math.round((atlasAnnual * groupMultiple) / 1000) * 1000)}/yr`}
-            sub={`vs ${fmtUsd(Math.round(atlasAnnual / 1000) * 1000)}/yr today; per-token revenue at Atlas's contracted rate`}
+            label="Shared deployment value"
+            value={`${fmtUsd(Math.round((WARM_H100_MONTH * 12) / 1000) * 1000)}+/yr`}
+            sub={`One H100 at list (${fmtUsd(Math.round((WARM_H100_MONTH_EU * 12) / 1000) * 1000)} EU), dedicated billing; vs ${fmtUsd(Math.round(atlasAnnual / 1000) * 1000)}/yr per token today`}
           />
           <KpiTile label="Pilot" value={pilot?.name ?? '—'} sub={pilot?.timing} />
         </div>
@@ -92,7 +92,7 @@ export function PlanView({ m }: { m: Model }) {
           </table>
         </div>
         <p className="table__caption">
-          Sister-brand profiles are scenario assumptions. Indicative value scales Atlas's August revenue by Tier-1 volume at the contracted per-token rate (~$1.12 per 1M tokens); the GPU floor that carries it is on the cost side, see Margin.
+          Sister-brand profiles are scenario assumptions. Shared deployment value is one dedicated H100 at list, billed to Northstar per GPU-second after migration; the replica count for five brands' combined load has to be benchmarked, so it is a floor, not a forecast.
         </p>
       </Section>
 
@@ -191,22 +191,22 @@ export function PlanView({ m }: { m: Model }) {
             <div>
               <dt>Support after expansion</dt>
               <dd>
-                One account team and one shared deployment for all five brands. Per-brand effort is one-off (adapter
-                training and eval), not ongoing.
+                One shared deployment and one account team give operating leverage across the five brands. Support still
+                grows with each brand: its integration, RAG ingestion, eval sets, policy updates, adapter releases,
+                monitoring and incidents.
               </dd>
             </div>
             <div>
               <dt>Margin</dt>
               <dd>
-                {`Northstar pays per token (${fmtUsd(m.totalSpend)} for August, ~$1.12 per 1M tokens); the dedicated ` +
-                  `GPU floor is a Fireworks-side cost. One warm H100 is approx. ${round100(WARM_H100_MONTH)}/month at ` +
-                  `${fmtUsd(H100_PER_HOUR, 2)}/GPU-hour list (approx. ${round100(WARM_H100_MONTH_EU)} at the ` +
-                  `${REGION_PREMIUM}x region-restricted rate), so Atlas alone utilises roughly a fifth of a GPU-day ` +
-                  `(inferred, not observed). A warm replica on Atlas alone is not justified on current evidence: the cause of ` +
-                  `the availability gap is not yet established, and it would be largely idle capacity. On the shared ` +
-                  `deployment five brands' token revenue (~$115k/yr indicative) covers one warm floor ` +
-                  `(approx. ${round100(WARM_H100_MONTH * 12)}–${round100(WARM_H100_MONTH_EU * 12)}/yr at list), which ` +
-                  `is what fixes the margin.`}
+                {`Today Atlas is billed per token (${fmtUsd(m.totalSpend)} for August, ~$1.12 per 1M tokens). Its GPU ` +
+                  `utilisation can't be derived from billing data, because the price is per token while dedicated ` +
+                  `infrastructure is billed per GPU-second; deployment telemetry or load benchmarks are needed. On the shared ` +
+                  `multi-LoRA deployment Northstar moves to dedicated capacity: one H100 is approx. ` +
+                  `${round100(WARM_H100_MONTH)}/month at ${fmtUsd(H100_PER_HOUR, 2)}/GPU-hour list (approx. ` +
+                  `${round100(WARM_H100_MONTH_EU)} at the ${REGION_PREMIUM}x region-restricted rate), so the GPU floor ` +
+                  `sits on Northstar's bill rather than Fireworks' cost, which is what fixes the margin. A warm replica on ` +
+                  `Atlas alone before migration is not justified on current evidence.`}
               </dd>
             </div>
             <div>

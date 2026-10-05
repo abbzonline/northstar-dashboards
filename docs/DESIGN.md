@@ -84,7 +84,7 @@ Two dashboards built from the same August dataset: an **internal QBR** for Firew
 ## 8. Assumptions, caveats and trade-offs
 
 **Data and scenario**
-- **Billing:** `spend_usd` tracks tokens at a constant ~$1.12 per 1M ($1.110–1.123 on every day), so it's treated as Northstar's contracted per-token rate on dedicated capacity. The GPU floor is a Fireworks-side cost, and utilisation (~20% of a GPU-day at list rates) is inferred, not observed.
+- **Billing:** `spend_usd` tracks tokens at a constant ~$1.12 per 1M ($1.110–1.123 on every day), so Atlas is billed per token today; on the multi-LoRA deployment Northstar moves to paying for dedicated capacity per GPU-second. GPU utilisation can't be derived from token billing and is not quoted; it needs telemetry or load benchmarks.
 - **Atlas** is a LoRA adapter on an open-weight base, trained on Atlas data only, served by live merge on its own autoscaling dedicated deployment. Custom models can't run serverless on Fireworks.
 - **Latency** columns are assumed to be time-to-first-token (331 output tokens in ~600 ms end-to-end isn't plausible).
 - **Brands and names:** Northstar is an outerwear holding company; Atlas is the flagship. The four sister brands (Ridgeline, Halden, Polar, Harbour & Hide) are invented because the brief's descriptions were not supplied.

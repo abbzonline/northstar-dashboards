@@ -78,7 +78,7 @@ export function SpendView({ m, showEvents = true }: { m: Model; showEvents?: boo
           <div>
             <dt>On the shared deployment</dt>
             <dd>
-              {`On the shared ${BRANDS_ON_SHARED_DEPLOYMENT}-brand deployment the same always-on capacity works out at approx. ` +
+              {`The shared ${BRANDS_ON_SHARED_DEPLOYMENT}-brand deployment is billed as dedicated capacity; one always-on replica works out at approx. ` +
                 `${round100(WARM_H100_MONTH / BRANDS_ON_SHARED_DEPLOYMENT)}–${round100(WARM_H100_MONTH_EU / BRANDS_ON_SHARED_DEPLOYMENT)} ` +
                 'per brand per month.'}
             </dd>
