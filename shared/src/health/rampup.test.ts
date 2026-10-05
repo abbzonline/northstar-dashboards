@@ -11,7 +11,7 @@ const rows = loaded.rows;
 
 const judgements: Record<string, Judgement> = {
   partnership: { score: 2, rationale: 'test' },
-  profitability: { score: 1, rationale: 'test' },
+  profitability: { score: 2, rationale: 'test' },
 };
 
 describe('scoreValue', () => {
@@ -70,7 +70,7 @@ describe('computeHealth on the Northstar dataset (full-period averages)', () => 
   it('weights pillars 20/20/20/10/20/10 and lands in Positive-Watch', () => {
     const weights = health.pillars.map((p) => p.weight);
     expect(weights.reduce((a, b) => a + b, 0)).toBeCloseTo(1, 10);
-    expect(health.score).toBeCloseTo(3.17, 2);
+    expect(health.score).toBeCloseTo(3.27, 2);
     expect(health.status).toBe('positive-watch');
   });
 
@@ -86,8 +86,9 @@ describe('rankRisks', () => {
 
   it('returns the three items furthest from a perfect 5, by exact position', () => {
     const risks = rankRisks(health);
-    expect(risks.map((r) => r.key)).toEqual(['profitability', 'partnership', 'reliability:p50']);
-    expect(risks[0].distance).toBe(4);
+    // Partnership and Profitability tie at 2; ties keep pillar order.
+    expect(risks.map((r) => r.key)).toEqual(['partnership', 'profitability', 'reliability:p50']);
+    expect(risks[0].distance).toBe(3);
     expect(risks[1].distance).toBe(3);
     expect(risks[2].distance).toBeCloseTo(1.35, 2); // 605 ms: 65% of the way from 800 ms to 500 ms
   });

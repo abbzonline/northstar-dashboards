@@ -23,9 +23,11 @@ export function judgements(rows: DailyMetric[]): Record<'partnership' | 'profita
       ],
     },
     profitability: {
-      score: 1,
+      score: 2,
       rationale:
-        'Current revenue is immaterial relative to the revenue ceiling across Northstar. The ' +
+        'Currently low, with reasonable confidence of meaningful improvement. Current revenue is immaterial ' +
+        'relative to the revenue ceiling across Northstar, and moving to dedicated capacity on the shared ' +
+        'deployment changes the economics. The ' +
         `${ACCOUNT.brand} deployment serves as a proof of concept to secure approval for rollouts across the ` +
         'other four brands, which carry significantly higher customer volumes.',
       evidence: [

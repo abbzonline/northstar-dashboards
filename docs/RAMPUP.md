@@ -149,7 +149,7 @@ Set by the account team in [`internal-qbr/src/judgements.ts`](../internal-qbr/sr
 | Pillar | Score | Rationale |
 |---|---|---|
 | Partnership | **2** | Live on one brand out of five. The flagship team is engaged, but the wider business hasn't bought in: the four sister brands have no commitment, sponsor or timeline. Next step is an executive sponsor above brand level at the EBR. |
-| Profitability | **1** | Scored from Fireworks' side. Current revenue is immaterial relative to the revenue ceiling across Northstar: $1,213 for August at a contracted ~$1.12 per 1M tokens, approx. $14k annualised. The Atlas deployment serves as a proof of concept to secure approval for rollouts across the other four brands, which carry significantly higher customer volumes (scenario assumption, to be backed by the brand profiles). **Cost to serve:** three operational events in month one (catalogue-sync incident, autoscaling threshold adjustment, RAG index refresh); shared infrastructure and account-level overhead create operating leverage across the five brands, but support effort still grows with each brand (integration, RAG ingestion, eval sets, policy updates, adapter releases, monitoring, incidents). **Strategic value:** a recognised retail logo and an EMEA retail reference account. **Deployment economics:** Atlas is billed per token today; its GPU utilisation can't be derived from billing data (token price vs GPU-second infrastructure) and needs telemetry or load benchmarks. On the shared multi-LoRA deployment Northstar moves to dedicated capacity: one H100 is approx. $5.8k/month at list, approx. $8.8k at the 1.5x region-restricted rate (fireworks.ai/pricing, 5 Oct 2026), approx. $1.2k–1.8k per brand. That puts the GPU floor on Northstar's bill, which is what fixes the margin (see [ARCHITECTURE.md](ARCHITECTURE.md)). |
+| Profitability | **2** | Scored from Fireworks' side. Currently low, with reasonable confidence of meaningful improvement. Current revenue is immaterial relative to the revenue ceiling across Northstar: $1,213 for August at a contracted ~$1.12 per 1M tokens, approx. $14k annualised. The Atlas deployment serves as a proof of concept to secure approval for rollouts across the other four brands, which carry significantly higher customer volumes (scenario assumption, to be backed by the brand profiles). **Cost to serve:** three operational events in month one (catalogue-sync incident, autoscaling threshold adjustment, RAG index refresh); shared infrastructure and account-level overhead create operating leverage across the five brands, but support effort still grows with each brand (integration, RAG ingestion, eval sets, policy updates, adapter releases, monitoring, incidents). **Strategic value:** a recognised retail logo and an EMEA retail reference account. **Deployment economics:** Atlas is billed per token today; its GPU utilisation can't be derived from billing data (token price vs GPU-second infrastructure) and needs telemetry or load benchmarks. On the shared multi-LoRA deployment Northstar moves to dedicated capacity: one H100 is approx. $5.8k/month at list, approx. $8.8k at the 1.5x region-restricted rate (fireworks.ai/pricing, 5 Oct 2026), approx. $1.2k–1.8k per brand. That puts the GPU floor on Northstar's bill, which is what fixes the margin (see [ARCHITECTURE.md](ARCHITECTURE.md)). |
 
 ## Current result (Aug 1–31, 2026, full-period averages)
 
@@ -160,13 +160,13 @@ Set by the account team in [`internal-qbr/src/judgements.ts`](../internal-qbr/sr
 | M | Grounded 93.9% → 4 · eval pass 93.1% → 4 | 4.00 | 0.80 |
 | P | Judgement | 2.00 | 0.20 |
 | U | CSAT 82.3 → 4 · handle time 7m 44s → 4 · first-contact resolution 87.2% → 4 | 4.00 | 0.80 |
-| P | Judgement | 1.00 | 0.10 |
-| **Overall** | | **3.17 / 5 (Positive-Watch)** | |
+| P | Judgement | 2.00 | 0.20 |
+| **Overall** | | **3.27 / 5 (Positive-Watch)** | |
 
 What the score says:
 - **Strengths:** model quality and user outcomes (both 4.0). Adoption is 3.0: automation averaged 67.9%, just under the 70% band, though it ended the month at 70.1%.
 - **Weaknesses:** profitability (current revenue immaterial relative to the group-wide ceiling), partnership (needs buy-in beyond Atlas) and reliability (latency and the Aug 9 incident).
-- **Status:** 3.17 is Positive-Watch, 0.83 short of Healthy.
+- **Status:** 3.27 is Positive-Watch, 0.73 short of Healthy.
 - **For the expansion case:** both judgement pillars point the same way. Scaling to the four sister brands on a shared model is what makes the account worth its support cost and turns a single-brand relationship into a group one. The pitch: "prove reliability on Atlas, win group sponsorship, then scale".
 
 ## Decision log
@@ -179,7 +179,7 @@ What the score says:
 | Availability scale | 99.9 = 5, 0.2-pt steps | Team standard (stricter SLA-anchored alternative documented above) |
 | M and U sources | Microsoft Foundry, RAGAS, Freshworks 2025, Salesforce 2025 (M bands are account-team gates anchored to RAGAS/Foundry practice, not a published scale) | Primary, first-party sources instead of blog aggregators |
 | Escalation | Scored in U as first-contact resolution | Has a direct Freshworks benchmark; keeps M purely about answer correctness |
-| Profitability perspective | Fireworks' commercial view, scored 1 | Current revenue is immaterial relative to the ceiling across Northstar; Atlas is the proof of concept for the group rollout. Customer value already shows in U and the EBR |
+| Profitability perspective | Fireworks' commercial view, scored 2 (was 1) | Current revenue is immaterial relative to the ceiling across Northstar; Atlas is the proof of concept for the group rollout. Customer value already shows in U and the EBR |
 | Status bands | Out of 5: Healthy ≥ 4, Positive-Watch ≥ 3, Negative-Watch ≥ 2, At risk < 2 | Same scale as the scores; splitting Watch shows which way an account is leaning |
 | CSAT yardstick | Salesforce: 85 = 5, 70 = 4, 60 = 3, 50 = 2, below 50 = 1 | Salesforce's general good (70) / poor (50) guidance fits an AI agent better than Freshworks' human-chat retail tiers |
 | Dashboard sources | Plain-text citations, no outbound links | Internal dashboard stays self-contained; full references live in this doc |

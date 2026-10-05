@@ -131,7 +131,7 @@ Scoring stays on month averages (decision #16); the week-4 figures are used only
 - **Today: per-token billing.** Atlas costs Northstar ~$1.2k/month (~$1.12 per 1M tokens, ~$14k/yr). GPU utilisation can't be derived from billing data: the price is per token while dedicated infrastructure is billed per GPU-second, so the GPU-seconds Atlas needs come from deployment telemetry or a load benchmark (tokens ÷ achievable tokens/s for the exact model, shape and workload).
 - **After migration: dedicated capacity.** Northstar pays for the shared multi-LoRA deployment per GPU-second: one H100 is ~$5.8k/month at list (~$70k/yr), ~$8.8k EU-only (~$105k/yr). Shared by five brands that is ~$1.2k–1.8k per brand per month, roughly Atlas's bill today.
 - **How many replicas** depends on the combined five-brand load, which has to be benchmarked on the chosen base model and shape before capacity is committed. Halden on its own deployment later adds a second floor once its volume justifies it.
-- **Why this sits in the expansion plan, not month one.** For Atlas alone, dedicated capacity is 4–7x today's bill; across five brands it is comparable per brand. The move from per-token to dedicated billing is also what makes the account commercially meaningful to Fireworks, which ties to the Profitability score (1) in RAMP UP.
+- **Why this sits in the expansion plan, not month one.** For Atlas alone, dedicated capacity is 4–7x today's bill; across five brands it is comparable per brand. The move from per-token to dedicated billing is also what makes the account commercially meaningful to Fireworks, which ties to the Profitability score (2) in RAMP UP.
 
 ## Pilot: two arms
 
@@ -164,7 +164,7 @@ This framing shows we aren't married to the architecture, and that's what Demi i
 
 **Group-level approval isn't secured, so the account stays single-brand and the shared deployment never reaches the utilisation that justifies it.**
 
-This links the two weakest RAMP UP pillars: Partnership (2) and Profitability (1).
+This links the two weakest RAMP UP pillars: Partnership (2) and Profitability (2).
 
 Mitigation:
 1. Use the EBR to secure an executive sponsor above brand level.
