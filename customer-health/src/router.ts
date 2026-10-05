@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 export type ViewId = 'outcomes' | 'service' | 'quality' | 'spend' | 'next-steps';
 
 export const VIEWS: { id: ViewId; label: string; description: string }[] = [
-  { id: 'outcomes', label: 'Outcomes', description: 'Operational health, headline results and usage trends' },
+  { id: 'outcomes', label: 'Outcomes', description: 'Operational health, headline metrics and usage trends' },
   { id: 'service', label: 'Service reliability', description: 'Availability, errors, latency and known caveats' },
   { id: 'quality', label: 'Answer quality', description: 'Grounding, evaluation, escalations, CSAT and handle time' },
   { id: 'spend', label: 'Spend', description: 'Daily and cumulative spend, unit cost and budget context' },

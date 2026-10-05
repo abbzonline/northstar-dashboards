@@ -28,13 +28,13 @@ export function OutcomesView({ m, single = false }: { m: Model; single?: boolean
       </Section>
 
       <div className="section__head kpis-head">
-        <h2 className="section__title">Headline results</h2>
+        <h2 className="section__title">Headline metrics</h2>
         <p className="kpis-head__note">
           August averages. The change line compares the first week with the final week. Select a result to see its
           trend.
         </p>
       </div>
-      <div className="kpis" aria-label="Headline results. Select one to see its trend">
+      <div className="kpis" aria-label="Headline metrics. Select one to see its trend">
         <KpiTile
           href={chartHref('outcomes', 'chart-automation')}
           label="Tier-1 automation"
