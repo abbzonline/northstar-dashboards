@@ -8,6 +8,7 @@ import {
   type PillarResult,
 } from '../health/rampup';
 import { fmtDay } from '../format';
+import { PillarIcon, hasPillarIcon } from './PillarIcon';
 import { Pips } from './Pips';
 import { TopRisks } from './TopRisks';
 
@@ -30,6 +31,10 @@ export interface HealthPanelProps {
   showStatus?: boolean;
   /** Label above the overall score. */
   label?: string;
+  /** Row marker: the RAMP UP letter (internal) or a small icon (customer). */
+  marker?: 'letter' | 'icon';
+  /** Show pillar weights in the summary and on each row (internal view only). */
+  showWeights?: boolean;
 }
 
 export function HealthPanel({
@@ -37,6 +42,8 @@ export function HealthPanel({
   showRisks = false,
   showStatus = true,
   label = 'Overall',
+  marker = 'letter',
+  showWeights = true,
 }: HealthPanelProps) {
   // Accordion: at most one pillar open at a time.
   const [openKey, setOpenKey] = useState<string | null>(null);
@@ -66,10 +73,12 @@ export function HealthPanel({
               {fmtDay(health.window.from)} – {fmtDay(health.window.to)}, {health.window.days} days)
             </dd>
           </div>
-          <div>
-            <dt>Weights</dt>
-            <dd>{weights}</dd>
-          </div>
+          {showWeights && (
+            <div>
+              <dt>Weights</dt>
+              <dd>{weights}</dd>
+            </div>
+          )}
           {showStatus && (
             <div>
               <dt>Bands</dt>
@@ -89,7 +98,8 @@ export function HealthPanel({
           <li key={p.key}>
             <PillarRow
               pillar={p}
-              share={p.weight / totalWeight}
+              share={showWeights ? p.weight / totalWeight : undefined}
+              marker={marker}
               open={openKey === p.key}
               onToggle={() => setOpenKey((k) => (k === p.key ? null : p.key))}
             />
@@ -103,26 +113,34 @@ export function HealthPanel({
 function PillarRow({
   pillar: p,
   share,
+  marker,
   open,
   onToggle,
 }: {
   pillar: PillarResult;
-  /** Weight as a share of the pillars shown (sums to 1). */
-  share: number;
+  /** Weight as a share of the pillars shown (sums to 1); omitted to hide the weight. */
+  share?: number;
+  marker: 'letter' | 'icon';
   open: boolean;
   onToggle: () => void;
 }) {
   return (
     <details className="pillar" open={open}>
       <summary
-        className="pillar__summary"
+        className={`pillar__summary${share === undefined ? ' pillar__summary--no-weight' : ''}`}
         onClick={(e) => {
           // Controlled: React owns the open state so only one pillar is open at a time.
           e.preventDefault();
           onToggle();
         }}
       >
-        <span className="pillar__letter">{p.letter}</span>
+        {marker === 'icon' && hasPillarIcon(p.key) ? (
+          <span className="pillar__letter pillar__letter--icon">
+            <PillarIcon pillarKey={p.key} />
+          </span>
+        ) : (
+          <span className="pillar__letter">{p.letter}</span>
+        )}
         <span className="pillar__name">
           <span className="pillar__title">
             {p.name}
@@ -130,7 +148,7 @@ function PillarRow({
           </span>
           <span className="pillar__desc">{p.summary}</span>
         </span>
-        <span className="pillar__weight label">{Math.round(share * 100)}%</span>
+        {share !== undefined && <span className="pillar__weight label">{Math.round(share * 100)}%</span>}
         <Pips score={p.score} />
         <span className="pillar__score">{p.score.toFixed(1)}</span>
         <span className="pillar__chevron" aria-hidden="true" />

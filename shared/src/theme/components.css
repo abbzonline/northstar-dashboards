@@ -276,6 +276,10 @@
   list-style: none;
 }
 .pillar__summary::-webkit-details-marker { display: none; }
+/* Customer view: no weight column. */
+.pillar__summary--no-weight { grid-template-columns: 40px 1fr auto 40px 16px; }
+/* Icon marker (customer view) in the same purple square as the letters. */
+.pillar__letter--icon svg { display: block; }
 .pillar__summary:hover { background: var(--fw-surface-tint); }
 .pillar__summary:focus-visible { outline: 2px solid var(--fw-purple-400); outline-offset: -2px; }
 .pillar__letter {
@@ -325,6 +329,8 @@
 
 @media (max-width: 639px) {
   .pillar__summary { grid-template-columns: 32px 1fr auto 32px; gap: 10px; padding: 14px 16px; }
+  .pillar__summary--no-weight { grid-template-columns: 32px 1fr 32px; }
+  .pillar__letter--icon svg { width: 16px; height: 16px; }
   .pillar__letter { width: 32px; height: 32px; font-size: 1rem; }
   .pillar__summary .pips, .pillar__chevron { display: none; }
   .pillar__desc { display: none; }

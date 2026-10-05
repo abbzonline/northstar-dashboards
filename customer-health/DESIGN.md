@@ -116,6 +116,9 @@ Sticky, white, hairline bottom border; 1392px frame with side rules (unchanged f
 .viewmenu__item.is-active { border-left-color: var(--accent); }
 ```
 
+### Health pillars
+Each row shows a small line icon (Lucide, inlined: shield-check for Reliability, trending-up for Adoption, badge-check for Model quality, smile for User outcomes) in the purple square, then the pillar name, score pips and score. No acronym letters and no weights: those are internal methodology, documented in `docs/RAMPUP.md`.
+
 ### Tags / Badges
 Square, Favorit in normal case, 0.75rem; purple fill for the audience badge; status pills tinted by meaning.
 
