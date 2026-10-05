@@ -75,18 +75,26 @@ Where the bands come from:
 
 ### U: User outcomes
 
-Benchmark: [Freshworks Customer Service Benchmark 2025](https://www.freshworks.com/assets/resources/Customer-Service-Benchmark-Report-2025.pdf), **Retail & eCommerce, conversational support**. The data covers 32,000+ companies and 138M conversations in 2024.
+Benchmarks:
+- **CSAT:** [Salesforce: What is a customer satisfaction score?](https://www.salesforce.com/uk/service/customer-service-incident-management/customer-satisfaction-score/). "Typically, anything above 70% is considered a good customer satisfaction score"; "a less-desirable score is anything below 50%"; the cross-industry average is 78%. CSAT = satisfied or very satisfied respondents ÷ all respondents.
+- **Handle time and first-contact resolution:** [Freshworks Customer Service Benchmark 2025](https://www.freshworks.com/assets/resources/Customer-Service-Benchmark-Report-2025.pdf), **Retail & eCommerce, conversational support**. The data covers 32,000+ companies and 138M conversations in 2024.
 
-| Metric | Direction | 5 = Trendsetter (top 20%) | 4 = Performer (median) | 3 = Aspirant | 2 | Our proxy |
+| Metric | Direction | 5 | 4 | 3 | 2 | Our proxy |
 |---|---|---|---|---|---|---|
-| CSAT | higher | ≥ 99.05 | ≥ 95.92 | ≥ 90.43 | ≥ 80.40* | `csat_score` |
+| CSAT | higher | ≥ 85 | ≥ 70 (Salesforce "good") | ≥ 60 | ≥ 50 (below = Salesforce "poor") | `csat_score` |
+
+Freshworks tiers for the next two metrics: 5 = Trendsetter (top 20%), 4 = Performer (median), 3 = Aspirant.
+
+| Metric | Direction | 5 | 4 | 3 | 2 | Our proxy |
+|---|---|---|---|---|---|---|
 | Avg handle time | lower | ≤ 2m 03s | ≤ 12m 07s | ≤ 1h 08m | ≤ 2h 00m* | `avg_handle_time_min` vs Freshworks *resolution time* |
 | First-contact resolution | higher | ≥ 93.95% | ≥ 82.43% | ≥ 68.12% | ≥ 58.00%* | 100% − `escalation_rate_pct` |
 
 \* Freshworks publishes three tiers. The score-2 band is our extension: about 10 points (or one step) below Aspirant.
 
 Caveats:
-- **CSAT scale:** Freshworks CSAT is the % of satisfied post-conversation surveys, mostly for human agents. We assume `csat_score` is on the same scale.
+- **CSAT bands:** 70 (good) and 50 (poor) come from Salesforce; 85 = 5 and 60 = 3 are the account team's placement on that scale. We assume `csat_score` is the % of satisfied responses.
+- **Why not Freshworks for CSAT:** its retail tiers (Aspirant 90.4%) come from post-chat surveys on mostly human-agent conversations, a much harsher yardstick for an AI agent's first month.
 - **Handle time vs resolution time:** Freshworks measures resolution time (elapsed time to resolve), not active handle time. It's the closest published equivalent.
 - **Escalation moved pillars:** escalation is measured in U, as first-contact resolution, rather than in M. M asks "is the answer right"; U asks "what did the customer experience".
 
@@ -107,14 +115,15 @@ Set by the account team in [`internal-qbr/src/judgements.ts`](../internal-qbr/sr
 | A | Automation 67.9% → 3 · volume +45% → 5 | 4.00 | 0.80 |
 | M | Grounded 93.9% → 4 · eval pass 93.1% → 4 | 4.00 | 0.80 |
 | P | Judgement | 2.00 | 0.20 |
-| U | CSAT 82.3 → 2 · handle time 7.74 min → 4 · first-contact resolution 87.2% → 4 | 3.33 | 0.67 |
+| U | CSAT 82.3 → 4 · handle time 7.74 min → 4 · first-contact resolution 87.2% → 4 | 4.00 | 0.80 |
 | P | Judgement | 5.00 | 0.50 |
-| **Overall** | | **3.63 / 5 (Watch)** | |
+| **Overall** | | **3.77 / 5 (Healthy, by 0.02)** | |
 
 What the score says:
-- **Strengths:** adoption and model quality.
-- **Weaknesses:** CSAT is the clearest one. It's below even the retail Aspirant tier, despite the +12-point lift in the brief. Reliability is held back by the Aug 9 incident, and partnership needs buy-in beyond the flagship brand.
-- **For the expansion case:** it frames as "prove reliability and lift CSAT on the flagship, win sponsorship across the group, then scale to the four other brands".
+- **Strengths:** adoption, model quality and user outcomes (all 4.0).
+- **Weaknesses:** reliability, held back by the Aug 9 incident and averaging below 99.9%; and partnership, which needs buy-in beyond Atlas.
+- **Status is on a knife-edge:** 3.77 clears Healthy (3.75) by 0.02. Any slip in one metric tips it back to Watch, so treat it as "Healthy, not yet secure".
+- **For the expansion case:** "prove reliability on Atlas and win sponsorship across the group, then scale to the four other brands".
 
 ## Decision log
 
@@ -127,4 +136,5 @@ What the score says:
 | M and U sources | Microsoft Foundry, RAGAS, Freshworks 2025, Salesforce 2025 | Primary, first-party sources instead of blog aggregators |
 | Escalation | Scored in U as first-contact resolution | Has a direct Freshworks benchmark; keeps M purely about answer correctness |
 | Status bands | Out of 5: Healthy ≥ 3.75, Watch ≥ 2.50 | Same scale as the scores; GitLab's 75% / 50% cut-offs |
+| CSAT yardstick | Salesforce: 85 = 5, 70 = 4, 60 = 3, 50 = 2, below 50 = 1 | Salesforce's general good (70) / poor (50) guidance fits an AI agent better than Freshworks' human-chat retail tiers |
 | Dashboard sources | Plain-text citations, no outbound links | Internal dashboard stays self-contained; full references live in this doc |

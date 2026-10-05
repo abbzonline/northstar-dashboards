@@ -116,6 +116,7 @@ const SRC = {
     label: 'Agreed bands. Context: Freshworks retail AI deflection 53%; Salesforce 30% of cases AI-handled (50% by 2027)',
   },
   trend: { label: 'Internal rule: growth in served requests, first vs last 7 days' },
+  csat: { label: 'Salesforce: above 70% is good, below 50% is poor, 78% cross-industry average; 85 = 5 and 60 = 3 set by the account team' },
 } satisfies Record<string, Source>;
 
 const avg = (rows: DailyMetric[], key: keyof DailyMetric) => mean(rows.map((r) => r[key] as number));
@@ -261,10 +262,10 @@ export const RAMPUP: PillarDef[] = [
         value: (w) => avg(w, 'csat_score'),
         precision: 1,
         format: (n) => n.toFixed(1),
-        bandFormat: (n) => n.toFixed(2),
-        bands: { direction: 'higher', edges: [99.05, 95.92, 90.43, 80.4] },
-        source: SRC.freshworks,
-        note: 'Freshworks CSAT is % satisfied; csat_score assumed to be on the same scale. Score-2 edge is our extension below Aspirant.',
+        bandFormat: (n) => n.toFixed(0),
+        bands: { direction: 'higher', edges: [85, 70, 60, 50] },
+        source: SRC.csat,
+        note: 'csat_score assumed to be % of satisfied responses (4–5 on a 5-point scale).',
       },
       {
         id: 'handle-time',

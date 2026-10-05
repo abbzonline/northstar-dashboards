@@ -46,6 +46,7 @@ Scoring-specific detail (bands, sources, formulas) lives in [RAMPUP.md](RAMPUP.m
 | 20 | 2026-10-05 | **Partnership = 2** | Live on one brand of five; buy-in from the rest of the business is still needed | 3 ("lukewarm") |
 | 21 | 2026-10-05 | **Profitability = 5** | About $1.2k of inference replaced roughly 12,550 agent-hours of Tier-1 work in August | Scoring from Fireworks' revenue angle (account is ~$15k a year; noted as a caveat) |
 | 22 | 2026-10-05 | Status bands out of 5: Healthy ≥ 3.75, Watch ≥ 2.50, At risk below | Same scale as the scores (GitLab's 75% / 50% cut-offs) | Percentages |
+| 25 | 2026-10-05 | CSAT yardstick switched to Salesforce: 85 = 5, 70 = 4, 60 = 3, 50 = 2, below 50 = 1. CSAT 82.3 now scores 4 (was 2), U rises to 4.0 and the overall to 3.77, Healthy by 0.02 | Salesforce: "above 70% is considered a good customer satisfaction score", "below 50%" is less desirable, 78% average. Freshworks' retail tiers come from human-agent chat surveys and are too harsh a yardstick here | Freshworks retail conversation tiers (Aspirant 90.4%) |
 
 ## Repository
 

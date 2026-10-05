@@ -59,15 +59,15 @@ describe('computeHealth on the Northstar dataset (full-period averages)', () => 
     expect(metric('reliability', 'errors')).toMatchObject({ value: 1.04, score: 3 });
     expect(metric('adoption', 'automation')).toMatchObject({ value: 67.9, score: 3 });
     expect(metric('model-quality', 'grounded')).toMatchObject({ value: 93.9, score: 4 });
-    expect(metric('user-outcomes', 'csat')).toMatchObject({ value: 82.3, score: 2 });
+    expect(metric('user-outcomes', 'csat')).toMatchObject({ value: 82.3, score: 4 });
     expect(metric('user-outcomes', 'fcr').score).toBe(4);
   });
 
-  it('weights pillars 20/20/20/10/20/10 and lands in Watch', () => {
+  it('weights pillars 20/20/20/10/20/10 and lands just inside Healthy', () => {
     const weights = health.pillars.map((p) => p.weight);
     expect(weights.reduce((a, b) => a + b, 0)).toBeCloseTo(1, 10);
-    expect(health.score).toBeCloseTo(3.63, 2);
-    expect(health.status).toBe('watch');
+    expect(health.score).toBeCloseTo(3.77, 2);
+    expect(health.status).toBe('healthy');
   });
 
   it('redistributes weight when a judgement is missing', () => {
