@@ -3,7 +3,7 @@ import type { RiskItem } from '../health/rampup';
 import { Pips } from './Pips';
 
 /**
- * "Top risks" button plus a modal listing the lowest-rated items.
+ * "Top risks" button plus a modal listing the items furthest from a perfect 5.
  * Native <dialog> with showModal(): Esc closes, focus stays inside, the backdrop blurs the page.
  */
 export function TopRisks({ risks }: { risks: RiskItem[] }) {
@@ -67,11 +67,8 @@ export function TopRisks({ risks }: { risks: RiskItem[] }) {
                   )}
                 </div>
                 <div className="risk__score">
-                  <span className="risk__score-row">
-                    <Pips score={r.score} />
-                    <span className="pillar__score">{r.score}</span>
-                  </span>
-                  <span className="risk__uplift num">+{r.uplift.toFixed(2)} overall per band</span>
+                  <Pips score={r.score} />
+                  <span className="pillar__score">{r.score}</span>
                 </div>
               </li>
             ))}

@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { loadMetrics } from '../data/loadMetrics';
-import { computeHealth, rankRisks, scoreValue, statusFor, type Judgement } from './rampup';
+import { computeHealth, exactPosition, rankRisks, scoreValue, statusFor, type Judgement } from './rampup';
 
 const csv = readFileSync(resolve(__dirname, '../../../data/northstar_flagship_30_day_metrics.csv'), 'utf8');
 const loaded = loadMetrics(csv);
@@ -84,20 +84,24 @@ describe('computeHealth on the Northstar dataset (full-period averages)', () => 
 describe('rankRisks', () => {
   const health = computeHealth(rows, judgements);
 
-  it('returns the three lowest-rated items, ties broken by uplift to the overall score', () => {
+  it('returns the three items furthest from a perfect 5, by exact position', () => {
     const risks = rankRisks(health);
-    expect(risks.map((r) => [r.key, r.score])).toEqual([
-      ['partnership', 2],
-      ['adoption:automation', 3],
-      ['reliability:errors', 3],
-    ]);
+    expect(risks.map((r) => r.key)).toEqual(['partnership', 'reliability:p50', 'reliability:p95']);
+    expect(risks[0].distance).toBe(3);
+    expect(risks[1].distance).toBeCloseTo(1.35, 2); // 605 ms: 65% of the way from 800 ms to 500 ms
+    expect(risks[2].distance).toBeCloseTo(1.33, 2); // 1,665 ms: 67% of the way from 2,000 to 1,500
   });
 
-  it('states what the next band needs and what it is worth', () => {
-    const [, automation, errors] = rankRisks(health);
-    expect(automation.nextBand).toBe('≥ 70.0% for a 4');
-    expect(automation.uplift).toBeCloseTo(0.1, 10);
-    expect(errors.nextBand).toBe('≤ 1.00% for a 4');
-    expect(errors.uplift).toBeCloseTo(0.2 / 3, 10);
+  it('places values precisely inside their band', () => {
+    const higher = { direction: 'higher' as const, edges: [80, 70, 60, 45] as [number, number, number, number] };
+    const lower = { direction: 'lower' as const, edges: [0.5, 1, 2, 5] as [number, number, number, number] };
+    expect(exactPosition(67.9, 3, higher)).toBeCloseTo(3.79, 2);
+    expect(exactPosition(1.04, 3, lower)).toBeCloseTo(3.96, 2);
+    expect(exactPosition(99, 5, higher)).toBe(5);
+  });
+
+  it('states what the next band needs', () => {
+    const [, p50] = rankRisks(health);
+    expect(p50.nextBand).toBe('≤ 500 ms for a 4');
   });
 });

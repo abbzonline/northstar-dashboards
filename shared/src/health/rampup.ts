@@ -384,25 +384,35 @@ export interface RiskItem {
   label: string;
   kind: 'measured' | 'judgement';
   score: Score;
+  /** Exact distance from a perfect 5, including how deep the value sits inside its band. */
+  distance: number;
   /** Formatted current value (measured items only). */
   value?: string;
   /** What the next band needs, e.g. "≥ 70.0% for a 4" (measured items only). */
   nextBand?: string;
-  /** Points added to the overall score if this item rises one band. */
-  uplift: number;
   /** Judgement rationale (judgement items only). */
   rationale?: string;
 }
 
 /**
- * The lowest-rated items across all pillars: every measured metric plus each judgement pillar.
- * Sorted by score (lowest first); ties broken by uplift, i.e. how much one band of improvement
- * would add to the overall score.
+ * Exact position of a value on the 1–5 scale: its whole-number score plus how far it has
+ * travelled from that band's edge towards the next one. E.g. P50 605 ms sits 65% of the way
+ * from 800 ms (a 3) to 500 ms (a 4), so 3.65. Scores of 5 stay 5; scores of 1 stay 1.
+ */
+export function exactPosition(value: number, score: Score, bands: Bands): number {
+  if (score === 5 || score === 1) return score;
+  // edges are listed for scores 5,4,3,2, so the edge for score s is at index 5 - s.
+  const from = bands.edges[5 - score];
+  const to = bands.edges[4 - score];
+  return score + Math.max(0, Math.min(1, (value - from) / (to - from)));
+}
+
+/**
+ * The items furthest from a perfect 5: every measured metric plus each judgement pillar,
+ * ordered by exact distance from 5 (largest first).
  */
 export function rankRisks(health: HealthResult, limit = 3): RiskItem[] {
-  const totalWeight = health.pillars.reduce((s, p) => s + p.weight, 0);
   const items: RiskItem[] = health.pillars.flatMap((p): RiskItem[] => {
-    const pillarShare = p.weight / totalWeight;
     if (p.kind === 'judgement') {
       return [
         {
@@ -412,16 +422,14 @@ export function rankRisks(health: HealthResult, limit = 3): RiskItem[] {
           label: p.name,
           kind: 'judgement',
           score: p.judgement.score,
-          uplift: p.judgement.score < 5 ? pillarShare : 0,
+          distance: 5 - p.judgement.score,
           rationale: p.judgement.rationale,
         },
       ];
     }
-    const metricWeight = p.metrics.reduce((s, m) => s + (m.def.weight ?? 1), 0);
     return p.metrics.map((m) => {
       const op = m.def.bands.direction === 'higher' ? '≥' : '≤';
       const f = m.def.bandFormat ?? m.def.format;
-      // edges are listed for scores 5,4,3,2; the edge for score s+1 is at index 4 - s.
       const nextEdge = m.score < 5 ? m.def.bands.edges[4 - m.score] : undefined;
       return {
         key: `${p.key}:${m.def.id}`,
@@ -430,15 +438,15 @@ export function rankRisks(health: HealthResult, limit = 3): RiskItem[] {
         label: m.def.label,
         kind: 'measured',
         score: m.score,
+        distance: 5 - exactPosition(m.value, m.score, m.def.bands),
         value: m.def.format(m.value),
         nextBand: nextEdge === undefined ? undefined : `${op} ${f(nextEdge)} for a ${m.score + 1}`,
-        uplift: m.score < 5 ? (pillarShare * (m.def.weight ?? 1)) / metricWeight : 0,
       };
     });
   });
 
   return items
-    .filter((i) => i.score < 5)
-    .sort((a, b) => a.score - b.score || b.uplift - a.uplift)
+    .filter((i) => i.distance > 0)
+    .sort((a, b) => b.distance - a.distance)
     .slice(0, limit);
 }

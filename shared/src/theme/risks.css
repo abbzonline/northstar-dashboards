@@ -111,12 +111,10 @@
 }
 .risk__facts dd { margin: 0; color: var(--fw-ink); }
 .risk__rationale { margin: 0; font-size: 13px; color: var(--fw-body); }
-.risk__score { display: grid; justify-items: end; gap: 6px; }
-.risk__score-row { display: inline-flex; align-items: center; gap: 12px; }
-.risk__uplift { font-size: 12px; color: var(--fw-gray); white-space: nowrap; }
+.risk__score { display: inline-flex; align-items: center; gap: 12px; padding-top: 10px; }
 
 @media (max-width: 639px) {
   .risk { grid-template-columns: 40px 1fr; }
   .risk__rank { display: none; }
-  .risk__score { grid-column: 2; justify-items: start; }
+  .risk__score { grid-column: 2; padding-top: 0; }
 }

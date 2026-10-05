@@ -107,21 +107,21 @@ Caveats:
 
 ## Top risks
 
-The internal view has a **Top risks** button that lists the three lowest-rated items:
+The internal view has a **Top risks** button that lists the three items **furthest from a perfect 5**:
 
 - **Candidates:** every measured metric plus each judgement pillar. Anything already scoring 5 is excluded.
-- **Order:** lowest score first. Ties are broken by **uplift**: how much one band of improvement would add to the overall score (pillar weight × the metric's share of its pillar).
-- **Shown per item:** current value, what the next band needs, and the uplift. Judgement items show their rationale instead.
+- **Order:** by exact distance from 5. A metric's exact position is its whole-number score plus how far its value has travelled through that band towards the next edge. Example: P50 at 605 ms sits 65% of the way from 800 ms (a 3) to 500 ms (a 4), giving 3.65, which is 1.35 from 5. Judgement pillars use their score as-is.
+- **Shown per item:** current value and what the next band needs. Judgement items show their rationale.
 
-Current top three (Aug 2026):
+Current ranking (Aug 2026):
 
-| # | Item | Score | Next band | Uplift |
+| # | Item | Score | Exact position | Distance from 5 |
 |---|---|---|---|---|
-| 1 | Partnership (judgement) | 2 | Account-team call | +0.10 |
-| 2 | Tier-1 automation (A) | 3 | ≥ 70.0% for a 4 (now 67.9%) | +0.10 |
-| 3 | Error rate (R) | 3 | ≤ 1.00% for a 4 (now 1.04%) | +0.07 |
-
-P50 and P95 latency also score 3, but each is worth +0.03, so they fall outside the top three.
+| 1 | Partnership (judgement) | 2 | 2.00 | 3.00 |
+| 2 | P50 latency (R): 605 ms, needs ≤ 500 ms for a 4 | 3 | 3.65 | 1.35 |
+| 3 | P95 latency (R): 1.67 s, needs ≤ 1.50 s for a 4 | 3 | 3.67 | 1.33 |
+| — | Tier-1 automation (A): 67.9% | 3 | 3.79 | 1.21 |
+| — | Error rate (R): 1.04% | 3 | 3.96 | 1.04 |
 
 ## Judgement pillars
 
