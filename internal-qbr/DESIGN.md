@@ -46,7 +46,7 @@ Same tokens as the customer dashboard (`shared/src/theme/global.css`, from firew
 
 ## 3. Typography Rules
 
-Same stack and scale as the customer dashboard: **Inter** (variable, self-hosted) for headings, body and numbers; **Inter 500** in normal case for labels, pills and table headers (Favorit is loaded but unused); system mono for the model ID.
+Same stack and scale as the customer dashboard: **Inter** (variable, self-hosted) for headings, body and numbers; **Inter 500** in normal case for labels, pills and table headers (Favorit is not used or shipped); system mono for the model ID.
 
 | Role | Font | Size | Weight | Line Height | Letter Spacing |
 |------|------|------|--------|-------------|----------------|

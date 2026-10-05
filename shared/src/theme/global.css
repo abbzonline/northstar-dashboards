@@ -1,8 +1,7 @@
 /*
  * Typography matches fireworks.ai (see fonts/FONTS.md):
- *   Inter (variable)  — the site default: titles at weight 500, body copy, numbers
- *   Favorit 550       — loaded but no longer used on the pages; labels, badges and table headers now use Inter (decision #64)
- * Fallback faces reuse the site's own metric overrides so layout doesn't shift while fonts load.
+ *   Inter (variable)  — the site default: titles, labels, body copy and numbers (Favorit removed, decisions #64, #71)
+ * The fallback face reuses the site's own metric overrides so layout doesn't shift while fonts load.
  */
 @import '@fontsource-variable/inter';
 @import './components.css';
@@ -10,21 +9,6 @@
 @import './plan.css';
 @import './motion.css';
 
-@font-face {
-  font-family: 'Favorit';
-  src: url('./fonts/favorit-550.woff2') format('woff2');
-  font-weight: 550;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Favorit Fallback';
-  src: local('Arial');
-  ascent-override: 79.09%;
-  descent-override: 25.86%;
-  line-gap-override: 0%;
-  size-adjust: 131.49%;
-}
 @font-face {
   font-family: 'Inter Fallback';
   src: local('Arial');
@@ -58,9 +42,8 @@
   --amber-100: oklch(95% .04 80);
   --amber-700: oklch(52% .12 65);
 
-  /* Same stacks as the site's --font-inter / --font-favorit. */
+  /* Same stack as the site's --font-inter. */
   --font-inter: 'Inter Variable', 'Inter Fallback', ui-sans-serif, system-ui, sans-serif;
-  --font-favorit: 'Favorit', 'Favorit Fallback', ui-monospace, monospace;
   /* Only for literal identifiers (deployment id, file paths). */
   --font-code: ui-monospace, 'SFMono-Regular', Consolas, monospace;
 

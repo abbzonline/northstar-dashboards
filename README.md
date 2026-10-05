@@ -108,7 +108,7 @@ scripts/          xlsx → csv conversion
 
 Stack: React 18, Recharts 2, PapaParse, Vite 6, Vitest 3, TypeScript 5.7, npm workspaces.
 
-**Typography:** Inter and Favorit, as on fireworks.ai. Favorit is a commercial Dinamo font, included for this private submission only; see [`shared/src/theme/fonts/FONTS.md`](shared/src/theme/fonts/FONTS.md). The EBR deck uses Arial so it renders identically in any copy of PowerPoint.
+**Typography:** Inter, the default font on fireworks.ai (open licence); see [`shared/src/theme/fonts/FONTS.md`](shared/src/theme/fonts/FONTS.md). The EBR deck uses Arial so it renders identically in any copy of PowerPoint.
 
 ## Known limitations
 

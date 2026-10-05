@@ -60,9 +60,7 @@ Exact fireworks.ai tokens (from the site's production CSS); defined once in `sha
 **Font Stack** (self-hosted; no network after `npm install`):
 ```css
 @import '@fontsource-variable/inter';              /* Inter variable, OFL */
-@font-face { font-family: 'Favorit'; src: url('./fonts/favorit-550.woff2') format('woff2'); font-weight: 550; }
 --font-inter: 'Inter Variable', 'Inter Fallback', ui-sans-serif, system-ui, sans-serif;
---font-favorit: 'Favorit', 'Favorit Fallback', ui-monospace, monospace;
 ```
 
 | Role | Font | Size | Weight | Line Height | Letter Spacing |
@@ -77,7 +75,7 @@ Exact fireworks.ai tokens (from the site's production CSS); defined once in `sha
 
 **Typography Rules:**
 - Numbers use `font-variant-numeric: tabular-nums` so columns line up.
-- Labels (KPI titles, table headers, facts labels) are Inter 500 in normal case. Favorit is still loaded but not used on the page; the user found it too mechanical for labels.
+- Labels (KPI titles, table headers, facts labels) are Inter 500 in normal case. Favorit, the site's label font, was dropped as too mechanical for labels and is no longer shipped.
 - **NEVER use**: Google-hosted fonts, display/script faces, weights above 600, gradient or shadowed text.
 
 **Text Decoration:** H1, H2 and H3 are plain (restrained, data-first): no gradient, no shadow.
