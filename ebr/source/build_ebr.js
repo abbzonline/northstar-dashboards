@@ -302,11 +302,8 @@ async function main() {
     s.addImage({ data: LOGO, x: M, y: 0.92, w: lh * LOGO_RATIO, h: lh, altText: 'Fireworks AI' });
     const lw = 5.9;
     label(s, 'Executive Business Review', { x: M, y: 2.55, w: lw, h: 0.3, fontSize: 14, color: T.purple500 });
-    text(s, [
-      { text: 'Northstar Retail Group', options: { breakLine: true } },
-      { text: '— Atlas' },
-    ], { x: M, y: 2.92, w: lw, h: 1.45, fontFace: MEDIUM, fontSize: 40, color: T.ink, charSpacing: -1.6, lineSpacingMultiple: 0.95 });
-    text(s, 'Month one in production, and the plan for four more brands', { x: M, y: 4.5, w: lw - 0.4, h: 0.8, fontSize: 18, color: T.gray });
+    text(s, 'Northstar Retail Group', { x: M, y: 2.92, w: lw, h: 0.8, fontFace: MEDIUM, fontSize: 40, color: T.ink, charSpacing: -1.6 });
+    text(s, 'Month one in production, and the plan for four more brands', { x: M, y: 3.77, w: lw - 0.4, h: 0.8, fontSize: 18, color: T.gray });
 
     // Key messages: the five talking points for the live EBR, up front.
     const kx = M + lw + 0.45, kw = CW - lw - 0.45, ky = 0.92, kh = 5.08;
@@ -322,11 +319,7 @@ async function main() {
     });
 
     hline(s, M, 6.3, CW);
-    text(s, [
-      { text: 'Model ID: ', options: { color: T.gray } },
-      { text: lib.ACCOUNT.modelId, options: { fontFace: MONO, color: T.gray } },
-    ], { x: M, y: 6.48, w: 6, h: 0.3, fontSize: 11 });
-    text(s, `${fmtDay(m.first.date)} – ${fmtDay(m.last.date)}, ${m.last.date.slice(0, 4)} · Reviewed October 2026`, {
+    text(s, 'October 2026', {
       x: W - M - 6, y: 6.48, w: 6, h: 0.3, fontSize: 11, color: T.gray, align: 'right',
     });
     s.addNotes(`Welcome and purpose. This review covers Atlas’s first month in production, measured on the same data and the same scoring as the dashboard Northstar already has, and the proposal to bring the four sister brands onto the platform. The five key messages are the whole story in one place; everything that follows is the evidence. One: month one delivered, with automation at ${fmtPct(cmp.automation.last)} in the final week and faster, better-rated answers. Two: quality improved every week. Three: availability is ${fmtPct2(m.avgAvailability)}, and we will find the cause in telemetry before anyone buys capacity. Four: one base model with one adapter per brand keeps each brand’s voice and data separate. Five: we are asking for a group sponsor today and Ridgeline as the pilot.`);
@@ -343,9 +336,9 @@ async function main() {
       ['Tier-1 automation', fmtPct(periodAvg('automation_rate_pct')), `${ppChange(cmp.automation.delta)} since week 1`, cmp.automation.delta > 0,
         `Final week ${fmtPct(cmp.automation.last)}; 70% reached from ${fmtDay(m.firstAutomation70)}`],
       ['Avg handle time', fmtMinSec(periodAvg('avg_handle_time_min')), `${fmtMinSec(cmp.aht.first)} → ${fmtMinSec(cmp.aht.last)}, week 1 → week 4`, cmp.aht.delta < 0,
-        '−35% vs pre-launch baseline, supplied by Northstar'],
+        '−35% vs pre-launch baseline (1)'],
       ['CSAT', periodAvg('csat_score').toFixed(1), `${cmp.csat.first.toFixed(1)} → ${cmp.csat.last.toFixed(1)}, week 1 → week 4`, cmp.csat.delta > 0,
-        '+12 pts vs pre-launch baseline, supplied by Northstar'],
+        '+12 pts vs pre-launch baseline (1)'],
       ['Requests / day', fmtCompact(periodAvg('requests')), `${pctChange(cmp.req.deltaPct)} since week 1`, null, `${fmtInt(m.totalRequests)} in August`],
       ['Availability', fmtPct2(m.avgAvailability), `${TARGET}% met on ${m.daysAtTarget} of ${days.length} days`, null,
         `Lowest ${fmtPct2(m.worstAvailability.availability_pct)} on ${fmtDay(m.worstAvailability.date)}`],
@@ -367,7 +360,7 @@ async function main() {
       text(s, delta, { x, y: y + 1.0, w, h: 0.24, fontSize: 10, color: tone(good) });
       text(s, sub, { x, y: y + 1.28, w, h: 0.5, fontSize: 9.5, color: T.gray });
     });
-    text(s, 'The −35% handle-time and +12-point CSAT figures compare against Northstar’s pre-launch baselines, which are not in the August dataset; the in-month trends are measured directly.', {
+    text(s, '(1) The −35% handle-time and +12-point CSAT figures compare against Northstar’s pre-launch baselines, which are not in the August dataset; the in-month trends are measured directly.', {
       x: M, y: gy + gh + 0.18, w: CW, h: 0.3, fontSize: 9.5, color: T.gray,
     });
     s.addNotes(`Open with the outcome and give the caveat in the same breath. Tier-1 automation averaged ${fmtPct(periodAvg('automation_rate_pct'))} in August and reached ${fmtPct(cmp.automation.last)} in the final week; 70% was first reached on ${fmtDay(m.firstAutomation70)}. Handle time fell from ${fmtMinSec(cmp.aht.first)} to ${fmtMinSec(cmp.aht.last)} and CSAT rose from ${cmp.csat.first.toFixed(1)} to ${cmp.csat.last.toFixed(1)} within the month. The −35% and +12 points are against Northstar’s own pre-launch baselines, which we’ll validate together. These are the same tiles, on the same basis, as the Outcomes view of the dashboard.`);
@@ -377,8 +370,8 @@ async function main() {
   {
     const h = m.health;
     const s = content('Results', 'Outcomes',
-      `Operational health is ${h.score.toFixed(2)} / 5, led by quality and outcomes`,
-      'Four operational pillars, each scored 1–5 on full-period averages for August. The same scoring as your dashboard.');
+      'Operational health is on-track for current deployment stage',
+      'A strong start on all four operational pillars, each scored 1–5 on full-period averages for August. ');
     const py = CT, ph = 4.3, sw = 3.55;
     box(s, M, py, CW, ph, T.white, null, R);
     s.addShape(pres.ShapeType.roundRect, { x: M, y: py, w: sw + R, h: ph, rectRadius: R, fill: { color: T.tint }, line: { type: 'none' } });
@@ -406,37 +399,6 @@ async function main() {
       text(s, p.score.toFixed(1), { x: rx + rw - 2.05 + pw + 0.18, y: y + rh / 2 - 0.2, w: 0.6, h: 0.4, fontFace: MEDIUM, fontSize: 18, color: T.ink, valign: 'middle' });
     });
     s.addNotes(`This is the Operational health panel from the dashboard. ${h.pillars.map((p) => `${p.name} ${p.score.toFixed(1)}`).join(', ')}; ${h.score.toFixed(2)} overall. Model quality and user outcomes are strongest. Adoption and reliability are where the work is. Adoption is a 3 because automation averaged ${fmtPct(periodAvg('automation_rate_pct'))}, just under the 70% band, although it finished the month above it. Reliability is a 3.3, and the reliability slide deals with it honestly.`);
-  }
-
-  // ================================================================ 4. Trends
-  {
-    const s = content('Results', 'Answer quality', 'Quality improved every week, and adoption is still rising',
-      'Daily values for August, with the operational events marked as on your dashboard.');
-    const gap = 0.3, cw = (CW - gap) / 2, ch = 3.55;
-    chartCard(s, {
-      x: M, y: CT, w: cw, h: ch, name: 'chart-automation',
-      title: 'Tier-1 automation rate',
-      headline: `Rose from ${fmtPct(cmp.automation.first)} in week 1 to ${fmtPct(cmp.automation.last)} in the final week, while automated tickets grew ${pctChange(cmp.automated.deltaPct)} against total tickets ${pctChange(cmp.tickets.deltaPct)}.`,
-      series: [{ key: 'automation_rate_pct', name: 'Automation rate', color: T.purple }],
-      min: 60, max: 76, unit: 4, format: '0"%"', refs: [{ y: 70, label: '70%' }],
-    });
-    chartCard(s, {
-      x: M + cw + gap, y: CT, w: cw, h: ch, name: 'chart-quality',
-      title: 'Grounding and eval pass',
-      headline: `Grounded answers ${cmp.grounded.first.toFixed(1)}% → ${cmp.grounded.last.toFixed(1)}%, eval pass ${cmp.evalPass.first.toFixed(1)}% → ${cmp.evalPass.last.toFixed(1)}%, escalations ${ppChange(cmp.escalation.delta)} (week 1 → week 4).`,
-      series: [
-        { key: 'grounded_answer_rate_pct', name: 'Grounded answers', color: T.purple },
-        { key: 'quality_eval_pass_rate_pct', name: 'Eval pass', color: T.blue },
-      ],
-      min: 88, max: 100, unit: 2, format: '0"%"',
-    });
-    const fy = CT + ch + 0.22;
-    box(s, M, fy, CW, 0.84, T.tint, T.border, R);
-    label(s, 'Worth reviewing together', { x: M + 0.25, y: fy + 0.14, w: 3, h: 0.2, fontSize: 9.5 });
-    text(s, `Requests per Tier-1 ticket rose from ${cmp.reqPerTicket.first.toFixed(1)} to ${cmp.reqPerTicket.last.toFixed(1)} over the month (7-day averages). It may be longer conversations, repeat contacts or non-ticket traffic; we’d like to look at it with your team.`, {
-      x: M + 0.25, y: fy + 0.38, w: CW - 0.5, h: 0.4, fontSize: 10.5, color: T.body,
-    });
-    s.addNotes(`Quality moved one way all month: grounded answers ${cmp.grounded.first.toFixed(1)}% to ${cmp.grounded.last.toFixed(1)}%, eval pass ${cmp.evalPass.first.toFixed(1)}% to ${cmp.evalPass.last.toFixed(1)}%, and escalations down ${Math.abs(cmp.escalation.delta).toFixed(1)} points. The knowledge refresh on 24 Aug, the purple marker, is where grounding steps up. Automation climbed steadily from ${fmtPct(cmp.automation.first)} to ${fmtPct(cmp.automation.last)} with no plateau yet, and automated tickets grew faster than total tickets, so more of the work is being handed to the model. One thing to review together: requests per ticket rose from ${cmp.reqPerTicket.first.toFixed(1)} to ${cmp.reqPerTicket.last.toFixed(1)}.`);
   }
 
   // ================================================================ 5. Reliability and cost
@@ -599,19 +561,18 @@ async function main() {
       'The risk is commercial and organisational rather than technical: month one worked, but no one owns the rollout above brand level yet.');
     const lw = 5.6, lh = 4.35;
     box(s, M, CT, lw, lh, T.tint, T.border, R, 'biggest-risk');
-    pill(s, M + 0.28, CT + 0.28, 'Biggest risk', 'bad');
     text(s, 'Without group-level sponsorship the rollout stays with Atlas, and shared capacity never carries enough volume to make per-brand cost efficient.', {
-      x: M + 0.28, y: CT + 0.7, w: lw - 0.56, h: 1.3, fontFace: MEDIUM, fontSize: 16, color: T.ink,
+      x: M + 0.28, y: CT + 0.22, w: lw - 0.56, h: 1.3, fontFace: MEDIUM, fontSize: 16, color: T.ink,
     });
-    label(s, 'Why it matters', { x: M + 0.28, y: CT + 2.2, w: 3, h: 0.22, fontSize: 10.5 });
+    label(s, 'Why it matters', { x: M + 0.28, y: CT + 1.62, w: 3, h: 0.22, fontSize: 10.5 });
     const perBrand = `${round100(lib.WARM_H100_MONTH / lib.BRANDS_ON_SHARED_DEPLOYMENT)}–${round100(lib.WARM_H100_MONTH_EU / lib.BRANDS_ON_SHARED_DEPLOYMENT)}`;
     [
       `Always-on capacity stays a single-brand cost (approx. ${round100(lib.WARM_H100_MONTH)}/month) rather than ${perBrand} per brand shared.`,
       'The four sister brands, with most of the group’s Tier-1 volume, don’t get the gains Atlas has shown.',
-      'Each brand would make its own platform decision, so the group ends up with several tools to run.',
+      'Each brand would make its own platform decision, so the group ends up with several tools to run at a meaningfully higher cost.',
     ].forEach((t, i) => {
-      const y = CT + 2.55 + i * 0.6;
-      rect(s, M + 0.3, y + 0.07, 0.11, 0.11, T.red);
+      const y = CT + 1.97 + i * 0.6;
+      rect(s, M + 0.3, y + 0.09, 0.11, 0.11, T.red);
       text(s, t, { x: M + 0.58, y, w: lw - 0.9, h: 0.5, fontSize: 11, color: T.body });
     });
 
@@ -641,7 +602,7 @@ async function main() {
     const s = pres.addSlide({ masterName: 'CLOSING', sectionTitle: 'Close' });
     text(s, 'Next steps', { x: M + LOGO_H * LOGO_RATIO + 0.48, y: 0.24, w: 3.5, h: 0.3, fontFace: MEDIUM, fontSize: 11, color: T.ink, valign: 'middle' });
     text(s, 'Thank you', { x: M, y: 1.5, w: 6, h: 1.0, fontFace: MEDIUM, fontSize: 54, color: T.ink, charSpacing: -2.2 });
-    text(s, 'Questions and discussion', { x: M, y: 2.55, w: 6, h: 0.45, fontSize: 20, color: T.gray });
+    text(s, 'Q&A', { x: M, y: 2.55, w: 6, h: 0.45, fontSize: 20, color: T.gray });
     pixels(s, M, 1.5 + 0.4 + 0.62 * lib.JOINT_ACTIONS.length - (5 * 0.31 - 0.07));
     // Joint next actions, as on the dashboard's Next steps view.
     const tx = M + 5.0, tw = CW - 5.0, hh = 0.4, rh = 0.62;

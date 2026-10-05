@@ -8,7 +8,7 @@ Fireworks' account review of **Northstar Retail Group**'s fine-tuned support mod
 |---|---|---|
 | 1. Internal QBR dashboard | `internal-qbr/` (port 5173) | Fireworks account, engineering and leadership teams |
 | 2. Customer health dashboard | `customer-health/` (port 5174) | Northstar VP Customer Experience and VP Engineering |
-| 3. EBR deck: cover, 8 slides with speaker notes, closing page | `ebr/Northstar_EBR_Oct2026.pptx` (+ `.pdf`) | Northstar VP Customer Experience and VP Engineering |
+| 3. EBR deck: cover with the five key messages, 7 slides with speaker notes, closing page | `ebr/Northstar_EBR_Oct2026.pptx` (+ `.pdf`) | Northstar VP Customer Experience and VP Engineering |
 | Design document, with screenshots | [`docs/DESIGN.md`](docs/DESIGN.md) | Reviewers |
 | Health-score method and benchmarks | [`docs/RAMPUP.md`](docs/RAMPUP.md) | Reviewers |
 | Scaling architecture | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Reviewers |
