@@ -4,6 +4,22 @@ This is the agreed technical plan for expanding the support model from Atlas to 
 
 The brief sets the constraint: each brand has **"its own product catalog, tone of voice, return policies, support tooling, and operating team"**. Fireworks serves the model; Northstar owns the bot, tooling and operations.
 
+## Verified Fireworks pricing and serving facts (checked 5 Oct 2026)
+
+Every number below is from [fireworks.ai/pricing](https://fireworks.ai/pricing) or the [deploying-loras docs](https://docs.fireworks.ai/fine-tuning/deploying-loras) on 5 Oct 2026. On-demand rates rose on 1 Sep 2026 (H100 $7 → $8), so re-check before presenting.
+
+| Item | Value | Implication here |
+|---|---|---|
+| On-demand H100 80 GB / H200 141 GB | **$8.00 per GPU-hour**, billed per GPU-second, no start-up charge | One replica warm 24/7 ≈ **$5,840/month** |
+| On-demand B200 / B300 / GB300 | $13.00 / $15.00 / $20.00 per GPU-hour | Not needed at Northstar's model size; noted for completeness |
+| **Region-restricted deployments** | **1.5x premium** on the GPU rate (contact sales) | EU-only placement for data residency puts an H100 at **$12.00/hour ≈ $8,760/month** warm. Northstar is an EMEA account; this is the number to confirm first |
+| Managed LoRA SFT, 16.1B–80B base | $3.00 per 1M training tokens (up to 16B: $0.50; 80–300B: $6.00) | A brand adapter on ~5M training tokens ≈ $15; training cost is immaterial next to serving |
+| Serving a fine-tuned model | Same price as the base model | No per-token markup for adapters; cost is entirely the GPU floor |
+| Multi-LoRA overhead | "TTFT often +10–30%; lower max throughput under load"; adapter count has little effect, concurrency does | Budget the overhead into the P95 target |
+| Speculative decoding on trained models | **Enterprise feature; contact Fireworks** | Not a lever we can assume for the shared deployment without an enterprise agreement |
+| Multi-LoRA positioning in the docs | "Best for experimentation, A/B testing, or serving many variants"; live merge "recommended" for a single production model | Our use (five variants, shared GPU) is the documented fit, but the docs' default for a high-volume single brand is live merge. See the tiered plan below |
+| Serverless | No custom or LoRA models; no SLA | Not an option for any Northstar model |
+
 ## Current state (assumptions)
 
 | # | Assumption | Basis |
@@ -11,9 +27,11 @@ The brief sets the constraint: each brand has **"its own product catalog, tone o
 | 1 | Atlas is a **LoRA adapter on an open-weight base**, trained on Atlas data only | Fireworks' managed fine-tuning produces LoRA adapters |
 | 2 | Atlas is served by **live merge on its own on-demand (dedicated) deployment** | "Neither custom base models nor LoRA addons are supported for serverless inference. All user-provided models, including trained models, require a dedicated deployment." Live merge is the single-model path, with performance "indistinguishable from a fully trained model" |
 | 3 | The deployment **autoscales** | The 21 Aug note ("autoscaling threshold adjusted") is a dedicated-deployment lever; the 9 and 21 Aug P95 spikes look like replica scale-up lag under burst |
-| 4 | `spend_usd` is the **per-GPU-second bill** for that deployment | On-demand is billed "per GPU second". At **$8.00 per H100-hour**, one replica kept warm 24/7 is about **$192/day (~$5.8k/month)**. August averaged **$39/day (~5 GPU-hours/day)**, so the dataset implies aggressive scale-down or understates a production bill. Confirm the real serving set-up with the account team |
+| 4 | `spend_usd` is the **per-GPU-second bill** for that deployment | On-demand is billed "per GPU second". At **$8.00 per H100-hour**, one replica kept warm 24/7 is about **$192/day (~$5.8k/month)**, or ~$288/day at the 1.5x EU region-restricted rate. August averaged **$39/day (~5 GPU-hours/day at the base rate)**, so the dataset implies aggressive scale-to-zero or understates a production bill. Confirm the real serving set-up and the region placement with the account team |
 
 **Implication for reliability:** a deployment scaled to zero answers the next request with an immediate **503 (`DEPLOYMENT_SCALING_UP`)** while it spins up. Some of August's error rate and missed availability may be scale-up behaviour rather than model faults. Keeping a minimum warm replica is a direct lever on R, at the cost of the GPU floor.
+
+**Implication for the customer's bill (say this out loud in the EBR):** a warm minimum replica moves Northstar from ~$1.2k/month to ~$5.8k/month (~$8.8k with EU placement), a 4–7x increase, before any expansion. The 99.9% availability target is therefore a commercial commitment to agree, not a configuration change. The expansion plan is what makes that floor sensible: five brands sharing one warm deployment is ~$1.2k–1.8k per brand, which is roughly what Atlas pays today for a deployment that scales to zero.
 
 ## Recommendation
 
@@ -69,10 +87,11 @@ Fireworks' compatibility table: **BF16 shapes support LoRA add-ons; FP8 and FP4 
 
 | Option | Cost | Latency |
 |---|---|---|
-| **A. One shared BF16 deployment, multi-LoRA** (recommended) | One GPU floor shared by five brands. One warm H100 is about $5.8k/month, about $1.2k per brand | No FP8. Multi-LoRA adds overhead ("TTFT often +10–30%; lower max throughput under load") |
-| B. Five live-merged deployments, each FP8 | Five GPU floors (about $29k/month warm at one H100 each) | Lowest P50 per brand (FP8, no adapter overhead) |
+| **A. One shared BF16 deployment, multi-LoRA** (recommended to start) | One GPU floor shared by five brands. One warm H100 is about $5.8k/month ($8.8k EU), about $1.2k–1.8k per brand | No FP8. Multi-LoRA adds overhead ("TTFT often +10–30%; lower max throughput under load"). Speculative decoding for trained models is an enterprise feature, so don't assume it |
+| B. Five live-merged deployments, each FP8 | Five GPU floors (about $29k/month warm at one H100 each; $44k EU) | Lowest P50 per brand (FP8, no adapter overhead). This is the docs' recommended path for a single production model |
+| **C. Tiered (the end state)** | Shared BF16 multi-LoRA for the three lower-volume brands; Halden (~3x Atlas volume) on its own live-merged FP8 deployment once it can keep a replica busy | Two floors (~$11.7k/month; $17.5k EU). Best latency where volume justifies it, shared cost where it doesn't |
 
-At Northstar's volumes, A wins on cost. FP8 live merge becomes the fallback for any brand whose volume later justifies its own deployment.
+Start on A: it is the documented fit for serving many variants of one base, it keeps one floor during the pilot, and the pilot itself is an A/B test, which is exactly what the docs say multi-LoRA is for. Move a brand to its own live-merged deployment (C) only when its sustained volume keeps a replica busy; Halden is the obvious first candidate. Option B is the alternative to name and reject on cost.
 
 ## Migration sequence (keeps uptime throughout)
 
@@ -84,7 +103,7 @@ At Northstar's volumes, A wins on cost. FP8 live merge becomes the fallback for 
 | 4 | Load the **remaining three adapters**, each as it clears its own eval gate | Per-brand eval gate |
 | 5 | **Decommission the live-merge deployment** | Atlas has run clean on the shared deployment through at least one promo-scale burst |
 
-**Budget the overlap.** Steps 1–5 run two GPU floors in parallel. Size that window in **weeks, not months** (each extra warm H100 week is about $1.3k at $8.00/GPU-hour), so the consolidation saving is real.
+**Budget the overlap.** Steps 1–5 run two GPU floors in parallel. Size that window in **weeks, not months** (each extra warm H100 week is about $1.3k at $8.00/GPU-hour, $2.0k at the EU rate), so the consolidation saving is real.
 
 **The one documented risk.** The shared BF16 deployment must be autoscaled for five brands' combined peaks, not one brand's. The 21 Aug threshold incident shows what happens when that's tuned reactively, so it's tuned in step 1, before Atlas traffic moves.
 
@@ -94,10 +113,10 @@ Be precise about which lever moves which percentile:
 
 | Percentile | Today | What moves it |
 |---|---|---|
-| P50 | 605 ms month average; **537 ms in week 4 and still falling** | Mostly compute for ~1,380 tokens per request. FP8 isn't available with add-ons, so the levers are **speculative decoding and prompt caching**. Already in a good place for chat support |
-| P95 | 1.67 s month average; **1.46 s in week 4** | Mostly burst and scale-up behaviour (9 and 21 Aug). Levers: **autoscaling configuration** (warm minimum replicas, scale-up thresholds), plus the same speculative decoding and caching |
+| P50 | 605 ms month average; **537 ms in week 4 and still falling** | Mostly compute for ~1,380 tokens per request. FP8 isn't available with add-ons, and speculative decoding on trained models needs an enterprise agreement, so the dependable lever on the shared deployment is **prompt caching** (the brand system prompt and RAG preamble are stable prefixes). Expect P50 to hold rather than fall after migration; it is already in a good place for chat support |
+| P95 | 1.67 s month average; **1.46 s in week 4** | Mostly burst and scale-up behaviour (9 and 21 Aug). Levers: **autoscaling configuration** (warm minimum replicas, scale-up thresholds) and prompt caching. Multi-LoRA's TTFT overhead works against this, which is why the warm replica comes first |
 
-Target wording for the EBR: *"P50 is already in a good place for chat support. On the shared deployment, autoscaling tuning plus speculative decoding targets P95 under ~1.2 s and holds it through promotional peaks, offsetting multi-LoRA's overhead."*
+Target wording for the EBR: *"P50 is already where it needs to be for chat support. On the shared deployment, a warm minimum replica plus prompt caching targets P95 under ~1.3 s and holds it through promotional peaks, absorbing the small overhead of serving five brands from one deployment."* (Quote a P95 target you can keep after the +10–30% TTFT overhead; 1.2 s is tight.)
 
 Scoring stays on month averages (decision #16); the week-4 figures are used only as the trajectory in the narrative.
 
@@ -105,7 +124,8 @@ Scoring stays on month averages (decision #16); the week-4 figures are used only
 
 - A dedicated deployment has a GPU floor, so it only pays for itself above a utilisation threshold.
 - At Atlas's current volume, one brand can't keep a warm GPU well utilised.
-- Five brands on one deployment share the floor (about $1.2k per brand per month at one warm H100).
+- Five brands on one deployment share the floor (about $1.2k per brand per month at one warm H100; $1.8k at the EU rate).
+- Group revenue on dedicated capacity scales with **replicas needed**, not with ticket volume. The "indicative group value" on the plan view (Atlas spend × volume multiple, ~$115k/yr) is a per-token low case. A replicas-based view is one warm H100 ($70k/yr, $105k EU) plus burst replicas, rising to two floors under the tiered plan (~$140k/yr, $210k EU). Present both; don't let the per-token figure stand alone.
 - That's why the shared deployment belongs in the expansion plan and not in month one. It also ties directly to the Profitability score (1) in RAMP UP.
 
 ## Pilot: two arms
@@ -151,5 +171,5 @@ Mitigation:
 - [Fireworks docs: Deploying trained models (live merge vs multi-LoRA, BF16/FP8 add-on support, firectl)](https://docs.fireworks.ai/fine-tuning/deploying-loras)
 - [Fireworks docs: Models overview (serverless vs dedicated)](https://docs.fireworks.ai/models/overview)
 - [Fireworks docs: Autoscaling (scale-to-zero, 503 on scale-up)](https://docs.fireworks.ai/deployments/autoscaling)
-- [Fireworks pricing (on-demand per GPU-second; H100 $8.00/hour)](https://fireworks.ai/pricing)
+- [Fireworks pricing (on-demand per GPU-second; H100/H200 $8.00/hour; region-restricted 1.5x; LoRA SFT per 1M tokens) — checked 5 Oct 2026](https://fireworks.ai/pricing)
 - [Fireworks blog: Multi-LoRA](https://fireworks.ai/blog/multi-lora)

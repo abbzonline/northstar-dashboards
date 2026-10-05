@@ -47,13 +47,13 @@ Bands give the threshold for scores 5, 4, 3 and 2; anything beyond the score-2 t
 
 | Metric | Direction | 5 | 4 | 3 | 2 | Source |
 |---|---|---|---|---|---|---|
-| Availability | higher | ≥ 99.9% | ≥ 99.7% | ≥ 99.5% | ≥ 99.3% | Fireworks team standard: 99.9% = 5, then 0.2-pt steps |
+| Availability | higher | ≥ 99.9% | ≥ 99.7% | ≥ 99.5% | ≥ 99.3% | Account-team bands (assumed; no SLA was supplied): 99.9% = 5, then 0.2-pt steps |
 | Error rate | lower | ≤ 0.5% | ≤ 1% | ≤ 2% | ≤ 5% | Major LLM API providers run server-error rates of roughly 0.3–0.7% (Apr 2026 status-code data across providers) |
 | P50 latency (×0.5) | lower | ≤ 300 ms | ≤ 500 ms | ≤ 800 ms | ≤ 1.2 s | Time-to-first-token UX: < 500 ms feels instant, > 2 s feels broken ([Particula](https://particula.tech/blog/llm-latency-targets-ttft-tokens-per-second-2026)) |
 | P95 latency (×0.5) | lower | ≤ 1.0 s | ≤ 1.5 s | ≤ 2.0 s | ≤ 3.0 s | As above |
 
 Notes:
-- **Availability scale is lenient by design.** Fireworks sells a 99.99% enterprise SLA; anchored to that, 99.85% would score 2. The team standard above was chosen deliberately, and the stricter scale is the alternative if the internal view should be harsher.
+- **Availability scale is lenient by design.** Fireworks sells a 99.99% enterprise SLA; anchored to that, 99.85% would score 2. The bands above are the account team's assumption, not a Fireworks standard; the stricter SLA-anchored scale is the alternative if the internal view should be harsher.
 - **Latency is assumed to be time-to-first-token.** Requests average about 1,045 input and 331 output tokens. Delivering 331 tokens end to end in about 600 ms would need about 550 tokens/s, which isn't plausible, so the latency columns must be time-to-first-token or server-side time.
 
 ### A: Adoption
@@ -106,9 +106,9 @@ Caveats:
 - **Handle time vs resolution time:** Freshworks measures resolution time (elapsed time to resolve), not active handle time. It's the closest published equivalent.
 - **Escalation moved pillars:** escalation is measured in U, as first-contact resolution, rather than in M. M asks "is the answer right"; U asks "what did the customer experience".
 
-## Top risks
+## Focus areas (lowest-scoring items)
 
-The internal view has a **Top risks** button that lists the three items **furthest from a perfect 5**:
+The internal view has a **Focus areas** button that lists the three items **furthest from a perfect 5**. These are scoring-derived, not a risk register; the top three technical, relationship and execution risks the brief asks for live on the Expansion plan view (see `internal-qbr/src/plan.ts`, `RISKS`):
 
 - **Candidates:** every measured metric plus each judgement pillar. Anything already scoring 5 is excluded.
 - **Order:** by exact distance from 5. A metric's exact position is its whole-number score plus how far its value has travelled through that band towards the next edge. Example: P50 at 605 ms sits 65% of the way from 800 ms (a 3) to 500 ms (a 4), giving 3.65, which is 1.35 from 5. Judgement pillars use their score as-is.
@@ -132,7 +132,7 @@ Set by the account team in [`internal-qbr/src/judgements.ts`](../internal-qbr/sr
 | Pillar | Score | Rationale |
 |---|---|---|
 | Partnership | **2** | Live on one brand out of five. The flagship team is engaged, but the wider business hasn't bought in: the four sister brands have no commitment, sponsor or timeline. Next step is an executive sponsor above brand level at the EBR. |
-| Profitability | **1** | Scored from Fireworks' side. Current revenue is immaterial relative to the revenue ceiling across Northstar: $1,213 for August, approx. $14k annualised. The Atlas deployment serves as a proof of concept to secure approval for rollouts across the other four brands, which carry significantly higher customer volumes (scenario assumption, to be backed by the brand profiles). **Cost to serve:** three operational events in month one (catalogue-sync incident, autoscaling threshold adjustment, RAG index refresh); one account team supports all five brands on a single shared deployment, so support effort does not scale per brand. **Strategic value:** a recognised retail logo and an EMEA retail reference account. **Deployment economics:** custom models run on dedicated deployments only, so Atlas carries a GPU floor (one warm H100 is approx. $5.8k/month at $8.00/GPU-hour). One brand can't keep it well utilised; five brand adapters on one multi-LoRA deployment share it at approx. $1.2k each (see [ARCHITECTURE.md](ARCHITECTURE.md)). |
+| Profitability | **1** | Scored from Fireworks' side. Current revenue is immaterial relative to the revenue ceiling across Northstar: $1,213 for August, approx. $14k annualised. The Atlas deployment serves as a proof of concept to secure approval for rollouts across the other four brands, which carry significantly higher customer volumes (scenario assumption, to be backed by the brand profiles). **Cost to serve:** three operational events in month one (catalogue-sync incident, autoscaling threshold adjustment, RAG index refresh); one account team supports all five brands on a single shared deployment, so support effort does not scale per brand. **Strategic value:** a recognised retail logo and an EMEA retail reference account. **Deployment economics:** custom models run on dedicated deployments only, so Atlas carries a GPU floor (one warm H100 is approx. $5.8k/month at $8.00/GPU-hour, or approx. $8.8k/month at the 1.5x region-restricted rate if EU data residency is required; fireworks.ai/pricing, 5 Oct 2026). August's $1,213 is consistent only with aggressive scale-to-zero, which is also what the availability misses look like. One brand can't keep a warm replica well utilised; five brand adapters on one multi-LoRA deployment share it at approx. $1.2k–1.8k each (see [ARCHITECTURE.md](ARCHITECTURE.md)). |
 
 ## Current result (Aug 1–31, 2026, full-period averages)
 

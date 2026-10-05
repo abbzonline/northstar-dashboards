@@ -3,7 +3,7 @@ import type { RiskItem } from '../health/rampup';
 import { Pips } from './Pips';
 
 /**
- * "Top risks" button plus a modal listing the items furthest from a perfect 5.
+ * "Focus areas" button plus a modal listing the items furthest from a perfect 5 (scoring-derived; the risk register is on the plan view).
  * Native <dialog> with showModal(): Esc closes, focus stays inside, the backdrop blurs the page.
  */
 export function TopRisks({ risks }: { risks: RiskItem[] }) {
@@ -13,7 +13,7 @@ export function TopRisks({ risks }: { risks: RiskItem[] }) {
   return (
     <>
       <button type="button" className="fw-button health__risks-button" onClick={() => dialog.current?.showModal()}>
-        Top risks
+        Focus areas
         <span className="fw-button__count">{risks.length}</span>
       </button>
 
@@ -27,9 +27,9 @@ export function TopRisks({ risks }: { risks: RiskItem[] }) {
         <div className="risks__inner">
           <header className="risks__head">
             <div>
-              <span className="eyebrow">Focus areas</span>
+              <span className="eyebrow">Lowest-scoring items</span>
               <h2 id="risks-title" className="risks__title">
-                Top risks
+                Focus areas
               </h2>
             </div>
             <button type="button" className="risks__close" onClick={close} aria-label="Close">

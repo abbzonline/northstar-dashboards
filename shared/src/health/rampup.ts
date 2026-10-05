@@ -105,7 +105,7 @@ const SRC = {
   foundry: {
     label: 'Microsoft Foundry agent evaluators (Groundedness, Task Completion, Intent Resolution, Task Adherence)',
   },
-  availability: { label: 'Fireworks team standard: 99.9% = 5, then 0.2-pt steps' },
+  availability: { label: 'Account-team bands (assumed; no SLA was supplied): 99.9% = 5, then 0.2-pt steps' },
   errors: {
     label: 'Major LLM API providers run server-error rates of roughly 0.3–0.7%',
   },

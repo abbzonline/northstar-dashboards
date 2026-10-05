@@ -1,10 +1,17 @@
 import { KpiTile, Section, fmtInt, fmtUsd } from '@northstar/shared';
 import type { Model } from '../model';
-import { ACTIONS, BRANDS, COMPETITORS, DECISIONS, DEPENDENCIES, STAKEHOLDERS, type Level } from '../plan';
+import { ACTIONS, BRANDS, COMPETITORS, DECISIONS, DEPENDENCIES, RISKS, STAKEHOLDERS, type Level } from '../plan';
 
-/** On-demand H100 rate from fireworks.ai/pricing (Oct 2026), billed per GPU-second. */
+/**
+ * Pricing from fireworks.ai/pricing, checked 5 Oct 2026 (on-demand rates rose on 1 Sep 2026).
+ * H100 / H200 $8.00 per GPU-hour, billed per GPU-second. Region-restricted deployments (e.g. EU-only
+ * placement for data residency) are priced at a 1.5x premium. Managed LoRA SFT on a 16–80B base is
+ * $3.00 per 1M training tokens; fine-tuned models serve at the base model's price.
+ */
 const H100_PER_HOUR = 8;
+const REGION_PREMIUM = 1.5;
 const WARM_H100_MONTH = H100_PER_HOUR * 24 * 365 / 12;
+const WARM_H100_MONTH_EU = WARM_H100_MONTH * REGION_PREMIUM;
 
 const round100 = (usd: number) => fmtUsd(Math.round(usd / 100) * 100);
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -39,7 +46,7 @@ export function PlanView({ m }: { m: Model }) {
           <KpiTile
             label="Indicative group value"
             value={`${fmtUsd(Math.round((atlasAnnual * groupMultiple) / 1000) * 1000)}/yr`}
-            sub={`vs ${fmtUsd(Math.round(atlasAnnual / 1000) * 1000)}/yr today; volume-scaled from Atlas`}
+            sub={`vs ${fmtUsd(Math.round(atlasAnnual / 1000) * 1000)}/yr today; volume-scaled from Atlas (low case; see Margin)`}
           />
           <KpiTile label="Pilot" value={pilot?.name ?? '—'} sub={pilot?.timing} />
         </div>
@@ -84,7 +91,39 @@ export function PlanView({ m }: { m: Model }) {
           </table>
         </div>
         <p className="table__caption">
-          Sister-brand profiles are scenario assumptions. Indicative value scales Atlas's August spend by Tier-1 volume.
+          Sister-brand profiles are scenario assumptions. Indicative value scales Atlas's August spend by Tier-1 volume (per-token basis, the low case); on dedicated capacity the ceiling is set by replicas needed, see Margin.
+        </p>
+      </Section>
+
+      <Section id="risks" eyebrow="01b · Top risks" title="Top three risks" stack>
+        <div className="table-wrap">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Risk</th>
+                <th>Evidence</th>
+                <th>Mitigation</th>
+                <th>Owner</th>
+              </tr>
+            </thead>
+            <tbody>
+              {RISKS.map((r) => (
+                <tr key={r.risk}>
+                  <td>
+                    <Pill tone="neutral">{r.kind}</Pill>
+                  </td>
+                  <td className="table__strong">{r.risk}</td>
+                  <td>{r.evidence}</td>
+                  <td>{r.mitigation}</td>
+                  <td>{r.owner}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="table__caption">
+          One technical, one relationship, one execution risk, as the brief asks. The "Focus areas" pop-up on the health view is the scoring-derived list and is a different thing.
         </p>
       </Section>
 
@@ -158,9 +197,14 @@ export function PlanView({ m }: { m: Model }) {
             <div>
               <dt>Margin</dt>
               <dd>
-                {`One warm H100 is approx. ${round100(WARM_H100_MONTH)}/month at ${fmtUsd(H100_PER_HOUR, 2)}/GPU-hour, ` +
-                  `against ${fmtUsd(m.totalSpend)} reported for August. Shared across five brands, the floor is ` +
-                  `approx. ${round100(WARM_H100_MONTH / 5)} per brand.`}
+                {`One warm H100 is approx. ${round100(WARM_H100_MONTH)}/month at ${fmtUsd(H100_PER_HOUR, 2)}/GPU-hour ` +
+                  `(approx. ${round100(WARM_H100_MONTH_EU)}/month at the ${REGION_PREMIUM}x region-restricted rate if EU ` +
+                  `residency is required), against ${fmtUsd(m.totalSpend)} billed for August. August is only consistent ` +
+                  `with aggressive scale-to-zero, so the warm-replica change that underwrites 99.9% availability raises ` +
+                  `Northstar's bill by roughly 4–7x and must be commercially agreed, not just configured. Shared across five ` +
+                  `brands, the floor is approx. ${round100(WARM_H100_MONTH / 5)}–${round100(WARM_H100_MONTH_EU / 5)} per ` +
+                  `brand, and group revenue scales with replicas needed, not with ticket volume; the indicative value above ` +
+                  `is the per-token low case.`}
               </dd>
             </div>
             <div>

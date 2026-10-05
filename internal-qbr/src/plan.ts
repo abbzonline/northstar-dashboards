@@ -114,7 +114,7 @@ export interface Dependency {
 
 export const DEPENDENCIES: Dependency[] = [
   { item: 'Warm minimum replica and autoscaling thresholds on the Atlas deployment', side: 'Fireworks', owner: 'Fireworks Engineering', neededBy: '16 Oct', status: 'In progress' },
-  { item: 'BF16 capacity reserved for the shared multi-LoRA deployment (EU region)', side: 'Fireworks', owner: 'Fireworks Infrastructure', neededBy: '6 Nov', status: 'Not started' },
+  { item: 'BF16 capacity reserved for the shared multi-LoRA deployment (EU region; 1.5x region-restricted rate confirmed with Northstar)', side: 'Fireworks', owner: 'Fireworks Infrastructure', neededBy: '6 Nov', status: 'Not started' },
   { item: 'Ridgeline adapter training and per-brand eval sets', side: 'Fireworks', owner: 'Fireworks Applied ML', neededBy: '20 Nov', status: 'Not started' },
   { item: 'Ridgeline transcripts and catalogue export', side: 'Northstar', owner: 'Northstar CX operations', neededBy: '6 Nov', status: 'Not started' },
   { item: 'Legal sign-off on de-branded Atlas transcripts', side: 'Northstar', owner: 'Northstar Legal', neededBy: '6 Nov', status: 'Not started' },
@@ -191,7 +191,7 @@ export const DECISIONS: Decision[] = [
     decision: 'Availability target to offer on the shared deployment',
     owner: 'Field CTO + Engineering',
     by: '20 Oct',
-    recommendation: '99.9%, conditional on the warm-replica change; Atlas averaged 99.85% in August',
+    recommendation: '99.9%, conditional on a warm minimum replica. That raises the bill from ~$1.2k to ~$5.8k/month ($8.8k with EU placement), so it is a commercial commitment to agree with Northstar, not an engineering toggle; Atlas averaged 99.85% in August',
   },
 ];
 
@@ -211,4 +211,37 @@ export const ACTIONS: Action[] = [
   { action: 'Stand up the shared BF16 deployment, load the Atlas adapter, confirm parity on the eval set', owner: 'Fireworks Engineering', due: '13 Nov', status: 'Not started' },
   { action: 'Train the Ridgeline adapter and run the two-arm pilot', owner: 'Fireworks Applied ML + Northstar Engineering', due: '18 Dec', status: 'Not started' },
   { action: 'Pilot readout and wave-2 go / no-go', owner: 'Deployment Strategist + Northstar sponsor', due: '8 Jan 2027', status: 'Not started' },
+];
+
+export interface Risk {
+  kind: 'Technical' | 'Relationship' | 'Execution';
+  risk: string;
+  evidence: string;
+  mitigation: string;
+  owner: string;
+}
+
+/** The top three risks the brief asks for. Distinct from the scoring-derived "Focus areas" on the health view. */
+export const RISKS: Risk[] = [
+  {
+    kind: 'Technical',
+    risk: 'Availability misses from scale-up behaviour under bursts',
+    evidence: '27 of 31 days below 99.9%; P95 spikes on 9 and 21 Aug; a deployment scaled to zero answers the next request with a 503 while it spins up',
+    mitigation: 'Warm minimum replica and retuned thresholds before any traffic moves; priced into the commercial structure (see Decisions)',
+    owner: 'Fireworks Engineering',
+  },
+  {
+    kind: 'Relationship',
+    risk: 'No sponsor above brand level, so the account stays single-brand',
+    evidence: 'Group executive and all four sister-brand CX leads are gaps in stakeholder coverage; Partnership scores 2',
+    mitigation: 'Use the EBR to secure a named group sponsor and agree the Ridgeline pilot and success criteria jointly',
+    owner: 'Deployment Strategist + Account Executive',
+  },
+  {
+    kind: 'Execution',
+    risk: 'Pilot slips on data: Ridgeline transcripts, catalogue export and legal sign-off on de-branded Atlas data',
+    evidence: 'Three Northstar-owned dependencies due 6 Nov, none started; without them arm B cannot train and arm A cannot ground',
+    mitigation: 'Dependencies tabled at the EBR with owners; fallback is arm A (prompt + RAG, no adapter) if transcripts are late',
+    owner: 'Deployment Strategist + Northstar CX operations',
+  },
 ];

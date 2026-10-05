@@ -54,7 +54,7 @@ Three views, switched from the dropdown next to the Fireworks logo (each is a sh
 
 | View | URL | Contents |
 |---|---|---|
-| Account health | `#/health` | Customer score (RAMP UP) with Top risks, eight headline metrics, operational events |
+| Account health | `#/health` | Customer score (RAMP UP) with Focus areas (lowest-scoring items), eight headline metrics, operational events |
 | Performance trends | `#/trends` | Nine charts across adoption, spend, reliability, latency and quality; each headline tile opens its chart here |
 | Expansion plan | `#/plan` | Pipeline across the four sister brands, stakeholder coverage, dependencies / support burden / margin, competitive risk, decisions needed, next actions with owners and dates |
 
@@ -108,6 +108,7 @@ Stack: React 18, Recharts 2, PapaParse, Vite 6, Vitest 3, TypeScript 5.7. npm wo
 
 ## Known limitations
 
-- Account-health score, risks, expansion pipeline, stakeholder map and actions are not built yet.
-- The customer-facing dashboard is not built yet.
+- The customer-facing dashboard (`customer-health/`) and the EBR deck are in progress; the internal QBR is complete.
 - The data is daily and covers one deployment. There's no per-conversation drill-down.
+- Pre-launch baselines, an SLA, and the four sister-brand descriptions were not supplied; every figure that depends on them is labelled as an assumption on the page and in `docs/`.
+- Pricing figures are from fireworks.ai/pricing as of 5 Oct 2026 and are set in one place (`internal-qbr/src/views/PlanView.tsx`); on-demand rates changed on 1 Sep 2026 and may change again.
