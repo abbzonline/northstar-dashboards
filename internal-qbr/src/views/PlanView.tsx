@@ -62,7 +62,7 @@ export function PlanView({ m }: { m: Model }) {
                 <th>Catalogue</th>
                 <th>Tone · returns</th>
                 <th>Tooling</th>
-                <th>Confidence</th>
+                <th>Likelihood on timeline</th>
                 <th>Rationale</th>
               </tr>
             </thead>

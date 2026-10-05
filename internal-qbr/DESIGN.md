@@ -33,7 +33,7 @@ Same tokens as the customer dashboard (`shared/src/theme/global.css`, from firew
   --accent-hover: oklch(43% .23 285.65);  /* purple-500 */
   --bg-rgb: 255, 255, 255;
   --accent-rgb: 103, 32, 255;
-  --success: oklch(64% .11 180.47);       /* marine-700: Healthy, champion, done, high confidence, low risk */
+  --success: oklch(64% .11 180.47);       /* marine-700: Healthy, champion, done, high likelihood, low risk */
   --error: oklch(64% .21 28.54);          /* red-500: At risk, gaps, high risk, incidents */
   --warning: oklch(76% .15 75);           /* amber: Positive-Watch, medium (only non-Fireworks colour) */
 }
@@ -41,7 +41,7 @@ Same tokens as the customer dashboard (`shared/src/theme/global.css`, from firew
 
 **Color Rules:**
 - All colours through variables; components never hard-code hex.
-- Purple is the single accent. Status colours encode meaning only, and the same meaning everywhere: confidence and risk read in opposite directions (high confidence is teal, high risk is red).
+- Purple is the single accent. Status colours encode meaning only, and the same meaning everywhere: likelihood and risk read in opposite directions (high likelihood is teal, high risk is red).
 - Negative-Watch reuses red-100/red-700, so the status scale adds no new hues.
 
 ## 3. Typography Rules

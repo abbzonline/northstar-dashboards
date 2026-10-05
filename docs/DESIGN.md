@@ -70,14 +70,14 @@ Two dashboards built from the same August dataset: an **internal QBR** for Firew
 | Headline metrics and trend charts | Yes | Yes, same figures |
 | Operational events | As logged | Restated in plain customer language |
 | Top three risks | Technical, relationship, execution | No (the caveats card covers what Northstar needs to know) |
-| Pipeline, confidence, stakeholder coverage | Yes | No |
+| Pipeline, likelihood on timeline, stakeholder coverage | Yes | No |
 | Margin, deployment economics, competitive risk | Yes | No |
 | Spend | Margin card at list rates | Budget context: bill, run-rate, what 99.9% would cost and when it becomes efficient |
 | Plan | Dependencies on both sides, leadership decisions, all actions | Pilot proposal, Northstar's dependencies, joint actions only |
 
 ## 7. Intentionally excluded
 
-- **From the customer view:** Partnership and Profitability scores, status band, Focus areas, expansion confidence, stakeholder status, competitors, margin, capacity reservation and commercial-structure decisions. A boundary test (`internal-qbr/src/customer-boundary.test.ts`) fails if the customer app imports internal code or uses that vocabulary.
+- **From the customer view:** Partnership and Profitability scores, status band, Focus areas, expansion likelihood, stakeholder status, competitors, margin, capacity reservation and commercial-structure decisions. A boundary test (`internal-qbr/src/customer-boundary.test.ts`) fails if the customer app imports internal code or uses that vocabulary.
 - **From both:** per-conversation drill-down (the data is daily), pre-launch baselines (not supplied), and any SLA claim (none was in place for August).
 - **From the internal view:** methodology prose on the page. It lives in the docs, so the page stays facts and evidence.
 
