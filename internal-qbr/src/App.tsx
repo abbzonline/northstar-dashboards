@@ -45,7 +45,6 @@ function Dashboard({
   anchor?: string;
 }) {
   const m = useMemo(() => buildModel(result.rows), [result.rows]);
-  const label = VIEWS.find((v) => v.id === view)!.label;
 
   // On every route change: jump to the anchor (and pulse it), or start the new view at the top.
   useEffect(() => {
@@ -65,7 +64,6 @@ function Dashboard({
   return (
     <>
       <div className="hero">
-        <span className="eyebrow">Internal QBR · {label}</span>
         <h1>
           {ACCOUNT.company} — {ACCOUNT.brand}
         </h1>

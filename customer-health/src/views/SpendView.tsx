@@ -21,7 +21,7 @@ export function SpendView({ m }: { m: Model }) {
     <>
       <EventLegend events={events} />
 
-      <Section id="spend" eyebrow="01 · Spend" title="Spend">
+      <Section id="spend" title="Spend">
         <ChartCard
           id="chart-spend"
           title="Daily and cumulative spend"
@@ -57,7 +57,7 @@ export function SpendView({ m }: { m: Model }) {
         </ChartCard>
       </Section>
 
-      <Section id="budget" eyebrow="02 · Budget context" title="Budget context" stack>
+      <Section id="budget" title="Budget context" stack>
         <dl className="facts-card">
           <div>
             <dt>August</dt>

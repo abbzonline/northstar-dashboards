@@ -68,11 +68,11 @@ Exact fireworks.ai tokens (from the site's production CSS); defined once in `sha
 | Role | Font | Size | Weight | Line Height | Letter Spacing |
 |------|------|------|--------|-------------|----------------|
 | Page H1 | Inter | 3rem (2.25rem < 640px) | 500 | 1.25 | -0.12rem |
-| Section H2 | Inter | 1.5rem | 500 | 1.33 | -0.06rem |
+| Section H2 (one per section, no eyebrow or number above it) | Inter | 1.5rem | 500 | 1.33 | -0.06rem |
 | Card title H3 | Inter | 1rem | 500 | 1.5 | -0.02em |
 | Body | Inter | 0.875–1rem | 400 | 1.5 | — |
 | KPI value | Inter | 1.875rem | 500 | 1.2 | -0.075rem, tabular-nums |
-| Label / eyebrow | Favorit | 0.6875–0.875rem | 550 | 1 | 0, normal case |
+| Label | Favorit | 0.6875–0.875rem | 550 | 1 | 0, normal case |
 | Mono (model ID) | system mono | 0.875em | 400 | 1.5 | — |
 
 **Typography Rules:**
@@ -120,7 +120,7 @@ Sticky, white, hairline bottom border; 1392px frame with side rules (unchanged f
 Each row shows a small line icon (Lucide, inlined: shield-check for Reliability, trending-up for Adoption, badge-check for Model quality, smile for User outcomes) in the purple square, then the pillar name, score pips and score. No acronym letters and no weights: those are internal methodology, documented in `docs/RAMPUP.md`.
 
 ### Tags / Badges
-Square, Favorit in normal case, 0.75rem; purple fill for the audience badge; status pills tinted by meaning.
+Square, Favorit in normal case, 0.75rem; status pills tinted by meaning. No audience badge in the header.
 
 ### Tables
 ```css

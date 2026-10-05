@@ -46,12 +46,12 @@ Same tokens as the customer dashboard (`shared/src/theme/global.css`, from firew
 
 ## 3. Typography Rules
 
-Same stack and scale as the customer dashboard: **Inter** (variable, self-hosted) for headings, body and numbers; **Favorit 550** in normal case for labels, eyebrows, pills and table headers; system mono for the model ID.
+Same stack and scale as the customer dashboard: **Inter** (variable, self-hosted) for headings, body and numbers; **Favorit 550** in normal case for labels, pills and table headers; system mono for the model ID.
 
 | Role | Font | Size | Weight | Line Height | Letter Spacing |
 |------|------|------|--------|-------------|----------------|
 | Page H1 | Inter | 3rem (2.25rem < 640px) | 500 | 1.25 | -0.12rem |
-| Section H2 | Inter | 1.5rem | 500 | 1.33 | -0.06rem |
+| Section H2 (one per section, no eyebrow or number above it) | Inter | 1.5rem | 500 | 1.33 | -0.06rem |
 | Card / pillar title | Inter | 1rem | 500 | 1.5 | -0.02em |
 | Body / table cell | Inter | 0.8125–0.875rem | 400 | 1.5 | — |
 | Score | Inter | 4rem | 500 | 1 | -0.18rem, tabular-nums |

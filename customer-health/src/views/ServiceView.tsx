@@ -8,7 +8,7 @@ export function ServiceView({ m }: { m: Model }) {
     <>
       <EventLegend events={events} />
 
-      <Section id="availability" eyebrow="01 · Availability and errors" title="Availability and errors">
+      <Section id="availability" title="Availability and errors">
         <ChartCard
           id="chart-availability"
           title="Availability"
@@ -39,7 +39,7 @@ export function ServiceView({ m }: { m: Model }) {
         </ChartCard>
       </Section>
 
-      <Section id="latency" eyebrow="02 · Latency" title="Response latency">
+      <Section id="latency" title="Response latency">
         <ChartCard
           id="chart-latency"
           title="P50 and P95 latency"
@@ -58,7 +58,7 @@ export function ServiceView({ m }: { m: Model }) {
         </ChartCard>
       </Section>
 
-      <Section id="caveats" eyebrow="03 · Known caveats" title="Known caveats" stack>
+      <Section id="caveats" title="Known caveats" stack>
         <dl className="facts-card">
           <div>
             <dt>Availability target</dt>

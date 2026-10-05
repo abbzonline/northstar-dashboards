@@ -22,7 +22,6 @@ export function App({ result }: { result: LoadResult }) {
             <span className="topbar__divider" aria-hidden="true" />
             <ViewMenu items={menu} current={route.view} />
           </div>
-          <span className="badge badge--purple">Prepared for {ACCOUNT.company}</span>
         </div>
       </header>
       <main className="frame shell motion-l1">
@@ -38,7 +37,6 @@ export function App({ result }: { result: LoadResult }) {
 
 function Dashboard({ result, view, anchor }: { result: Extract<LoadResult, { ok: true }>; view: ViewId; anchor?: string }) {
   const m = useMemo(() => buildModel(result.rows), [result.rows]);
-  const label = VIEWS.find((v) => v.id === view)!.label;
 
   // On every route change: jump to the anchor (and pulse it), or start the new view at the top.
   useEffect(() => {
@@ -57,7 +55,6 @@ function Dashboard({ result, view, anchor }: { result: Extract<LoadResult, { ok:
   return (
     <>
       <div className="hero">
-        <span className="eyebrow">Account health · {label}</span>
         <h1>
           {ACCOUNT.company} — {ACCOUNT.brand}
         </h1>

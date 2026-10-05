@@ -93,7 +93,6 @@ h1 { font-size: 2.25rem; line-height: 1.22; letter-spacing: -0.09rem; }
 
 /* Favorit label in normal case, as fireworks.ai sets mixed-case Favorit (e.g. "Table of Contents"). */
 .label,
-.eyebrow,
 .badge {
   font-family: var(--font-favorit);
   font-weight: 550;
@@ -101,20 +100,6 @@ h1 { font-size: 2.25rem; line-height: 1.22; letter-spacing: -0.09rem; }
   line-height: 1;
 }
 
-/* Eyebrow with the site's purple marker square (--color-marker-eyebrow = purple-500). */
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.875rem;
-  color: var(--fw-ink);
-}
-.eyebrow::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  background: var(--fw-purple-500);
-}
 
 .badge {
   font-size: 0.75rem;

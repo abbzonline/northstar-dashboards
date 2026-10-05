@@ -4,7 +4,7 @@ import { JOINT_ACTIONS, NORTHSTAR_DEPENDENCIES, PILOT } from '../content';
 export function NextStepsView() {
   return (
     <>
-      <Section id="pilot" eyebrow="01 · Pilot proposal" title={`Pilot: ${PILOT.brand}`} stack>
+      <Section id="pilot" title={`Pilot: ${PILOT.brand}`} stack>
         <dl className="facts-card">
           <div>
             <dt>Window</dt>
@@ -58,7 +58,7 @@ export function NextStepsView() {
         <p className="table__caption">{PILOT.evidence}</p>
       </Section>
 
-      <Section id="dependencies" eyebrow="02 · Dependencies" title="What we need from Northstar" stack>
+      <Section id="dependencies" title="What we need from Northstar" stack>
         <div className="table-wrap">
           <table className="table">
             <thead>
@@ -81,7 +81,7 @@ export function NextStepsView() {
         </div>
       </Section>
 
-      <Section id="actions" eyebrow="03 · Joint actions" title="Joint next actions" stack>
+      <Section id="actions" title="Joint next actions" stack>
         <div className="table-wrap">
           <table className="table">
             <thead>

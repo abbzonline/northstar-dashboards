@@ -20,7 +20,7 @@ export function TrendsView({ m }: { m: Model }) {
     <>
       <EventLegend events={events} />
 
-      <Section id="adoption" eyebrow="01 · Adoption" title="Adoption">
+      <Section id="adoption" title="Adoption">
         <ChartCard
           id="chart-requests"
           title="Requests vs Tier-1 tickets"
@@ -54,7 +54,7 @@ export function TrendsView({ m }: { m: Model }) {
         </ChartCard>
       </Section>
 
-      <Section id="spend" eyebrow="02 · Spend" title="Spend">
+      <Section id="spend" title="Spend">
         <ChartCard
           id="chart-spend"
           title="Daily and cumulative spend"
@@ -90,7 +90,7 @@ export function TrendsView({ m }: { m: Model }) {
         </ChartCard>
       </Section>
 
-      <Section id="reliability" eyebrow="03 · Reliability" title="Reliability">
+      <Section id="reliability" title="Reliability">
         <ChartCard
           id="chart-availability"
           title="Availability"
@@ -121,7 +121,7 @@ export function TrendsView({ m }: { m: Model }) {
         </ChartCard>
       </Section>
 
-      <Section id="latency" eyebrow="04 · Latency" title="Latency">
+      <Section id="latency" title="Latency">
         <ChartCard
           id="chart-latency"
           title="P50 and P95 latency"
@@ -140,7 +140,7 @@ export function TrendsView({ m }: { m: Model }) {
         </ChartCard>
       </Section>
 
-      <Section id="quality" eyebrow="05 · Quality" title="Quality">
+      <Section id="quality" title="Quality">
         <ChartCard
           id="chart-quality"
           title="Grounding, eval pass and escalation"

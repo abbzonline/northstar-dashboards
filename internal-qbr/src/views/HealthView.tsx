@@ -9,12 +9,12 @@ export function HealthView({ m }: { m: Model }) {
   const { cmp, periodAvg } = m;
   return (
     <>
-      <Section id="health" eyebrow="01 · Account health" title="Customer score">
+      <Section id="health" title="Customer score">
         <HealthPanel health={m.health} showRisks />
       </Section>
 
       <div className="section__head kpis-head">
-        <span className="eyebrow">02 · Headline metrics</span>
+        <h2 className="section__title">Headline metrics</h2>
         <p className="kpis-head__note">
           Full-period averages, the same basis as the customer score. The change line compares the first week with the
           final week. Select a metric to open its trend.

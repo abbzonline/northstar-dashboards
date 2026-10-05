@@ -36,7 +36,7 @@ export function PlanView({ m }: { m: Model }) {
 
   return (
     <>
-      <Section id="pipeline" eyebrow="01 · Expansion pipeline" title="Pipeline across the four brands" stack>
+      <Section id="pipeline" title="Expansion pipeline" stack>
         <div className="kpis kpis--plan">
           <KpiTile label="Brands live" value={`1 of ${brands.length}`} sub="Atlas only" />
           <KpiTile
@@ -96,7 +96,7 @@ export function PlanView({ m }: { m: Model }) {
         </p>
       </Section>
 
-      <Section id="risks" eyebrow="02 · Top risks" title="Top three risks" stack>
+      <Section id="risks" title="Top three risks" stack>
         <div className="table-wrap">
           <table className="table">
             <thead>
@@ -128,7 +128,7 @@ export function PlanView({ m }: { m: Model }) {
         </p>
       </Section>
 
-      <Section id="stakeholders" eyebrow="03 · Relationship" title="Stakeholder coverage" stack>
+      <Section id="stakeholders" title="Stakeholder coverage" stack>
         <div className="table-wrap">
           <table className="table">
             <thead>
@@ -153,7 +153,7 @@ export function PlanView({ m }: { m: Model }) {
         </div>
       </Section>
 
-      <Section id="dependencies" eyebrow="04 · Delivery" title="Dependencies, support burden and margin" stack>
+      <Section id="dependencies" title="Dependencies, support burden and margin" stack>
         <div className="plan-grid">
           <div className="table-wrap">
             <table className="table">
@@ -220,7 +220,7 @@ export function PlanView({ m }: { m: Model }) {
         </div>
       </Section>
 
-      <Section id="competition" eyebrow="05 · Competitive risk" title="Competitive risk" stack>
+      <Section id="competition" title="Competitive risk" stack>
         <div className="table-wrap">
           <table className="table">
             <thead>
@@ -245,7 +245,7 @@ export function PlanView({ m }: { m: Model }) {
         </div>
       </Section>
 
-      <Section id="decisions" eyebrow="06 · Leadership" title="Decisions needed" stack>
+      <Section id="decisions" title="Decisions needed" stack>
         <ol className="decisions">
           {DECISIONS.map((d, i) => (
             <li key={d.decision} className="decision">
@@ -265,7 +265,7 @@ export function PlanView({ m }: { m: Model }) {
         </ol>
       </Section>
 
-      <Section id="actions" eyebrow="07 · Next actions" title="Next actions" stack>
+      <Section id="actions" title="Next actions" stack>
         <div className="table-wrap">
           <table className="table">
             <thead>

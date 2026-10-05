@@ -117,6 +117,7 @@
   display: grid;
   gap: 10px;
 }
+.events__title { margin: 0; font-size: 1rem; font-weight: 500; letter-spacing: -0.02em; color: var(--fw-ink); }
 .events ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 13px; }
 .events li { display: flex; align-items: baseline; gap: 10px; }
 .events__date { color: var(--fw-ink); min-width: 52px; font-size: 0.75rem; }
@@ -126,7 +127,7 @@
 
 /* ---------- Sections ---------- */
 .section { padding-top: 48px; scroll-margin-top: 88px; }
-.section__head { display: grid; gap: 8px; margin-bottom: 16px; }
+.section__head { margin-bottom: 16px; }
 .section__title { font-size: 1.5rem; line-height: 1.33; letter-spacing: -0.06rem; }
 .section__grid.section__grid--stack, #health .section__grid { grid-template-columns: 1fr; }
 .kpis-head { margin-top: 48px; }

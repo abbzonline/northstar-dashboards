@@ -20,12 +20,12 @@ export function OutcomesView({ m }: { m: Model }) {
   const { cmp, periodAvg, days, events } = m;
   return (
     <>
-      <Section id="health" eyebrow="01 · Operational health" title="How the deployment is performing">
+      <Section id="health" title="Operational health">
         <HealthPanel health={m.health} label="Operational health, 1–5" showStatus={false} marker="icon" showWeights={false} />
       </Section>
 
       <div className="section__head kpis-head">
-        <span className="eyebrow">02 · Headline results</span>
+        <h2 className="section__title">Headline results</h2>
         <p className="kpis-head__note">
           August averages. The change line compares the first week with the final week. Select a result to see its
           trend.
@@ -98,7 +98,7 @@ export function OutcomesView({ m }: { m: Model }) {
         />
       </div>
 
-      <Section id="usage" eyebrow="03 · Usage and adoption" title="Usage and adoption">
+      <Section id="usage" title="Usage and adoption">
         <ChartCard
           id="chart-requests"
           title="Requests vs Tier-1 tickets"

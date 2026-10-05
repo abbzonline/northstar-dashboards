@@ -8,7 +8,7 @@ export function QualityView({ m }: { m: Model }) {
     <>
       <EventLegend events={events} />
 
-      <Section id="quality" eyebrow="01 · Answer quality" title="Answer quality">
+      <Section id="quality" title="Answer quality">
         <ChartCard
           id="chart-quality"
           title="Grounding, eval pass and escalation"

@@ -26,12 +26,9 @@ export function TopRisks({ risks }: { risks: RiskItem[] }) {
       >
         <div className="risks__inner">
           <header className="risks__head">
-            <div>
-              <span className="eyebrow">Lowest-scoring items</span>
-              <h2 id="risks-title" className="risks__title">
-                Focus areas
-              </h2>
-            </div>
+            <h2 id="risks-title" className="risks__title">
+              Focus areas
+            </h2>
             <button type="button" className="risks__close" onClick={close} aria-label="Close">
               <span aria-hidden="true" />
             </button>

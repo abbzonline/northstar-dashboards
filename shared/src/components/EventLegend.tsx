@@ -6,7 +6,7 @@ export function EventLegend({ events }: { events: OpsEvent[] }) {
   if (!events.length) return null;
   return (
     <div className="events">
-      <span className="eyebrow">Operational events</span>
+      <h3 className="events__title">Operational events</h3>
       <ul>
         {events.map((e) => (
           <li key={e.date}>
