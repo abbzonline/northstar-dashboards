@@ -214,14 +214,11 @@
 .health__value { font-size: 4rem; line-height: 1; font-weight: 500; letter-spacing: -0.18rem; color: var(--fw-ink); font-variant-numeric: tabular-nums; }
 .health__outof { font-size: 1.25rem; color: var(--fw-gray); }
 .health__status-row { display: flex; align-items: center; gap: 12px; }
-.health__pct { font-size: 1rem; font-weight: 500; color: var(--fw-ink); font-variant-numeric: tabular-nums; }
-/* .badge sets a grey background later in global.css; double class wins. */
-.badge.health__status--healthy,
-.badge.health__status--watch,
-.badge.badge.health__status--at-risk { border: 0; }
+/* .badge sets a grey background later in global.css; the double class wins. */
 .badge.health__status--healthy { background: var(--fw-marine-700); color: #fff; }
-.badge.health__status--watch { background: var(--amber-500); color: var(--fw-ink); }
-.health__status--at-risk { background: var(--fw-red-500); color: #fff; }
+.badge.health__status--positive-watch { background: var(--amber-500); color: var(--fw-ink); }
+.badge.health__status--negative-watch { background: var(--fw-red-100); color: var(--fw-red-700); }
+.badge.health__status--at-risk { background: var(--fw-red-500); color: #fff; }
 .health__facts { margin: 0; display: grid; gap: 8px; font-size: 13px; }
 .health__facts div { display: grid; gap: 2px; }
 .health__facts dt {

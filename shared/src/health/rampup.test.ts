@@ -32,11 +32,15 @@ describe('scoreValue', () => {
 });
 
 describe('statusFor (bands out of 5)', () => {
-  it('maps scores to statuses', () => {
-    expect(statusFor(3.75)).toBe('healthy');
-    expect(statusFor(3.74)).toBe('watch');
-    expect(statusFor(2.5)).toBe('watch');
-    expect(statusFor(2.49)).toBe('at-risk');
+  it('maps scores to statuses, inclusive at each lower edge', () => {
+    expect(statusFor(5)).toBe('healthy');
+    expect(statusFor(4)).toBe('healthy');
+    expect(statusFor(3.99)).toBe('positive-watch');
+    expect(statusFor(3)).toBe('positive-watch');
+    expect(statusFor(2.99)).toBe('negative-watch');
+    expect(statusFor(2)).toBe('negative-watch');
+    expect(statusFor(1.99)).toBe('at-risk');
+    expect(statusFor(1)).toBe('at-risk');
   });
 });
 
@@ -63,11 +67,11 @@ describe('computeHealth on the Northstar dataset (full-period averages)', () => 
     expect(metric('user-outcomes', 'fcr').score).toBe(4);
   });
 
-  it('weights pillars 20/20/20/10/20/10 and lands just inside Healthy', () => {
+  it('weights pillars 20/20/20/10/20/10 and lands in Positive-Watch', () => {
     const weights = health.pillars.map((p) => p.weight);
     expect(weights.reduce((a, b) => a + b, 0)).toBeCloseTo(1, 10);
     expect(health.score).toBeCloseTo(3.77, 2);
-    expect(health.status).toBe('healthy');
+    expect(health.status).toBe('positive-watch');
   });
 
   it('redistributes weight when a judgement is missing', () => {

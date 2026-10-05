@@ -1,11 +1,16 @@
 import { bandLabels, STATUS_BANDS, type HealthResult, type HealthStatus, type PillarResult } from '../health/rampup';
 import { fmtDay } from '../format';
 
-const STATUS_LABEL: Record<HealthStatus, string> = {
-  healthy: 'Healthy',
-  watch: 'Watch',
-  'at-risk': 'At risk',
-};
+const STATUS_LABEL = Object.fromEntries(STATUS_BANDS.map((b) => [b.status, b.label])) as Record<HealthStatus, string>;
+
+/** "Healthy ≥ 4.00", "Positive-Watch 3.00–3.99", …, "At risk < 2.00" */
+function bandText(i: number) {
+  const b = STATUS_BANDS[i];
+  if (i === 0) return `${b.label} ≥ ${b.min.toFixed(2)}`;
+  const upper = (STATUS_BANDS[i - 1].min - 0.01).toFixed(2);
+  if (b.min === -Infinity) return `${b.label} < ${STATUS_BANDS[i - 1].min.toFixed(2)}`;
+  return `${b.label} ${b.min.toFixed(2)}–${upper}`;
+}
 
 /** Five square pips, partially filled for fractional scores (e.g. 4.2). */
 function Pips({ score, small }: { score: number; small?: boolean }) {
@@ -26,7 +31,7 @@ export function HealthPanel({ health }: { health: HealthResult }) {
       <div className="health__summary">
         <span className="label health__brand">RAMP UP score</span>
         <div className="health__score">
-          <span className="health__value">{health.score.toFixed(1)}</span>
+          <span className="health__value">{health.score.toFixed(2)}</span>
           <span className="health__outof">/ 5</span>
         </div>
         <div className="health__status-row">
@@ -47,11 +52,9 @@ export function HealthPanel({ health }: { health: HealthResult }) {
           <div>
             <dt>Bands</dt>
             <dd className="health__bands">
-              <span>Healthy ≥ {STATUS_BANDS.healthy.toFixed(2)}</span>
-              <span>
-                Watch {STATUS_BANDS.watch.toFixed(2)}–{(STATUS_BANDS.healthy - 0.01).toFixed(2)}
-              </span>
-              <span>At risk &lt; {STATUS_BANDS.watch.toFixed(2)}</span>
+              {STATUS_BANDS.map((b, i) => (
+                <span key={b.status}>{bandText(i)}</span>
+              ))}
             </dd>
           </div>
         </dl>

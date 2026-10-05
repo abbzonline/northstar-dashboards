@@ -28,7 +28,14 @@ Design principles:
 3. **Values are rounded to display precision before scoring**, so the number on screen is the number that was scored.
 4. **A measured pillar's score** is the weighted mean of its metric scores. Metric weights are 1, except P50 and P95 latency at 0.5 each, so latency counts as one metric.
 5. **Overall score** = Σ(pillar weight × pillar score), on a 1–5 scale.
-6. **Status** is banded on the same 1–5 scale: **Healthy ≥ 3.75**, **Watch 2.50–3.74**, **At risk < 2.50**. These are GitLab's 75% and 50% cut-offs expressed out of 5.
+6. **Status** is banded on the same 1–5 scale:
+
+   | Score | Status |
+   |---|---|
+   | ≥ 4.00 | **Healthy** |
+   | 3.00–3.99 | **Positive-Watch** |
+   | 2.00–2.99 | **Negative-Watch** |
+   | < 2.00 | **At risk** |
 7. **Missing pillars:** if a pillar has no input (for example, judgements not supplied), its weight is shared among the remaining pillars, as in GitLab's model.
 
 ## Benchmarks
@@ -117,12 +124,12 @@ Set by the account team in [`internal-qbr/src/judgements.ts`](../internal-qbr/sr
 | P | Judgement | 2.00 | 0.20 |
 | U | CSAT 82.3 → 4 · handle time 7.74 min → 4 · first-contact resolution 87.2% → 4 | 4.00 | 0.80 |
 | P | Judgement | 5.00 | 0.50 |
-| **Overall** | | **3.77 / 5 (Healthy, by 0.02)** | |
+| **Overall** | | **3.77 / 5 (Positive-Watch)** | |
 
 What the score says:
 - **Strengths:** adoption, model quality and user outcomes (all 4.0).
 - **Weaknesses:** reliability, held back by the Aug 9 incident and averaging below 99.9%; and partnership, which needs buy-in beyond Atlas.
-- **Status is on a knife-edge:** 3.77 clears Healthy (3.75) by 0.02. Any slip in one metric tips it back to Watch, so treat it as "Healthy, not yet secure".
+- **Status:** 3.77 is Positive-Watch, in the upper part of the band and 0.23 short of Healthy. Lifting reliability by one band (3.33 → 4.33) would get there.
 - **For the expansion case:** "prove reliability on Atlas and win sponsorship across the group, then scale to the four other brands".
 
 ## Decision log
@@ -135,6 +142,6 @@ What the score says:
 | Availability scale | 99.9 = 5, 0.2-pt steps | Team standard (stricter SLA-anchored alternative documented above) |
 | M and U sources | Microsoft Foundry, RAGAS, Freshworks 2025, Salesforce 2025 | Primary, first-party sources instead of blog aggregators |
 | Escalation | Scored in U as first-contact resolution | Has a direct Freshworks benchmark; keeps M purely about answer correctness |
-| Status bands | Out of 5: Healthy ≥ 3.75, Watch ≥ 2.50 | Same scale as the scores; GitLab's 75% / 50% cut-offs |
+| Status bands | Out of 5: Healthy ≥ 4, Positive-Watch ≥ 3, Negative-Watch ≥ 2, At risk < 2 | Same scale as the scores; splitting Watch shows which way an account is leaning |
 | CSAT yardstick | Salesforce: 85 = 5, 70 = 4, 60 = 3, 50 = 2, below 50 = 1 | Salesforce's general good (70) / poor (50) guidance fits an AI agent better than Freshworks' human-chat retail tiers |
 | Dashboard sources | Plain-text citations, no outbound links | Internal dashboard stays self-contained; full references live in this doc |

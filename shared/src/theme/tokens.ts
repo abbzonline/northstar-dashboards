@@ -29,7 +29,7 @@ export const fw = {
   neutrals300: 'oklch(74% 0 0)', //        #ABABAB
   neutrals100: 'oklch(93% 0 0)', //        #E8E8E8
   white: '#FFFFFF',
-  /** NOT a Fireworks token: their palette has no yellow/amber, needed for the 'Watch' health band. */
+  /** NOT a Fireworks token: their palette has no yellow/amber, needed for the 'Positive-Watch' health band. */
   amber500: 'oklch(76% .15 75)', // #E3A53A
 } as const;
 

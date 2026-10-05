@@ -13,7 +13,7 @@
  * period (not a trailing window), so a strong final week can't flatter the score.
  * Volume trend is the one comparison metric (first vs last 7 days). Values are rounded to display precision
  * before scoring, so the number on screen is the number that was scored.
- * Status is banded on the same 1–5 scale: Healthy ≥ 3.75, Watch ≥ 2.50, At risk below.
+ * Status is banded on the same 1–5 scale: Healthy ≥ 4, Positive-Watch ≥ 3, Negative-Watch ≥ 2, At risk below.
  */
 import type { DailyMetric } from '../data/schema';
 import { mean, round } from '../data/derive';
@@ -315,7 +315,7 @@ export type PillarResult =
   | (Omit<MeasuredPillarDef, 'metrics'> & { score: number; metrics: MetricResult[] })
   | (JudgementPillarDef & { score: number; judgement: Judgement });
 
-export type HealthStatus = 'healthy' | 'watch' | 'at-risk';
+export type HealthStatus = 'healthy' | 'positive-watch' | 'negative-watch' | 'at-risk';
 
 export interface HealthResult {
   pillars: PillarResult[];
@@ -325,13 +325,16 @@ export interface HealthResult {
   window: { from: string; to: string; days: number; isFullPeriod: boolean };
 }
 
-/** Status bands on the 1–5 scale (the 75% / 50% cut-offs of GitLab's model, expressed out of 5). */
-export const STATUS_BANDS = { healthy: 3.75, watch: 2.5 } as const;
+/** Status bands on the 1–5 scale, best first. A score takes the first band whose `min` it reaches. */
+export const STATUS_BANDS: { status: HealthStatus; label: string; min: number }[] = [
+  { status: 'healthy', label: 'Healthy', min: 4 },
+  { status: 'positive-watch', label: 'Positive-Watch', min: 3 },
+  { status: 'negative-watch', label: 'Negative-Watch', min: 2 },
+  { status: 'at-risk', label: 'At risk', min: -Infinity },
+];
 
 export function statusFor(score: number): HealthStatus {
-  if (score >= STATUS_BANDS.healthy) return 'healthy';
-  if (score >= STATUS_BANDS.watch) return 'watch';
-  return 'at-risk';
+  return STATUS_BANDS.find((b) => score >= b.min)!.status;
 }
 
 export function computeHealth(

@@ -50,7 +50,7 @@
   --fw-body: oklch(28% .01 285.93);
   --fw-gray: oklch(48% .01 256.74);
   --fw-eyebrow-gray: #0000000d;
-  /* Only non-Fireworks colour: their palette has no amber for the 'Watch' health band. */
+  /* Only non-Fireworks colour: their palette has no amber for the 'Positive-Watch' health band. */
   --amber-500: oklch(76% .15 75);
   --amber-100: oklch(95% .04 80);
   --amber-700: oklch(52% .12 65);

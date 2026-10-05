@@ -62,7 +62,7 @@ The app reads **`data/northstar_flagship_30_day_metrics.csv`**: 31 daily rows, A
   | **P**rofitability | 10% | account-team judgement |
 
   - **Measured metrics** are scored on their **full-period average** against published benchmarks: Freshworks Benchmark 2025 (retail conversations), RAGAS CI gates and Microsoft Foundry evaluators, plus the agreed reliability bands.
-  - **Status** is out of 5, like the scores: Healthy ≥ 3.75, Watch 2.50–3.74, At risk < 2.50.
+  - **Status** is out of 5, like the scores: Healthy ≥ 4, Positive-Watch 3–3.99, Negative-Watch 2–2.99, At risk < 2.
   - **Transparency:** expand any pillar to see its metrics, scores, bands and sources.
   - **Code:** the logic and bands are in `shared/src/health/rampup.ts`. The judgement scores are in `internal-qbr/src/judgements.ts`, which the customer view never imports.
 - **KPI strip:** requests/day, spend, availability, P95 latency, eval pass rate. Each compares the last 7 days with the first 7 days.
