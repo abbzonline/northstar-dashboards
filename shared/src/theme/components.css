@@ -53,6 +53,27 @@
 }
 @media (min-width: 480px) { .kpis { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1024px) { .kpis { grid-template-columns: repeat(4, 1fr); } }
+
+/*
+ * Corner tiles share the container's rounded corners, so a hover background or outline follows the
+ * curve instead of being clipped (which left the corners white). Which tile is a corner depends on
+ * the column count, so this mirrors the breakpoints above.
+ */
+.kpis > .kpi { --kpi-r: calc(var(--radius) - 1px); }
+.kpis > .kpi:first-child { border-top-left-radius: var(--kpi-r); }
+.kpis > .kpi:last-child { border-bottom-right-radius: var(--kpi-r); }
+@media (max-width: 479px) {
+  .kpis > .kpi:first-child { border-top-right-radius: var(--kpi-r); }
+  .kpis > .kpi:last-child { border-bottom-left-radius: var(--kpi-r); }
+}
+@media (min-width: 480px) and (max-width: 1023px) {
+  .kpis > .kpi:nth-child(2) { border-top-right-radius: var(--kpi-r); }
+  .kpis > .kpi:nth-child(odd):nth-last-child(-n + 2) { border-bottom-left-radius: var(--kpi-r); }
+}
+@media (min-width: 1024px) {
+  .kpis > .kpi:nth-child(4) { border-top-right-radius: var(--kpi-r); }
+  .kpis > .kpi:nth-child(4n + 1):nth-last-child(-n + 4) { border-bottom-left-radius: var(--kpi-r); }
+}
 /* Dividers as shadows: the container clips the outer edges, so lines stay clean however the tiles wrap. */
 .kpi {
   padding: 18px 20px;
