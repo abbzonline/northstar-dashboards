@@ -1,4 +1,4 @@
-import { EventLegend, HealthPanel, KpiTile, Section, fmtCompact, fmtDay, fmtInt, fmtMs, fmtPct, fmtSigned, fmtUsd } from '@northstar/shared';
+import { EventLegend, HealthPanel, KpiTile, Section, fmtCompact, fmtDay, fmtInt, fmtMinSec, fmtMs, fmtPct, fmtSigned, fmtUsd } from '@northstar/shared';
 import { AVAILABILITY_TARGET, type Model } from '../model';
 import { viewHref } from '../router';
 import { fmtPct2, fmtUsd2, pctChange, ppChange } from './format';
@@ -32,8 +32,8 @@ export function HealthView({ m }: { m: Model }) {
         <KpiTile
           href={chart('chart-csat-aht')}
           label="Avg handle time"
-          value={`${periodAvg('avg_handle_time_min').toFixed(2)} min`}
-          delta={`${fmtSigned(cmp.aht.delta, (n) => n.toFixed(2))} min since week 1`}
+          value={fmtMinSec(periodAvg('avg_handle_time_min'))}
+          delta={`${fmtSigned(cmp.aht.delta, fmtMinSec)} since week 1`}
           deltaGood={cmp.aht.delta < 0}
           sub="Brief: −35% vs pre-launch"
         />

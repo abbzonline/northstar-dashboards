@@ -17,7 +17,7 @@
  */
 import type { DailyMetric } from '../data/schema';
 import { mean, round } from '../data/derive';
-import { fmtMs, fmtPct } from '../format';
+import { fmtMinSec, fmtMs, fmtPct } from '../format';
 
 export type Score = 1 | 2 | 3 | 4 | 5;
 
@@ -120,14 +120,6 @@ const SRC = {
 } satisfies Record<string, Source>;
 
 const avg = (rows: DailyMetric[], key: keyof DailyMetric) => mean(rows.map((r) => r[key] as number));
-const fmtMin = (n: number) => `${n.toFixed(2)} min`;
-/** 2.05 -> "2m 03s", 68 -> "1h 08m" */
-const fmtDuration = (min: number) => {
-  const s = Math.round(min * 60);
-  if (s >= 3600) return `${Math.floor(s / 3600)}h ${String(Math.floor((s % 3600) / 60)).padStart(2, '0')}m`;
-  return `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, '0')}s`;
-};
-
 export const RAMPUP: PillarDef[] = [
   {
     kind: 'measured',
@@ -272,8 +264,7 @@ export const RAMPUP: PillarDef[] = [
         label: 'Avg handle time',
         value: (w) => avg(w, 'avg_handle_time_min'),
         precision: 2,
-        format: fmtMin,
-        bandFormat: fmtDuration,
+        format: fmtMinSec,
         bands: { direction: 'lower', edges: [2.05, 12.12, 68, 120] },
         source: SRC.freshworks,
         note: 'Benchmarked against Freshworks resolution time (2m 03s / 12m 07s / 1h 08m), the closest published equivalent.',

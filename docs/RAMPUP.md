@@ -142,7 +142,7 @@ Set by the account team in [`internal-qbr/src/judgements.ts`](../internal-qbr/sr
 | A | Automation 67.9% → 3 · volume +45% → 5 | 4.00 | 0.80 |
 | M | Grounded 93.9% → 4 · eval pass 93.1% → 4 | 4.00 | 0.80 |
 | P | Judgement | 2.00 | 0.20 |
-| U | CSAT 82.3 → 4 · handle time 7.74 min → 4 · first-contact resolution 87.2% → 4 | 4.00 | 0.80 |
+| U | CSAT 82.3 → 4 · handle time 7m 44s → 4 · first-contact resolution 87.2% → 4 | 4.00 | 0.80 |
 | P | Judgement | 1.00 | 0.10 |
 | **Overall** | | **3.37 / 5 (Positive-Watch)** | |
 

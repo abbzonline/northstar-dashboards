@@ -6,6 +6,7 @@ import {
   fmtCompact,
   fmtDay,
   fmtInt,
+  fmtMinSec,
   fmtMs,
   fmtPct,
   fmtUsd,
@@ -163,7 +164,7 @@ export function TrendsView({ m }: { m: Model }) {
         <ChartCard
           id="chart-csat-aht"
           title="CSAT and average handle time"
-          headline={`CSAT ${cmp.csat.first.toFixed(1)} → ${cmp.csat.last.toFixed(1)}; handle time ${cmp.aht.first.toFixed(2)} → ${cmp.aht.last.toFixed(2)} min.`}
+          headline={`CSAT ${cmp.csat.first.toFixed(1)} → ${cmp.csat.last.toFixed(1)}; handle time ${fmtMinSec(cmp.aht.first)} → ${fmtMinSec(cmp.aht.last)}.`}
           footnote="No pre-launch baseline is in the dataset. The brief's 35% handle-time cut and +12 CSAT are versus pre-deployment."
         >
           <TrendChart
@@ -171,10 +172,10 @@ export function TrendsView({ m }: { m: Model }) {
             events={events}
             series={[
               { key: 'csat_score', label: 'CSAT', kind: 'line', color: series.primary, format: (n) => n.toFixed(1) },
-              { key: 'avg_handle_time_min', label: 'Avg handle time (min)', kind: 'line', color: series.secondary, axis: 'right', dashed: true, format: (n) => `${n.toFixed(2)} min` },
+              { key: 'avg_handle_time_min', label: 'Avg handle time', kind: 'line', color: series.secondary, axis: 'right', dashed: true, format: fmtMinSec },
             ]}
             leftFormat={(n) => n.toFixed(0)}
-            rightFormat={(n) => `${n.toFixed(1)}m`}
+            rightFormat={fmtMinSec}
             leftDomain={[78, 86]}
             rightDomain={[6, 10]}
           />

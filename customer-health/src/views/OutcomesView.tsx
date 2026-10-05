@@ -7,6 +7,7 @@ import {
   fmtCompact,
   fmtDay,
   fmtInt,
+  fmtMinSec,
   fmtMs,
   fmtPct,
   fmtSigned,
@@ -43,8 +44,8 @@ export function OutcomesView({ m }: { m: Model }) {
         <KpiTile
           href={viewHref('quality', 'chart-csat-aht')}
           label="Avg handle time"
-          value={`${periodAvg('avg_handle_time_min').toFixed(2)} min`}
-          delta={`${cmp.aht.first.toFixed(2)} → ${cmp.aht.last.toFixed(2)} min, week 1 → week 4`}
+          value={fmtMinSec(periodAvg('avg_handle_time_min'))}
+          delta={`${fmtMinSec(cmp.aht.first)} → ${fmtMinSec(cmp.aht.last)}, week 1 → week 4`}
           deltaGood={cmp.aht.delta < 0}
           sub="−35% vs pre-launch baseline, supplied by Northstar"
         />

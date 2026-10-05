@@ -1,4 +1,4 @@
-import { ChartCard, EventLegend, Section, TrendChart, fmtPct, series } from '@northstar/shared';
+import { ChartCard, EventLegend, Section, TrendChart, fmtMinSec, fmtPct, series } from '@northstar/shared';
 import type { Model } from '../model';
 import { ppChange } from './format';
 
@@ -32,7 +32,7 @@ export function QualityView({ m }: { m: Model }) {
         <ChartCard
           id="chart-csat-aht"
           title="CSAT and average handle time"
-          headline={`CSAT ${cmp.csat.first.toFixed(1)} → ${cmp.csat.last.toFixed(1)}; handle time ${cmp.aht.first.toFixed(2)} → ${cmp.aht.last.toFixed(2)} min (week 1 → week 4).`}
+          headline={`CSAT ${cmp.csat.first.toFixed(1)} → ${cmp.csat.last.toFixed(1)}; handle time ${fmtMinSec(cmp.aht.first)} → ${fmtMinSec(cmp.aht.last)} (week 1 → week 4).`}
           footnote="The −35% and +12-point headline figures are versus Northstar's pre-launch baselines, which are not in this dataset."
         >
           <TrendChart
@@ -40,10 +40,10 @@ export function QualityView({ m }: { m: Model }) {
             events={events}
             series={[
               { key: 'csat_score', label: 'CSAT', kind: 'line', color: series.primary, format: (n) => n.toFixed(1) },
-              { key: 'avg_handle_time_min', label: 'Avg handle time (min)', kind: 'line', color: series.secondary, axis: 'right', dashed: true, format: (n) => `${n.toFixed(2)} min` },
+              { key: 'avg_handle_time_min', label: 'Avg handle time', kind: 'line', color: series.secondary, axis: 'right', dashed: true, format: fmtMinSec },
             ]}
             leftFormat={(n) => n.toFixed(0)}
-            rightFormat={(n) => `${n.toFixed(1)}m`}
+            rightFormat={fmtMinSec}
             leftDomain={[78, 86]}
             rightDomain={[6, 10]}
           />
