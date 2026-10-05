@@ -24,7 +24,7 @@ export function OutcomesView({ m, single = false }: { m: Model; single?: boolean
   return (
     <>
       <Section id="health" title="Operational health">
-        <HealthPanel health={m.health} label="Operational health, 1–5" showStatus={false} marker="icon" showWeights={false} hideNotes={['p50']} />
+        <HealthPanel health={m.health} label="Operational health, 1–5" showStatus={false} marker="icon" showWeights={false} showNotes={false} />
       </Section>
 
       <div className="section__head kpis-head">

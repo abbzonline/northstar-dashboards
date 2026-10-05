@@ -27,11 +27,6 @@ export interface Bands {
   edges: [number, number, number, number];
 }
 
-/** Where a metric's bands come from. Not shown on the dashboard; documented in docs/RAMPUP.md. */
-export interface Source {
-  label: string;
-}
-
 export interface MetricDef {
   id: string;
   label: string;
@@ -44,7 +39,6 @@ export interface MetricDef {
   bands: Bands;
   /** Relative weight inside its pillar (default 1). */
   weight?: number;
-  source: Source;
   note?: string;
 }
 
@@ -91,35 +85,9 @@ export function bandLabels(metric: MetricDef): string[] {
   return metric.bands.edges.map((e) => `${op} ${f(e)}`);
 }
 
-// ---------------------------------------------------------------------------
-// Benchmarks
-// ---------------------------------------------------------------------------
-
-const SRC = {
-  freshworks: {
-    label: 'Freshworks Customer Service Benchmark 2025 — Retail & eCommerce, conversations (Trendsetter / Performer / Aspirant)',
-  },
-  ragas: {
-    label: 'RAGAS CI gates (answer relevancy ≥ 0.90; context precision/recall ≥ 0.95) + Microsoft Foundry evaluators',
-  },
-  foundry: {
-    label: 'Microsoft Foundry agent evaluators (Groundedness, Task Completion, Intent Resolution, Task Adherence)',
-  },
-  availability: { label: 'Account-team bands (assumed; no SLA was supplied): 99.9% = 5, then 0.2-pt steps' },
-  errors: {
-    label: 'Major LLM API providers run server-error rates of roughly 0.3–0.7%',
-  },
-  latency: {
-    label: 'Time-to-first-token UX targets: < 500 ms feels instant, > 2 s feels broken',
-  },
-  automation: {
-    label: 'Agreed bands. Context: Freshworks retail AI deflection 53%; Salesforce 30% of cases AI-handled (50% by 2027)',
-  },
-  trend: { label: 'Internal rule: growth in served requests, first vs last 7 days' },
-  csat: { label: 'Salesforce: above 70% is good, below 50% is poor, 78% cross-industry average; 85 = 5 and 60 = 3 set by the account team' },
-} satisfies Record<string, Source>;
-
 const avg = (rows: DailyMetric[], key: keyof DailyMetric) => mean(rows.map((r) => r[key] as number));
+
+/** Band calibration is documented in docs/RAMPUP.md. */
 export const RAMPUP: PillarDef[] = [
   {
     kind: 'measured',
@@ -136,7 +104,6 @@ export const RAMPUP: PillarDef[] = [
         precision: 2,
         format: (n) => fmtPct(n, 2),
         bands: { direction: 'higher', edges: [99.9, 99.7, 99.5, 99.3] },
-        source: SRC.availability,
       },
       {
         id: 'errors',
@@ -145,7 +112,6 @@ export const RAMPUP: PillarDef[] = [
         precision: 2,
         format: (n) => fmtPct(n, 2),
         bands: { direction: 'lower', edges: [0.5, 1, 2, 5] },
-        source: SRC.errors,
       },
       {
         id: 'p50',
@@ -155,7 +121,6 @@ export const RAMPUP: PillarDef[] = [
         format: fmtMs,
         bands: { direction: 'lower', edges: [300, 500, 800, 1200] },
         weight: 0.5,
-        source: SRC.latency,
         note: 'Assumed time-to-first-token: ~331 output tokens in ~600 ms end-to-end would be implausible.',
       },
       {
@@ -166,7 +131,6 @@ export const RAMPUP: PillarDef[] = [
         format: fmtMs,
         bands: { direction: 'lower', edges: [1000, 1500, 2000, 3000] },
         weight: 0.5,
-        source: SRC.latency,
       },
     ],
   },
@@ -185,7 +149,6 @@ export const RAMPUP: PillarDef[] = [
         precision: 1,
         format: (n) => fmtPct(n, 1),
         bands: { direction: 'higher', edges: [80, 70, 60, 45] },
-        source: SRC.automation,
       },
       {
         id: 'volume-trend',
@@ -198,7 +161,6 @@ export const RAMPUP: PillarDef[] = [
         precision: 0,
         format: (n) => `${n > 0 ? '+' : ''}${n.toFixed(0)}%`,
         bands: { direction: 'higher', edges: [10, 2, -2, -10] },
-        source: SRC.trend,
       },
     ],
   },
@@ -217,8 +179,7 @@ export const RAMPUP: PillarDef[] = [
         precision: 1,
         format: (n) => fmtPct(n, 1),
         bands: { direction: 'higher', edges: [95, 90, 85, 80] },
-        source: SRC.ragas,
-        note: 'Share of responses passing a Groundedness check (Foundry: 1–5, pass at 3).',
+        note: 'Share of responses passing a groundedness check (scored 1–5, pass at 3).',
       },
       {
         id: 'eval-pass',
@@ -227,8 +188,7 @@ export const RAMPUP: PillarDef[] = [
         precision: 1,
         format: (n) => fmtPct(n, 1),
         bands: { direction: 'higher', edges: [95, 90, 85, 80] },
-        source: SRC.foundry,
-        note: 'Assumed composite like Foundry Output Quality: passes only if every component passes.',
+        note: 'Assumed composite: passes only if every component check passes.',
       },
     ],
   },
@@ -256,7 +216,6 @@ export const RAMPUP: PillarDef[] = [
         format: (n) => n.toFixed(1),
         bandFormat: (n) => n.toFixed(0),
         bands: { direction: 'higher', edges: [85, 70, 60, 50] },
-        source: SRC.csat,
         note: 'csat_score assumed to be % of satisfied responses (4–5 on a 5-point scale).',
       },
       {
@@ -266,8 +225,6 @@ export const RAMPUP: PillarDef[] = [
         precision: 2,
         format: fmtMinSec,
         bands: { direction: 'lower', edges: [2.05, 12.12, 68, 120] },
-        source: SRC.freshworks,
-        note: 'Benchmarked against Freshworks resolution time (2m 03s / 12m 07s / 1h 08m), the closest published equivalent.',
       },
       {
         id: 'fcr',
@@ -277,7 +234,6 @@ export const RAMPUP: PillarDef[] = [
         format: (n) => fmtPct(n, 1),
         bandFormat: (n) => fmtPct(n, 2),
         bands: { direction: 'higher', edges: [93.95, 82.43, 68.12, 58] },
-        source: SRC.freshworks,
         note: 'Proxy: 100% − escalation rate.',
       },
     ],

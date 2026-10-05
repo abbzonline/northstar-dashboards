@@ -51,9 +51,9 @@ Two dashboards built from the same August dataset: an **internal QBR** for Firew
 |---|---|---|
 | Reliability | 20% | availability, error rate, P50/P95 latency vs benchmark bands |
 | Adoption | 20% | Tier-1 automation, volume trend |
-| Model quality | 20% | grounded answers, eval pass (RAGAS / Microsoft Foundry bands) |
+| Model quality | 20% | grounded answers, eval pass |
 | Partnership | 10% | account-team judgement (internal only) |
-| User outcomes | 20% | CSAT (Salesforce bands), handle time and first-contact resolution (Freshworks retail bands) |
+| User outcomes | 20% | CSAT, handle time and first-contact resolution |
 | Profitability | 10% | account-team judgement, Fireworks' commercial view (internal only) |
 
 - Each metric scores 1–5 on its **full-period average**, rounded to display precision first; a pillar is the weighted mean of its metrics.

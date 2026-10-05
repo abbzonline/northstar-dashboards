@@ -35,8 +35,8 @@ export interface HealthPanelProps {
   marker?: 'letter' | 'icon';
   /** Show pillar weights in the summary and on each row (internal view only). */
   showWeights?: boolean;
-  /** Metric ids whose explanatory note is hidden in this view. */
-  hideNotes?: string[];
+  /** Show the explanatory note under each metric (internal view only). */
+  showNotes?: boolean;
 }
 
 export function HealthPanel({
@@ -46,7 +46,7 @@ export function HealthPanel({
   label = 'Overall',
   marker = 'letter',
   showWeights = true,
-  hideNotes = [],
+  showNotes = true,
 }: HealthPanelProps) {
   // Accordion: at most one pillar open at a time.
   const [openKey, setOpenKey] = useState<string | null>(null);
@@ -103,7 +103,7 @@ export function HealthPanel({
               pillar={p}
               share={showWeights ? p.weight / totalWeight : undefined}
               marker={marker}
-              hideNotes={hideNotes}
+              showNotes={showNotes}
               open={openKey === p.key}
               onToggle={() => setOpenKey((k) => (k === p.key ? null : p.key))}
             />
@@ -118,7 +118,7 @@ function PillarRow({
   pillar: p,
   share,
   marker,
-  hideNotes,
+  showNotes,
   open,
   onToggle,
 }: {
@@ -126,7 +126,7 @@ function PillarRow({
   /** Weight as a share of the pillars shown (sums to 1); omitted to hide the weight. */
   share?: number;
   marker: 'letter' | 'icon';
-  hideNotes: string[];
+  showNotes: boolean;
   open: boolean;
   onToggle: () => void;
 }) {
@@ -174,7 +174,7 @@ function PillarRow({
               </thead>
               <tbody>
                 {p.metrics.map((m) => {
-                  const note = hideNotes.includes(m.def.id) ? undefined : m.def.note;
+                  const note = showNotes ? m.def.note : undefined;
                   return [
                     <tr key={m.def.id} className={note ? 'has-note' : undefined}>
                       <td className="pillar__metric">
