@@ -113,7 +113,7 @@ export interface Dependency {
 }
 
 export const DEPENDENCIES: Dependency[] = [
-  { item: 'Warm minimum replica and autoscaling thresholds on the Atlas deployment', side: 'Fireworks', owner: 'Fireworks Engineering', neededBy: '16 Oct', status: 'In progress' },
+  { item: 'Scale-up threshold retune and promotion pre-warm runbook on the Atlas deployment (no warm floor)', side: 'Fireworks', owner: 'Fireworks Engineering', neededBy: '16 Oct', status: 'In progress' },
   { item: 'BF16 capacity reserved for the shared multi-LoRA deployment (EU region; 1.5x region-restricted rate confirmed with Northstar)', side: 'Fireworks', owner: 'Fireworks Infrastructure', neededBy: '6 Nov', status: 'Not started' },
   { item: 'Ridgeline adapter training and per-brand eval sets', side: 'Fireworks', owner: 'Fireworks Applied ML', neededBy: '20 Nov', status: 'Not started' },
   { item: 'Ridgeline transcripts and catalogue export', side: 'Northstar', owner: 'Northstar CX operations', neededBy: '6 Nov', status: 'Not started' },
@@ -191,7 +191,7 @@ export const DECISIONS: Decision[] = [
     decision: 'Availability target to offer on the shared deployment',
     owner: 'Field CTO + Engineering',
     by: '20 Oct',
-    recommendation: '99.9%, conditional on a warm minimum replica. That raises the bill from ~$1.2k to ~$5.8k/month ($8.8k with EU placement), so it is a commercial commitment to agree with Northstar, not an engineering toggle; Atlas averaged 99.85% in August',
+    recommendation: 'Do not offer 99.9% on Atlas alone. A warm minimum replica costs ~$4.6k/month extra ($7.6k with EU placement) for ~22 minutes/month of availability (99.85% → 99.9%). Keep scale-to-zero, retune scale-up thresholds, pre-warm for known promotions via the scale API. Offer 99.9% with a warm floor on the shared deployment from the pilot onward, where five brands utilise it',
   },
 ];
 
@@ -204,7 +204,7 @@ export interface Action {
 
 export const ACTIONS: Action[] = [
   { action: "Confirm Atlas's serving set-up (shape, minimum replicas, scale-to-zero) and how reported spend maps to the bill", owner: 'Deployment Strategist + Fireworks Engineering', due: '9 Oct', status: 'In progress' },
-  { action: 'Set a warm minimum replica and retune autoscaling thresholds', owner: 'Fireworks Engineering', due: '16 Oct', status: 'Not started' },
+  { action: 'Retune scale-up thresholds and write the promotion pre-warm runbook (no warm floor on Atlas alone)', owner: 'Fireworks Engineering + Northstar CX operations', due: '16 Oct', status: 'Not started' },
   { action: 'Obtain pre-launch handle-time and CSAT baselines to substantiate the −35% and +12 claims', owner: 'Deployment Strategist + Northstar CX', due: '16 Oct', status: 'Not started' },
   { action: 'Hold the EBR: secure a group sponsor, agree the Ridgeline pilot and success criteria', owner: 'Deployment Strategist + Account Executive', due: '22 Oct', status: 'Not started' },
   { action: 'Joint review of rising requests per ticket (4.6 → 6.2)', owner: 'Deployment Strategist + Northstar Engineering', due: '23 Oct', status: 'Not started' },
@@ -227,7 +227,7 @@ export const RISKS: Risk[] = [
     kind: 'Technical',
     risk: 'Availability misses from scale-up behaviour under bursts',
     evidence: '27 of 31 days below 99.9%; P95 spikes on 9 and 21 Aug; a deployment scaled to zero answers the next request with a 503 while it spins up',
-    mitigation: 'Warm minimum replica and retuned thresholds before any traffic moves; priced into the commercial structure (see Decisions)',
+    mitigation: 'Retune scale-up thresholds and pre-warm for known promotions now; the warm floor arrives with the shared deployment, where five brands make it utilised capacity rather than idle cost (see Decisions)',
     owner: 'Fireworks Engineering',
   },
   {

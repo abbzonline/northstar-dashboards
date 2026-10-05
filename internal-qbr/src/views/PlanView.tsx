@@ -200,8 +200,9 @@ export function PlanView({ m }: { m: Model }) {
                 {`One warm H100 is approx. ${round100(WARM_H100_MONTH)}/month at ${fmtUsd(H100_PER_HOUR, 2)}/GPU-hour ` +
                   `(approx. ${round100(WARM_H100_MONTH_EU)}/month at the ${REGION_PREMIUM}x region-restricted rate if EU ` +
                   `residency is required), against ${fmtUsd(m.totalSpend)} billed for August. August is only consistent ` +
-                  `with aggressive scale-to-zero, so the warm-replica change that underwrites 99.9% availability raises ` +
-                  `Northstar's bill by roughly 4–7x and must be commercially agreed, not just configured. Shared across five ` +
+                  `with aggressive scale-to-zero. A warm replica on Atlas alone would raise the bill 4–7x to buy ~22 minutes ` +
+                  `of availability a month (99.85% → 99.9%), so it is not recommended; the warm floor belongs on the shared ` +
+                  `deployment. Shared across five ` +
                   `brands, the floor is approx. ${round100(WARM_H100_MONTH / 5)}–${round100(WARM_H100_MONTH_EU / 5)} per ` +
                   `brand, and group revenue scales with replicas needed, not with ticket volume; the indicative value above ` +
                   `is the per-token low case.`}

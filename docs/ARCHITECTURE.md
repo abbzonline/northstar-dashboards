@@ -31,7 +31,9 @@ Every number below is from [fireworks.ai/pricing](https://fireworks.ai/pricing) 
 
 **Implication for reliability:** a deployment scaled to zero answers the next request with an immediate **503 (`DEPLOYMENT_SCALING_UP`)** while it spins up. Some of August's error rate and missed availability may be scale-up behaviour rather than model faults. Keeping a minimum warm replica is a direct lever on R, at the cost of the GPU floor.
 
-**Implication for the customer's bill (say this out loud in the EBR):** a warm minimum replica moves Northstar from ~$1.2k/month to ~$5.8k/month (~$8.8k with EU placement), a 4–7x increase, before any expansion. The 99.9% availability target is therefore a commercial commitment to agree, not a configuration change. The expansion plan is what makes that floor sensible: five brands sharing one warm deployment is ~$1.2k–1.8k per brand, which is roughly what Atlas pays today for a deployment that scales to zero.
+**Decision: no warm replica on Atlas alone.** A warm minimum replica moves Northstar from ~$1.2k/month to ~$5.8k/month (~$8.8k with EU placement), a 4–7x increase, to lift availability from 99.85% to 99.9%: about 22 minutes a month, or ~$200 per recovered minute for a bot whose fallback is the human queue. That trade is rejected on cost. Atlas stays scale-to-zero; the cheaper levers for the burst days are a retuned scale-up threshold and pre-warming around known promotions (Northstar knows its calendar; the Scale Deployment API lets them raise minimum replicas for a window and drop it after). Report 99.85% as what the current economics buy.
+
+**Where 99.9% does make sense:** on the shared deployment. Five brands keep a replica busy, so the floor stops being idle cost and becomes utilised capacity at ~$1.2k–1.8k per brand, roughly Atlas's bill today. The expansion is what buys the SLA, and that is the commercial story for the EBR: not "pay 5x for 22 minutes" but "the warm floor arrives when five brands share it".
 
 ## Recommendation
 
@@ -97,7 +99,7 @@ Start on A: it is the documented fit for serving many variants of one base, it k
 
 | Step | Action | Gate to proceed |
 |---|---|---|
-| 1 | Stand up the multi-LoRA deployment alongside the live one. Load **Atlas's adapter first**. **Tune autoscaling for the combined five-brand peak now**, using the 21 Aug promo burst as the template | Atlas-on-add-on matches Atlas-on-merge on the existing eval set (grounding, eval pass, P50/P95) before any customer traffic touches it |
+| 1 | Stand up the multi-LoRA deployment alongside the live one, with a **warm minimum replica** (this is where the floor belongs). Load **Atlas's adapter first**. **Tune autoscaling for the combined five-brand peak now**, using the 21 Aug promo burst as the template | Atlas-on-add-on matches Atlas-on-merge on the existing eval set (grounding, eval pass, P50/P95) before any customer traffic touches it |
 | 2 | Load the **pilot brand's adapter** on the same deployment and run the two-arm pilot there, so the pilot doubles as the production test of the shared deployment | Pilot success criteria met (see Pilot) |
 | 3 | Shift **Atlas traffic by percentage (10% → 50% → 100%)** at Northstar's routing layer | Parity at each step; rollback to the old deployment available at every step |
 | 4 | Load the **remaining three adapters**, each as it clears its own eval gate | Per-brand eval gate |
@@ -109,12 +111,12 @@ Start on A: it is the documented fit for serving many variants of one base, it k
 
 ## Latency plan
 
-Be precise about which lever moves which percentile:
+Cost efficiency wins over latency on Atlas alone: no warm replica, accept scale-up behaviour on burst days, mitigate with thresholds and pre-warming. Be precise about which lever moves which percentile:
 
 | Percentile | Today | What moves it |
 |---|---|---|
 | P50 | 605 ms month average; **537 ms in week 4 and still falling** | Mostly compute for ~1,380 tokens per request. FP8 isn't available with add-ons, and speculative decoding on trained models needs an enterprise agreement, so the dependable lever on the shared deployment is **prompt caching** (the brand system prompt and RAG preamble are stable prefixes). Expect P50 to hold rather than fall after migration; it is already in a good place for chat support |
-| P95 | 1.67 s month average; **1.46 s in week 4** | Mostly burst and scale-up behaviour (9 and 21 Aug). Levers: **autoscaling configuration** (warm minimum replicas, scale-up thresholds) and prompt caching. Multi-LoRA's TTFT overhead works against this, which is why the warm replica comes first |
+| P95 | 1.67 s month average; **1.46 s in week 4** | Mostly burst and scale-up behaviour (9 and 21 Aug). Levers now: **scale-up threshold retune and promotion pre-warm** (no warm floor on Atlas alone; rejected on cost). On the shared deployment: a warm minimum replica, plus prompt caching. Multi-LoRA's TTFT overhead works against this, which is why the shared deployment carries the warm floor from day one |
 
 Target wording for the EBR: *"P50 is already where it needs to be for chat support. On the shared deployment, a warm minimum replica plus prompt caching targets P95 under ~1.3 s and holds it through promotional peaks, absorbing the small overhead of serving five brands from one deployment."* (Quote a P95 target you can keep after the +10–30% TTFT overhead; 1.2 s is tight.)
 
