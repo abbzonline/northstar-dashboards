@@ -26,7 +26,7 @@ if (!CHROME) throw new Error('Chrome not found; set CHROME_PATH');
 const font = (file) => 'data:font/ttf;base64,' + fs.readFileSync(path.join(FONTS, file)).toString('base64');
 
 // The two screenshot sections start on a new page; the text sections flow on.
-const PAGE_BREAK = /^(1|2)\. /;
+const PAGE_BREAK = /^(2|3)\. /;
 marked.use({
   renderer: {
     heading({ tokens, depth }) {
@@ -67,12 +67,17 @@ ul, ol { margin: 0 0 10px; padding-left: 18px; }
 li { margin: 0 0 4px; }
 li::marker { color: var(--purple); }
 code { font-family: Consolas, ui-monospace, monospace; font-size: 0.88em; color: var(--gray); }
+a { color: var(--purple-500); text-decoration: none; }
 hr { border: 0; border-top: 1px solid var(--border); margin: 18px 0; }
 figure { margin: 0 0 18px; break-inside: avoid; }
 figure > p { margin-bottom: 6px; }
 p:has(> img) { margin: 4px 0 18px; break-inside: avoid; }
 p:has(> strong:only-child) { break-after: avoid; }
-table:has(th:nth-child(6)) td:nth-child(n+2):nth-child(-n+5) { white-space: nowrap; }
+table:has(th:nth-child(7)) td:nth-child(n+2):nth-child(-n+5) { white-space: nowrap; }
+img.lead { max-height: 128mm; width: auto; max-width: 100%; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; break-inside: avoid; }
+.pair figure { margin: 0 0 12px; }
+.pair figure > p { font-size: 8.6pt; line-height: 1.45; min-height: 2.9em; }
 img { display: block; width: 100%; max-height: 228mm; object-fit: contain; object-position: left top;
       border: 1px solid var(--border); border-radius: var(--radius); }
 /* Open tables (header band and row rules, no outer box) so a table that runs onto the next page splits cleanly. */
@@ -80,7 +85,8 @@ table { width: 100%; border-collapse: collapse; margin: 6px 0 16px; font-size: 8
 thead { display: table-header-group; }
 th { text-align: left; font-weight: 500; color: var(--gray); background: var(--tint); padding: 7px 9px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
 td { padding: 7px 9px; border-bottom: 1px solid var(--border); vertical-align: top; }
-tr { break-inside: avoid; }
+tr { break-inside: avoid; break-after: auto; }
+h2 + p, h2 + ul { break-before: avoid; }
 td strong { color: var(--ink); }
 `;
 

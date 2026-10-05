@@ -82,7 +82,7 @@ Both apps read **`data/northstar_flagship_30_day_metrics.csv`**: 31 daily rows, 
 
 ## Assumptions
 
-Full list in the [design document](docs/Northstar_Dashboard_Design.pdf), section 8.
+Full list on page 1 of the [design document](docs/Northstar_Dashboard_Design.pdf).
 
 - **Scenario:** Northstar is an outerwear-fashion holding company and Atlas its flagship brand. The dashboards show the model as `northstar-atlas-support-ft-v1`; the CSV's `deployment` column reads `northstar-flagship-support-ft-v1`. Set in `shared/src/account.ts`.
 - **Sister brands:** Ridgeline, Halden, Polar and Harbour & Hide, with their volumes, catalogues and tooling, are invented. The brief's brand descriptions were not supplied.
