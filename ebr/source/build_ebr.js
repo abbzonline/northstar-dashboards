@@ -285,16 +285,42 @@ async function main() {
     item(T.purple200, 'Change', 'dash');
   }
 
+  // The five talking points for the live EBR (brief item 7), shown on the cover.
+  const KEY_MESSAGES = () => [
+    `Month one delivered: Tier-1 automation reached ${fmtPct(cmp.automation.last)} in the final week, with faster, better-rated answers.`,
+    'Quality improved every week, and the evidence is in your dashboard.',
+    `${fmtPct2(m.avgAvailability)} availability today: we find the cause in telemetry before buying capacity.`,
+    'One base model, one adapter per brand: each brand keeps its voice and its data.',
+    'We’re asking for a group sponsor today and Ridgeline as the pilot.',
+  ];
+
   // ================================================================ 1. Cover
   pres.addSection({ title: 'Opening' });
   {
     const s = pres.addSlide({ masterName: 'COVER', sectionTitle: 'Opening' });
     const lh = 0.46;
     s.addImage({ data: LOGO, x: M, y: 0.92, w: lh * LOGO_RATIO, h: lh, altText: 'Fireworks AI' });
-    pixels(s, W - M - 6 * 0.31 + 0.07, 0.92);
-    label(s, 'Executive Business Review', { x: M, y: 2.95, w: 6, h: 0.3, fontSize: 14, color: T.purple500 });
-    text(s, 'Northstar Retail Group — Atlas', { x: M, y: 3.3, w: CW, h: 1.0, fontFace: MEDIUM, fontSize: 50, color: T.ink, charSpacing: -2 });
-    text(s, 'Month one in production, and the plan for four more brands', { x: M, y: 4.38, w: CW, h: 0.5, fontSize: 20, color: T.gray });
+    const lw = 5.9;
+    label(s, 'Executive Business Review', { x: M, y: 2.55, w: lw, h: 0.3, fontSize: 14, color: T.purple500 });
+    text(s, [
+      { text: 'Northstar Retail Group', options: { breakLine: true } },
+      { text: '— Atlas' },
+    ], { x: M, y: 2.92, w: lw, h: 1.45, fontFace: MEDIUM, fontSize: 40, color: T.ink, charSpacing: -1.6, lineSpacingMultiple: 0.95 });
+    text(s, 'Month one in production, and the plan for four more brands', { x: M, y: 4.5, w: lw - 0.4, h: 0.8, fontSize: 18, color: T.gray });
+
+    // Key messages: the five talking points for the live EBR, up front.
+    const kx = M + lw + 0.45, kw = CW - lw - 0.45, ky = 0.92, kh = 5.08;
+    box(s, kx, ky, kw, kh, T.tint, T.border, R, 'key-messages');
+    label(s, 'Key messages', { x: kx + 0.3, y: ky + 0.3, w: 3, h: 0.24, fontSize: 11, color: T.purple500 });
+    const points = KEY_MESSAGES();
+    const rh = (kh - 0.75) / points.length;
+    points.forEach((t, i) => {
+      const y = ky + 0.66 + i * rh;
+      if (i) hline(s, kx + 0.3, y, kw - 0.6);
+      rect(s, kx + 0.32, y + rh / 2 - 0.065, 0.13, 0.13, i === points.length - 1 ? T.marine : T.purple);
+      text(s, t, { x: kx + 0.66, y, w: kw - 0.96, h: rh, fontSize: 12.5, color: T.ink, valign: 'middle' });
+    });
+
     hline(s, M, 6.3, CW);
     text(s, [
       { text: 'Model ID: ', options: { color: T.gray } },
@@ -303,7 +329,7 @@ async function main() {
     text(s, `${fmtDay(m.first.date)} – ${fmtDay(m.last.date)}, ${m.last.date.slice(0, 4)} · Reviewed October 2026`, {
       x: W - M - 6, y: 6.48, w: 6, h: 0.3, fontSize: 11, color: T.gray, align: 'right',
     });
-    s.addNotes('Welcome and purpose. This review covers Atlas’s first month in production, measured on the same data and the same scoring as the dashboard Northstar already has, and the proposal to bring the four sister brands onto the platform. We want to leave today with a group sponsor and agreement on the Ridgeline pilot.');
+    s.addNotes(`Welcome and purpose. This review covers Atlas’s first month in production, measured on the same data and the same scoring as the dashboard Northstar already has, and the proposal to bring the four sister brands onto the platform. The five key messages are the whole story in one place; everything that follows is the evidence. One: month one delivered, with automation at ${fmtPct(cmp.automation.last)} in the final week and faster, better-rated answers. Two: quality improved every week. Three: availability is ${fmtPct2(m.avgAvailability)}, and we will find the cause in telemetry before anyone buys capacity. Four: one base model with one adapter per brand keeps each brand’s voice and data separate. Five: we are asking for a group sponsor today and Ridgeline as the pilot.`);
   }
 
   // ================================================================ 2. Headline metrics
@@ -569,37 +595,44 @@ async function main() {
   // ================================================================ 9. Decision
   pres.addSection({ title: 'Decision' });
   {
-    const s = content('Decision', 'Next steps', 'The rollout must not stall at one brand', 'What we are asking for today.');
+    const s = content('Decision', 'Next steps', 'Biggest risk: the rollout stalls at one brand',
+      'The risk is commercial and organisational rather than technical: month one worked, but no one owns the rollout above brand level yet.');
     const lw = 5.6, lh = 4.35;
     box(s, M, CT, lw, lh, T.tint, T.border, R, 'biggest-risk');
     pill(s, M + 0.28, CT + 0.28, 'Biggest risk', 'bad');
     text(s, 'Without group-level sponsorship the rollout stays with Atlas, and shared capacity never carries enough volume to make per-brand cost efficient.', {
       x: M + 0.28, y: CT + 0.7, w: lw - 0.56, h: 1.3, fontFace: MEDIUM, fontSize: 16, color: T.ink,
     });
-    label(s, 'Mitigation', { x: M + 0.28, y: CT + 2.2, w: 3, h: 0.22, fontSize: 10.5 });
-    ['Name a group sponsor at this review', 'Agree the Ridgeline pilot criteria together', 'Size shared capacity alongside a second brand'].forEach((t, i) => {
-      const y = CT + 2.55 + i * 0.5;
-      rect(s, M + 0.3, y + 0.08, 0.11, 0.11, T.purple);
-      text(s, t, { x: M + 0.58, y, w: lw - 0.9, h: 0.3, fontSize: 12, color: T.body });
+    label(s, 'Why it matters', { x: M + 0.28, y: CT + 2.2, w: 3, h: 0.22, fontSize: 10.5 });
+    const perBrand = `${round100(lib.WARM_H100_MONTH / lib.BRANDS_ON_SHARED_DEPLOYMENT)}–${round100(lib.WARM_H100_MONTH_EU / lib.BRANDS_ON_SHARED_DEPLOYMENT)}`;
+    [
+      `Always-on capacity stays a single-brand cost (approx. ${round100(lib.WARM_H100_MONTH)}/month) rather than ${perBrand} per brand shared.`,
+      'The four sister brands, with most of the group’s Tier-1 volume, don’t get the gains Atlas has shown.',
+      'Each brand would make its own platform decision, so the group ends up with several tools to run.',
+    ].forEach((t, i) => {
+      const y = CT + 2.55 + i * 0.6;
+      rect(s, M + 0.3, y + 0.07, 0.11, 0.11, T.red);
+      text(s, t, { x: M + 0.58, y, w: lw - 0.9, h: 0.5, fontSize: 11, color: T.body });
     });
+
     const kx = M + lw + 0.35, kw = CW - lw - 0.35;
-    box(s, kx, CT, kw, lh, T.white, T.border, R, 'key-messages');
-    label(s, 'Key messages', { x: kx + 0.28, y: CT + 0.28, w: 3, h: 0.22, fontSize: 10.5 });
-    const points = [
-      `Month one delivered: Tier-1 automation reached ${fmtPct(cmp.automation.last)} in the final week, with faster, better-rated answers.`,
-      'Quality improved every week, and the evidence is in your dashboard.',
-      `${fmtPct2(m.avgAvailability)} today: we find the cause in telemetry before buying capacity.`,
-      'One base, one adapter per brand: each brand keeps its voice and its data.',
-      'We’re asking for a group sponsor today and Ridgeline as the pilot.',
+    box(s, kx, CT, kw, lh, T.white, T.border, R, 'mitigation');
+    label(s, 'How we mitigate it', { x: kx + 0.28, y: CT + 0.28, w: 3, h: 0.22, fontSize: 10.5 });
+    const steps = [
+      ['Name a group sponsor at this review', 'Someone above brand level who owns the rollout and the wave-2 decision.', '22 Oct'],
+      ['Agree the Ridgeline pilot criteria together', 'Success is defined jointly up front, so the readout is a decision rather than a debate.', '22 Oct'],
+      ['Size shared capacity with a second brand', 'Capacity is committed with Ridgeline from a load benchmark, never for Atlas alone.', 'Nov 2026'],
     ];
-    const rh = (lh - 0.65) / points.length;
-    points.forEach((t, i) => {
+    const rh = (lh - 0.65) / steps.length;
+    steps.forEach(([head, body, due], i) => {
       const y = CT + 0.62 + i * rh;
       if (i) hline(s, kx + 0.28, y, kw - 0.56);
-      rect(s, kx + 0.3, y + rh / 2 - 0.06, 0.12, 0.12, i === 4 ? T.marine : T.purple);
-      text(s, t, { x: kx + 0.6, y, w: kw - 0.9, h: rh, fontSize: 12, color: T.body, valign: 'middle' });
+      rect(s, kx + 0.3, y + 0.24, 0.12, 0.12, T.purple);
+      text(s, head, { x: kx + 0.6, y: y + 0.16, w: kw - 1.9, h: 0.3, fontFace: MEDIUM, fontSize: 13, color: T.ink });
+      text(s, due, { x: kx + kw - 1.3, y: y + 0.16, w: 1.02, h: 0.3, fontFace: MEDIUM, fontSize: 11, color: T.purple500, align: 'right' });
+      text(s, body, { x: kx + 0.6, y: y + 0.5, w: kw - 0.9, h: rh - 0.6, fontSize: 11, color: T.gray });
     });
-    s.addNotes('Close on the one risk that matters: if group sponsorship doesn’t happen, the rollout stays with Atlas and the shared capacity never pays for itself. Ask for three things: a named group sponsor, joint agreement on the Ridgeline criteria, and shared capacity sized alongside a second brand, based on what the telemetry shows. Then land the five messages.');
+    s.addNotes('Close on the one risk that matters. The platform worked in month one; the risk is that nobody above brand level owns the rollout, so it stays with Atlas. If that happens, always-on capacity stays a single-brand cost, the sister brands, which carry most of the Tier-1 volume, don’t get the gains, and each brand makes its own tooling decision. The mitigation is three concrete asks: a named group sponsor at this review, the Ridgeline criteria agreed together, and shared capacity sized alongside a second brand from a load benchmark, never for Atlas alone.');
   }
 
   // ================================================================ 10. Closing
