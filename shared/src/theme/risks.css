@@ -8,8 +8,8 @@
   border-radius: 0;
   background: #fff;
   color: var(--fw-ink);
-  font-family: var(--font-favorit);
-  font-weight: 550;
+  font-family: var(--font-inter);
+  font-weight: 500;
   font-size: 0.875rem;
   letter-spacing: 0;
   line-height: 1;
@@ -100,8 +100,8 @@
 .risk__facts { margin: 0; display: flex; flex-wrap: wrap; gap: 6px 24px; font-size: 13px; }
 .risk__facts div { display: grid; gap: 2px; }
 .risk__facts dt {
-  font-family: var(--font-favorit);
-  font-weight: 550;
+  font-family: var(--font-inter);
+  font-weight: 500;
   font-size: 0.6875rem;
   letter-spacing: 0;
   color: var(--fw-gray);

@@ -1,7 +1,7 @@
 /*
  * Typography matches fireworks.ai (see fonts/FONTS.md):
  *   Inter (variable)  — the site default: titles at weight 500, body copy, numbers
- *   Favorit 550       — labels, eyebrows, badges, in the case they're written (no forced capitals)
+ *   Favorit 550       — loaded but no longer used on the pages; labels, badges and table headers now use Inter (decision #64)
  * Fallback faces reuse the site's own metric overrides so layout doesn't shift while fonts load.
  */
 @import '@fontsource-variable/inter';
@@ -91,11 +91,11 @@ h1 { font-size: 2.25rem; line-height: 1.22; letter-spacing: -0.09rem; }
   h1 { font-size: 3rem; line-height: 1.25; letter-spacing: -0.12rem; }
 }
 
-/* Favorit label in normal case, as fireworks.ai sets mixed-case Favorit (e.g. "Table of Contents"). */
+/* Labels in Inter, normal case. */
 .label,
 .badge {
-  font-family: var(--font-favorit);
-  font-weight: 550;
+  font-family: var(--font-inter);
+  font-weight: 500;
   letter-spacing: 0;
   line-height: 1;
 }

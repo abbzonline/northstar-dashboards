@@ -35,6 +35,8 @@ export interface HealthPanelProps {
   marker?: 'letter' | 'icon';
   /** Show pillar weights in the summary and on each row (internal view only). */
   showWeights?: boolean;
+  /** Metric ids whose explanatory note is hidden in this view. */
+  hideNotes?: string[];
 }
 
 export function HealthPanel({
@@ -44,6 +46,7 @@ export function HealthPanel({
   label = 'Overall',
   marker = 'letter',
   showWeights = true,
+  hideNotes = [],
 }: HealthPanelProps) {
   // Accordion: at most one pillar open at a time.
   const [openKey, setOpenKey] = useState<string | null>(null);
@@ -100,6 +103,7 @@ export function HealthPanel({
               pillar={p}
               share={showWeights ? p.weight / totalWeight : undefined}
               marker={marker}
+              hideNotes={hideNotes}
               open={openKey === p.key}
               onToggle={() => setOpenKey((k) => (k === p.key ? null : p.key))}
             />
@@ -114,6 +118,7 @@ function PillarRow({
   pillar: p,
   share,
   marker,
+  hideNotes,
   open,
   onToggle,
 }: {
@@ -121,6 +126,7 @@ function PillarRow({
   /** Weight as a share of the pillars shown (sums to 1); omitted to hide the weight. */
   share?: number;
   marker: 'letter' | 'icon';
+  hideNotes: string[];
   open: boolean;
   onToggle: () => void;
 }) {
@@ -167,27 +173,30 @@ function PillarRow({
                 </tr>
               </thead>
               <tbody>
-                {p.metrics.map((m) => [
-                  <tr key={m.def.id} className={m.def.note ? 'has-note' : undefined}>
-                    <td className="pillar__metric">
-                      {m.def.label}
-                      {m.def.weight != null && m.def.weight !== 1 && <span className="muted"> (×{m.def.weight})</span>}
-                    </td>
-                    <td className="num">{m.def.format(m.value)}</td>
-                    <td>
-                      <span className="pillar__metric-score">
-                        <Pips score={m.score} small />
-                        <span className="num">{m.score}</span>
-                      </span>
-                    </td>
-                    <td className="pillar__bands num">{bandLabels(m.def).join(' · ')}</td>
-                  </tr>,
-                  m.def.note && (
-                    <tr key={`${m.def.id}-note`} className="pillar__note-row">
-                      <td colSpan={4}>{m.def.note}</td>
-                    </tr>
-                  ),
-                ])}
+                {p.metrics.map((m) => {
+                  const note = hideNotes.includes(m.def.id) ? undefined : m.def.note;
+                  return [
+                    <tr key={m.def.id} className={note ? 'has-note' : undefined}>
+                      <td className="pillar__metric">
+                        {m.def.label}
+                        {m.def.weight != null && m.def.weight !== 1 && <span className="muted"> (×{m.def.weight})</span>}
+                      </td>
+                      <td className="num">{m.def.format(m.value)}</td>
+                      <td>
+                        <span className="pillar__metric-score">
+                          <Pips score={m.score} small />
+                          <span className="num">{m.score}</span>
+                        </span>
+                      </td>
+                      <td className="pillar__bands num">{bandLabels(m.def).join(' · ')}</td>
+                    </tr>,
+                    note && (
+                      <tr key={`${m.def.id}-note`} className="pillar__note-row">
+                        <td colSpan={4}>{note}</td>
+                      </tr>
+                    ),
+                  ];
+                })}
               </tbody>
             </table>
           </div>
