@@ -202,8 +202,8 @@ export function PlanView({ m }: { m: Model }) {
                   `GPU floor is a Fireworks-side cost. One warm H100 is approx. ${round100(WARM_H100_MONTH)}/month at ` +
                   `${fmtUsd(H100_PER_HOUR, 2)}/GPU-hour list (approx. ${round100(WARM_H100_MONTH_EU)} at the ` +
                   `${REGION_PREMIUM}x region-restricted rate), so Atlas alone utilises roughly a fifth of a GPU-day ` +
-                  `(inferred, not observed). A warm replica on Atlas alone would buy ~22 minutes of availability a month ` +
-                  `(99.85% → 99.9%) with idle capacity that someone has to pay for; it is not recommended. On the shared ` +
+                  `(inferred, not observed). A warm replica on Atlas alone is not justified on current evidence: the cause of ` +
+                  `the availability gap is not yet established, and it would be largely idle capacity. On the shared ` +
                   `deployment five brands' token revenue (~$115k/yr indicative) covers one warm floor ` +
                   `(approx. ${round100(WARM_H100_MONTH * 12)}–${round100(WARM_H100_MONTH_EU * 12)}/yr at list), which ` +
                   `is what fixes the margin.`}

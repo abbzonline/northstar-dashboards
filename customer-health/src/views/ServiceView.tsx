@@ -63,10 +63,11 @@ export function ServiceView({ m, showEvents = true }: { m: Model; showEvents?: b
           <div>
             <dt>Availability target</dt>
             <dd>
-              {`${AVAILABILITY_TARGET}% was met on ${m.daysAtTarget} of ${days.length} days. Reaching it on Atlas alone would need ` +
-                'always-on capacity at roughly 4–7x the current bill for about 22 minutes a month of extra availability. We ' +
-                'recommend keeping the current set-up, retuning scale-up thresholds and pre-warming before planned ' +
-                'promotions. 99.9% becomes affordable on the shared deployment once more brands are live.'}
+              {`${AVAILABILITY_TARGET}% was met on ${m.daysAtTarget} of ${days.length} days, and the misses were spread across ` +
+                'the month rather than limited to the 9 and 21 Aug events. The cause is not yet established: possible ' +
+                'contributors include capacity scale-up during bursts, application errors and other serving failures. We ' +
+                'will review the deployment telemetry with you before recommending any change in capacity; in the ' +
+                'meantime we are retuning scale-up thresholds and pre-warming before planned promotions.'}
             </dd>
           </div>
           <div>

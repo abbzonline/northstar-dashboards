@@ -149,7 +149,7 @@ pres.addSection({ title: 'Results' });
   const rows = [
     ['Adoption is still rising', 'Automation 65.8% → 70.1% from week 1 to the final week, with no plateau yet.', THEME.colors.accent1],
     ['Fewer handoffs to agents', 'Escalations 14.2% → 11.5% as grounding improved after the 24 Aug knowledge refresh.', THEME.colors.accent2],
-    ['Availability missed 99.9% most days', 'Met on 4 of 31 days, all in the final week. The fix has a cost (next slide).', THEME.colors.accent6],
+    ['Availability missed 99.9% most days', 'Met on 4 of 31 days, all in the final week. Cause under review (next slide).', THEME.colors.accent6],
     ['Requests per ticket 4.6 → 6.2', 'Worth a joint review, not an alarm: longer conversations, repeat contacts or non-ticket traffic.', GRAY],
   ];
   const x0 = M + 6.95;
@@ -164,14 +164,14 @@ pres.addSection({ title: 'Results' });
 
 // ---------------------------------------------------------------- 3. Reliability and cost
 {
-  const s = slide('CONTENT', 'Results', '03 · Reliability and cost', '99.9% arrives with shared capacity, not a 5x bill');
-  s.addText('Atlas scales its capacity down when traffic is quiet. That keeps the bill low, and it explains most of August’s availability misses: after a quiet spell, the first requests wait while capacity comes back up.', {
+  const s = slide('CONTENT', 'Results', '03 · Reliability and cost', 'Find the cause before buying capacity');
+  s.addText('Availability averaged 99.85% and fell short of 99.9% on 27 of 31 days, not only on the two incident days. Daily metrics can’t show why, so we diagnose from deployment telemetry before changing capacity.', {
     x: M, y: 1.95, w: CW, h: 0.65, fontSize: 15, color: C.text1, margin: 0, isTextBox: true,
   });
   const opts = [
-    ['RECOMMENDED NOW', THEME.colors.accent2, 'Tune what Atlas has', ['Retune scale-up thresholds', 'Pre-warm capacity before planned promotions'], 'Bill stays ~$1.4k/month at current traffic; availability ~99.85%'],
-    ['NOT RECOMMENDED', THEME.colors.accent5, 'Always-on capacity for Atlas alone', ['~$5.8k/month', '~$8.8k/month with EU-only placement'], 'Buys about 22 minutes a month of extra availability'],
-    ['WITH EXPANSION', THEME.colors.accent1, 'Shared five-brand deployment', ['Always-on capacity shared by five brands', '~$1.2k–1.8k per brand per month'], 'This is where 99.9% becomes efficient'],
+    ['RECOMMENDED NOW', THEME.colors.accent2, 'Diagnose and tune', ['Review deployment telemetry together', 'Retune scale-up; pre-warm before promotions'], 'Bill stays ~$1.4k/month at current traffic'],
+    ['ONLY IF THE DATA SHOWS IT', THEME.colors.accent5, 'Always-on capacity for Atlas alone', ['~$5.8k/month', '~$8.8k/month with EU-only placement'], 'Justified only if scale-up is driving the misses'],
+    ['WITH EXPANSION', THEME.colors.accent1, 'Shared five-brand deployment', ['Always-on capacity shared by five brands', '~$1.2k–1.8k per brand per month'], 'Baseline capacity is affordable once shared'],
   ];
   const gap = 0.3;
   const cw = (CW - gap * 2) / 3;
@@ -187,7 +187,7 @@ pres.addSection({ title: 'Results' });
     s.addText(foot, { x: x + 0.3, y: 5.45, w: cw - 0.6, h: 0.75, fontSize: 13, color: GRAY, margin: 0, valign: 'top', isTextBox: true });
   });
   s.addText('Capacity figures at Fireworks list rates as of 5 Oct 2026; contracted terms may differ.', { x: M, y: 6.48, w: CW, h: 0.28, fontSize: 10, color: GRAY, margin: 0, isTextBox: true });
-  s.addNotes('Be direct about the trade-off. Atlas scales to zero when quiet, which is why the August bill is low and why the first requests after a lull can fail while capacity spins up. Holding capacity warm for Atlas alone would cost about $5.8k a month, $8.8k with EU-only placement, to gain roughly 22 minutes of availability a month. We don’t recommend that. For now: retune scale-up thresholds and pre-warm before planned promotions. The always-on floor and 99.9% arrive with the shared deployment, where five brands make it about $1.2k to $1.8k each.');
+  s.addNotes('Be precise about what we know. Availability averaged 99.85% and missed 99.9% on 27 of 31 days, 25 of them outside the two incidents, so this is not just the burst days. At 19,000 to 31,000 requests a day Atlas is unlikely to sit idle at zero for long, so we should not assume cold starts are the cause. The next step is the deployment telemetry: scale-up events and error codes by hour. Meanwhile we retune scale-up thresholds and pre-warm before planned promotions. Always-on capacity for Atlas alone would cost about $5.8k a month, $8.8k with EU-only placement; we would only recommend it if the telemetry shows scale-up is driving the misses. On the shared deployment the same capacity is about $1.2k to $1.8k per brand.');
 }
 
 // ---------------------------------------------------------------- 4. Expand, and how
@@ -324,11 +324,11 @@ pres.addSection({ title: 'Decision' });
   card(s, M, 2.0, 5.9, 4.55, DARK_CARD);
   pip(s, M + 0.35, 2.36, THEME.colors.accent6);
   s.addText('BIGGEST RISK', { x: M + 0.6, y: 2.28, w: 4, h: 0.28, fontSize: 11, bold: true, color: LAVENDER, charSpacing: 1.5, margin: 0, isTextBox: true });
-  s.addText('Without group-level sponsorship the rollout stays with Atlas, and shared capacity never carries enough volume to make 99.9% and per-brand cost efficient.', {
+  s.addText('Without group-level sponsorship the rollout stays with Atlas, and shared capacity never carries enough volume to make per-brand cost efficient.', {
     x: M + 0.35, y: 2.7, w: 5.2, h: 1.35, fontSize: 16, bold: true, color: C.background1, margin: 0, valign: 'top', isTextBox: true,
   });
   s.addText('MITIGATION', { x: M + 0.35, y: 4.2, w: 4, h: 0.28, fontSize: 11, bold: true, color: LAVENDER, charSpacing: 1.5, margin: 0, isTextBox: true });
-  const mit = ['Name a group sponsor at this review', 'Agree the Ridgeline pilot criteria together', 'Commit always-on capacity alongside a second brand'];
+  const mit = ['Name a group sponsor at this review', 'Agree the Ridgeline pilot criteria together', 'Size shared capacity alongside a second brand'];
   s.addText(mit.map((t, j) => ({ text: t, options: { bullet: true, breakLine: j < mit.length - 1, paraSpaceAfter: 8 } })), {
     x: M + 0.35, y: 4.6, w: 5.2, h: 1.7, fontSize: 14, color: C.background1, margin: 0, valign: 'top', isTextBox: true,
   });
@@ -338,7 +338,7 @@ pres.addSection({ title: 'Decision' });
   const points = [
     'Month one delivered: 70% of Tier-1 automated by month end, faster and better-rated.',
     'Quality improved every week, and the evidence is in your dashboard.',
-    '99.85% is what Atlas alone buys today; 99.9% comes with shared capacity.',
+    '99.85% today: we find the cause in telemetry before buying capacity.',
     'One base, one adapter per brand: each brand keeps its voice and its data.',
     'We’re asking for a group sponsor today and Ridgeline as the pilot.',
   ];
@@ -347,7 +347,7 @@ pres.addSection({ title: 'Decision' });
     s.addText(String(i + 1).padStart(2, '0'), { x: kx, y, w: 0.5, h: 0.6, fontSize: 18, bold: true, color: '00E6CC', margin: 0, valign: 'top', isTextBox: true });
     s.addText(t, { x: kx + 0.6, y, w: kw - 0.6, h: 0.68, fontSize: 14, color: C.background1, margin: 0, valign: 'top', isTextBox: true });
   });
-  s.addNotes('Close on the one risk that matters: if group sponsorship doesn’t happen, the rollout stays with Atlas and the shared capacity never pays for itself, for Northstar or for the 99.9% target. Ask for three things: a named group sponsor, joint agreement on the Ridgeline criteria, and always-on capacity committed alongside a second brand rather than for Atlas alone. Then land the five messages.');
+  s.addNotes('Close on the one risk that matters: if group sponsorship doesn’t happen, the rollout stays with Atlas and the shared capacity never pays for itself. Ask for three things: a named group sponsor, joint agreement on the Ridgeline criteria, and shared capacity sized alongside a second brand, based on what the telemetry shows. Then land the five messages.');
 }
 
 pres.writeFile({ fileName: OUT }).then(async () => {

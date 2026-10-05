@@ -68,18 +68,19 @@ export function SpendView({ m, showEvents = true }: { m: Model; showEvents?: boo
             <dd>{`Approx. ${round100(runRate)}/month at final-week traffic.`}</dd>
           </div>
           <div>
-            <dt>Always-on capacity for 99.9%</dt>
+            <dt>Always-on capacity</dt>
             <dd>
               {`Holding a replica warm around the clock would move Atlas to approx. ${round100(WARM_H100_MONTH)}/month ` +
-                `(${round100(WARM_H100_MONTH_EU)} with EU-only placement). We do not recommend it for Atlas alone.`}
+                `(${round100(WARM_H100_MONTH_EU)} with EU-only placement). We would recommend it only if the deployment telemetry ` +
+                'shows that capacity scale-up is driving the availability misses.'}
             </dd>
           </div>
           <div>
-            <dt>When it becomes efficient</dt>
+            <dt>On the shared deployment</dt>
             <dd>
               {`On the shared ${BRANDS_ON_SHARED_DEPLOYMENT}-brand deployment the same always-on capacity works out at approx. ` +
                 `${round100(WARM_H100_MONTH / BRANDS_ON_SHARED_DEPLOYMENT)}–${round100(WARM_H100_MONTH_EU / BRANDS_ON_SHARED_DEPLOYMENT)} ` +
-                'per brand per month, which is when the 99.9% target becomes efficient.'}
+                'per brand per month.'}
             </dd>
           </div>
         </dl>

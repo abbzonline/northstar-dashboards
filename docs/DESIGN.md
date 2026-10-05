@@ -72,7 +72,7 @@ Two dashboards built from the same August dataset: an **internal QBR** for Firew
 | Top three risks | Technical, relationship, execution | No (the caveats card covers what Northstar needs to know) |
 | Pipeline, likelihood on timeline, stakeholder coverage | Yes | No |
 | Margin, deployment economics, competitive risk | Yes | No |
-| Spend | Margin card at list rates | Budget context: bill, run-rate, what 99.9% would cost and when it becomes efficient |
+| Spend | Margin card at list rates | Budget context: bill, run-rate, and what always-on capacity would cost alone and shared |
 | Plan | Dependencies on both sides, leadership decisions, all actions | Pilot proposal, Northstar's dependencies, joint actions only |
 
 ## 7. Intentionally excluded
@@ -103,7 +103,7 @@ Two dashboards built from the same August dataset: an **internal QBR** for Firew
 **Trade-offs**
 - **Two apps instead of one with roles:** some duplicated view code, in exchange for a customer build that can't contain internal data.
 - **Lenient availability bands** (99.9% = 5) rather than Fireworks' 99.99% SLA, which would score August a 2. The alternative is documented in RAMPUP.md.
-- **No warm replica on Atlas alone** (99.85% accepted). An always-on floor is efficient only once five brands share it.
+- **Telemetry before capacity.** The 99.85% availability gap is diagnosed from deployment telemetry before any warm replica is bought; the cause can't be read from daily metrics. A warm floor is cheap per brand once five brands share it.
 - **One shared BF16 multi-LoRA deployment** (no FP8 with adapters, +10–30% TTFT) rather than five FP8 deployments; Halden moves to its own when its volume justifies it.
 
 ## Appendix
