@@ -96,9 +96,8 @@
   font-family: var(--font-favorit);
   font-weight: 550;
   font-size: 0.75rem;
-  letter-spacing: 0.04em;
+  letter-spacing: 0;
   line-height: 1;
-  text-transform: uppercase;
   color: var(--fw-gray);
   margin-bottom: 4px;
 }
@@ -248,8 +247,7 @@
   font-family: var(--font-favorit);
   font-weight: 550;
   font-size: 0.6875rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  letter-spacing: 0;
   color: var(--fw-gray);
 }
 .health__facts dd { margin: 0; color: var(--fw-body); }
@@ -308,8 +306,7 @@
   font-family: var(--font-favorit);
   font-weight: 550;
   font-size: 0.6875rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  letter-spacing: 0;
   color: var(--fw-gray);
   padding: 8px 12px 8px 0;
   border-bottom: 1px solid var(--fw-border);

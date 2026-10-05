@@ -83,8 +83,7 @@
   font-family: var(--font-favorit);
   font-weight: 550;
   font-size: 0.6875rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  letter-spacing: 0;
   color: var(--fw-gray);
   padding: 12px 16px;
   background: var(--fw-surface-tint);
@@ -106,9 +105,8 @@
   font-family: var(--font-favorit);
   font-weight: 550;
   font-size: 0.625rem;
-  letter-spacing: 0.04em;
+  letter-spacing: 0;
   line-height: 1.2;
-  text-transform: uppercase;
   white-space: nowrap;
   background: var(--fw-eyebrow-gray);
   color: var(--fw-ink);
@@ -139,8 +137,7 @@
   font-family: var(--font-favorit);
   font-weight: 550;
   font-size: 0.6875rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  letter-spacing: 0;
   color: var(--fw-gray);
 }
 .facts-card dd { margin: 0; color: var(--fw-body); }

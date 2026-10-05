@@ -72,12 +72,12 @@ Exact fireworks.ai tokens (from the site's production CSS); defined once in `sha
 | Card title H3 | Inter | 1rem | 500 | 1.5 | -0.02em |
 | Body | Inter | 0.875–1rem | 400 | 1.5 | — |
 | KPI value | Inter | 1.875rem | 500 | 1.2 | -0.075rem, tabular-nums |
-| Label / eyebrow | Favorit | 0.6875–0.875rem | 550 | 1 | 0.04em, uppercase |
+| Label / eyebrow | Favorit | 0.6875–0.875rem | 550 | 1 | 0, normal case |
 | Mono (model ID) | system mono | 0.875em | 400 | 1.5 | — |
 
 **Typography Rules:**
 - Numbers use `font-variant-numeric: tabular-nums` so columns line up.
-- Labels are always Favorit uppercase; headings are never uppercase.
+- Labels are Favorit in normal case, as written ("01 · Expansion pipeline"); nothing is forced to capitals.
 - **NEVER use**: Google-hosted fonts, display/script faces, weights above 600, gradient or shadowed text.
 
 **Text Decoration:** H1, H2 and H3 are plain (restrained, data-first): no gradient, no shadow.
@@ -117,7 +117,7 @@ Sticky, white, hairline bottom border; 1392px frame with side rules (unchanged f
 ```
 
 ### Tags / Badges
-Square, Favorit uppercase, 0.75rem; purple fill for the audience badge; status pills tinted by meaning.
+Square, Favorit in normal case, 0.75rem; purple fill for the audience badge; status pills tinted by meaning.
 
 ### Tables
 ```css

@@ -46,7 +46,7 @@ Same tokens as the customer dashboard (`shared/src/theme/global.css`, from firew
 
 ## 3. Typography Rules
 
-Same stack and scale as the customer dashboard: **Inter** (variable, self-hosted) for headings, body and numbers; **Favorit 550** uppercase for labels, eyebrows, pills and table headers; system mono for the model ID.
+Same stack and scale as the customer dashboard: **Inter** (variable, self-hosted) for headings, body and numbers; **Favorit 550** in normal case for labels, eyebrows, pills and table headers; system mono for the model ID.
 
 | Role | Font | Size | Weight | Line Height | Letter Spacing |
 |------|------|------|--------|-------------|----------------|
@@ -55,7 +55,7 @@ Same stack and scale as the customer dashboard: **Inter** (variable, self-hosted
 | Card / pillar title | Inter | 1rem | 500 | 1.5 | -0.02em |
 | Body / table cell | Inter | 0.8125–0.875rem | 400 | 1.5 | — |
 | Score | Inter | 4rem | 500 | 1 | -0.18rem, tabular-nums |
-| Label / pill / th | Favorit | 0.625–0.75rem | 550 | 1–1.2 | 0.04em, uppercase |
+| Label / pill / th | Favorit | 0.625–0.75rem | 550 | 1–1.2 | 0, normal case |
 
 **Typography Rules:**
 - Tabular numerals for every figure; figures never animate.
@@ -92,7 +92,7 @@ Sticky white top bar in the 1392px framed header; view menu next to the logo; "I
 ```
 
 ### Tags / Pills / Status badge
-Square, Favorit uppercase. Status badge: Healthy (teal), Positive-Watch (amber), Negative-Watch (red tint), At risk (red). Pills follow the colour rules above.
+Square, Favorit in normal case. Status badge: Healthy (teal), Positive-Watch (amber), Negative-Watch (red tint), At risk (red). Pills follow the colour rules above.
 
 ### Dialog (Focus areas)
 Native `<dialog>`; blurred, dimmed backdrop; Esc and backdrop click close; 0.2s rise-in, disabled under reduced motion.
