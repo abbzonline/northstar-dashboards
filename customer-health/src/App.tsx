@@ -71,7 +71,7 @@ function Dashboard({ result, view, anchor }: { result: Extract<LoadResult, { ok:
         </div>
       </div>
 
-      {/* Keyed by view so the entrance and count-ups replay on navigation (DESIGN.md §7). */}
+      {/* Keyed by view so the entrance replays on navigation (DESIGN.md §7). */}
       <div className="view-in" key={view}>
         {view === 'outcomes' && <OutcomesView m={m} />}
         {view === 'service' && <ServiceView m={m} />}

@@ -21,7 +21,7 @@ export function OutcomesView({ m }: { m: Model }) {
   return (
     <>
       <Section id="health" eyebrow="01 · Operational health" title="How the deployment is performing">
-        <HealthPanel health={m.health} label="Operational health, 1–5" showStatus={false} animate />
+        <HealthPanel health={m.health} label="Operational health, 1–5" showStatus={false} />
       </Section>
 
       <div className="section__head kpis-head">
@@ -33,7 +33,6 @@ export function OutcomesView({ m }: { m: Model }) {
       </div>
       <div className="kpis" aria-label="Headline results. Select one to see its trend">
         <KpiTile
-          animate
           href={viewHref('outcomes', 'chart-automation')}
           label="Tier-1 automation"
           value={fmtPct(periodAvg('automation_rate_pct'))}
@@ -42,7 +41,6 @@ export function OutcomesView({ m }: { m: Model }) {
           sub={`Final week ${fmtPct(cmp.automation.last)}; 70% reached from ${m.firstAutomation70 ? fmtDay(m.firstAutomation70) : '—'}`}
         />
         <KpiTile
-          animate
           href={viewHref('quality', 'chart-csat-aht')}
           label="Avg handle time"
           value={`${periodAvg('avg_handle_time_min').toFixed(2)} min`}
@@ -51,7 +49,6 @@ export function OutcomesView({ m }: { m: Model }) {
           sub="−35% vs pre-launch baseline, supplied by Northstar"
         />
         <KpiTile
-          animate
           href={viewHref('quality', 'chart-csat-aht')}
           label="CSAT"
           value={periodAvg('csat_score').toFixed(1)}
@@ -60,7 +57,6 @@ export function OutcomesView({ m }: { m: Model }) {
           sub="+12 pts vs pre-launch baseline, supplied by Northstar"
         />
         <KpiTile
-          animate
           href={viewHref('outcomes', 'chart-requests')}
           label="Requests / day"
           value={fmtCompact(periodAvg('requests'))}
@@ -69,7 +65,6 @@ export function OutcomesView({ m }: { m: Model }) {
           sub={`${fmtInt(m.totalRequests)} in August`}
         />
         <KpiTile
-          animate
           href={viewHref('service', 'chart-availability')}
           label="Availability"
           value={fmtPct2(m.avgAvailability)}
@@ -78,7 +73,6 @@ export function OutcomesView({ m }: { m: Model }) {
           sub={`Lowest ${fmtPct2(m.worstAvailability.availability_pct)} on ${fmtDay(m.worstAvailability.date)}`}
         />
         <KpiTile
-          animate
           href={viewHref('service', 'chart-latency')}
           label="P50 / P95 latency"
           value={`${fmtMs(periodAvg('p50_latency_ms'))} / ${fmtMs(periodAvg('p95_latency_ms'))}`}
@@ -87,7 +81,6 @@ export function OutcomesView({ m }: { m: Model }) {
           sub={`P50 ${fmtSigned(cmp.p50.delta, fmtMs)} since week 1`}
         />
         <KpiTile
-          animate
           href={viewHref('quality', 'chart-quality')}
           label="Eval pass rate"
           value={fmtPct(periodAvg('quality_eval_pass_rate_pct'))}
@@ -96,7 +89,6 @@ export function OutcomesView({ m }: { m: Model }) {
           sub={`Grounded answers ${fmtPct(periodAvg('grounded_answer_rate_pct'))}`}
         />
         <KpiTile
-          animate
           href={viewHref('quality', 'chart-quality')}
           label="Escalation rate"
           value={fmtPct(periodAvg('escalation_rate_pct'))}

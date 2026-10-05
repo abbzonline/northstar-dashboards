@@ -1,6 +1,6 @@
 # DESIGN.md — Northstar customer health dashboard
 
-> Fireworks' own design language, applied to an executive dashboard: quiet surfaces, one purple accent, numbers that arrive with a little life, and nothing that gets between a VP and the figure they came for.
+> Fireworks' own design language, applied to an executive dashboard: quiet surfaces, one purple accent, and nothing that gets between a VP and the figure they came for.
 
 Produced with the [web-design](https://github.com/xiaopu-ai/web-design) skill's spec-first workflow (Phase B). Scene: **Dashboard**, so the skill's baseline tier **L1** applies. Its landing-page rules (hero "wow" moments, WebGL, six-category signature motion) are out of scope for this scene; see §8 for the deliberate deviations.
 
@@ -12,7 +12,7 @@ Produced with the [web-design](https://github.com/xiaopu-ai/web-design) skill's 
 **Feel**: a well-set annual report that happens to be live
 
 **Interaction Tier**: L1 (refined static)
-**Dependencies**: CSS only, plus one small React hook for number count-up. No CDN, no animation library.
+**Dependencies**: CSS only. No CDN, no animation library.
 
 ## 2. Color Palette & Roles
 
@@ -76,7 +76,7 @@ Exact fireworks.ai tokens (from the site's production CSS); defined once in `sha
 | Mono (model ID) | system mono | 0.875em | 400 | 1.5 | — |
 
 **Typography Rules:**
-- Numbers use `font-variant-numeric: tabular-nums` so counting and columns don't jitter.
+- Numbers use `font-variant-numeric: tabular-nums` so columns line up.
 - Labels are always Favorit uppercase; headings are never uppercase.
 - **NEVER use**: Google-hosted fonts, display/script faces, weights above 600, gradient or shadowed text.
 
@@ -150,7 +150,7 @@ Square, Favorit uppercase, 0.75rem; purple fill for the audience badge; status p
 
 ## 7. Animation & Interaction
 
-**Motion Philosophy**: numbers arrive, surfaces respond, nothing moves on its own.
+**Motion Philosophy**: views settle in once, surfaces respond to the pointer, numbers never move.
 **Tier**: L1
 
 ### Entrance Animation (once per view, on load; not scroll-triggered)
@@ -161,9 +161,6 @@ Square, Favorit uppercase, 0.75rem; purple fill for the audience badge; status p
 .motion-l1 .view-in > *:nth-child(3) { animation-delay: .12s; }
 .motion-l1 .view-in > *:nth-child(n + 4) { animation-delay: .18s; }
 ```
-
-### Number count-up (headline values and the overall score)
-Every number inside a value string ("67.9%", "605 ms / 1.66 s", "25.5K") counts from 0 to its exact value over 700 ms with ease-out, keeping its decimals and thousands separators. Runs once per view load; the final frame is always the exact formatted value.
 
 ### Scroll Behavior
 None. Dashboard rule: information is visible immediately.
@@ -177,14 +174,12 @@ As §4: tiles and cards highlight their border, rows tint, menu items tint; ever
   .motion-l1 .view-in > * { animation: none; }
   .motion-l1 .kpi--link, .motion-l1 .card, .motion-l1 .table tbody tr { transition: none; }
 }
-/* The count-up hook renders the final value immediately when reduced motion is set. */
 ```
 
 ## 8. Do's and Don'ts
 
 ### Do
 - Keep every figure readable at first paint; motion only ever delays decoration, never data.
-- End every count-up on the exact formatted value.
 - Highlight with borders and tints; keep the grid perfectly still.
 - Keep one accent (purple) per view; reserve teal and red for meaning.
 - Respect `prefers-reduced-motion` everywhere.
@@ -198,7 +193,7 @@ As §4: tiles and cards highlight their border, rows tint, menu items tint; ever
 - ❌ Google Fonts, CDNs or Unsplash: the dashboard must run offline after install. *(Deliberate deviation from the skill's default.)*
 - ❌ Emoji, gradient text or decorative illustrations.
 - ❌ New colours outside the Fireworks tokens (amber remains the only exception).
-- ❌ Re-running count-ups on every re-render: once per view load only.
+- ❌ Animating figures (count-ups, tickers, rolling digits): numbers render at their final value. *(Tried and removed: decision #58.)*
 
 ## 9. Responsive Behavior
 

@@ -8,7 +8,6 @@ import {
   type PillarResult,
 } from '../health/rampup';
 import { fmtDay } from '../format';
-import { CountUp } from './CountUp';
 import { Pips } from './Pips';
 import { TopRisks } from './TopRisks';
 
@@ -31,8 +30,6 @@ export interface HealthPanelProps {
   showStatus?: boolean;
   /** Label above the overall score. */
   label?: string;
-  /** Count the overall score up once on mount (customer view). */
-  animate?: boolean;
 }
 
 export function HealthPanel({
@@ -40,7 +37,6 @@ export function HealthPanel({
   showRisks = false,
   showStatus = true,
   label = 'Overall',
-  animate = false,
 }: HealthPanelProps) {
   // Accordion: at most one pillar open at a time.
   const [openKey, setOpenKey] = useState<string | null>(null);
@@ -54,9 +50,7 @@ export function HealthPanel({
       <div className="health__summary">
         <span className="label health__brand">{label}</span>
         <div className="health__score">
-          <span className="health__value">
-            {animate ? <CountUp value={health.score.toFixed(2)} /> : health.score.toFixed(2)}
-          </span>
+          <span className="health__value">{health.score.toFixed(2)}</span>
           <span className="health__outof">/ 5</span>
         </div>
         {showStatus && (
