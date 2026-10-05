@@ -208,7 +208,7 @@ export const RAMPUP: PillarDef[] = [
     letter: 'M',
     name: 'Model quality',
     weight: 0.2,
-    summary: 'Are the answers right? (offline evaluation)',
+    summary: 'Are the answers right?',
     metrics: [
       {
         id: 'grounded',

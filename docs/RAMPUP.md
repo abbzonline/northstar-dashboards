@@ -10,7 +10,7 @@ The code lives in [`shared/src/health/rampup.ts`](../shared/src/health/rampup.ts
 |---|---|---|---|---|
 | **R** | Reliability | Is the platform up, error-free and fast? | 20% | Measured |
 | **A** | Adoption | Is Northstar putting more of its support load on the model? | 20% | Measured |
-| **M** | Model quality | Are the answers right? (offline evaluation) | 20% | Measured |
+| **M** | Model quality | Are the answers right? | 20% | Measured |
 | **P** | Partnership | How committed is Northstar beyond the first deployment? | 10% | Judgement |
 | **U** | User outcomes | What did Northstar's shoppers experience? | 20% | Measured |
 | **P** | Profitability | Is the account commercially worth it to Fireworks? | 10% | Judgement |
